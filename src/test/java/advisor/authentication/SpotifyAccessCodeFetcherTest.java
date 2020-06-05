@@ -25,7 +25,7 @@ import static org.hamcrest.core.Is.is;
 public final class SpotifyAccessCodeFetcherTest {
     private final String spotifyAccessHost = "mySpotifyHost";
     private final String clientId = "myClientId";
-    private final int serverPort = 9500;
+    private final int serverPort = 45456;
     private final String redirectUri = "http://localhost" + ":" + serverPort;
     private final int accessCodeServerTimeoutSeconds = 1;
     private final ByteArrayOutputStream output = new ByteArrayOutputStream();
