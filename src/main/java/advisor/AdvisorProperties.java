@@ -7,13 +7,6 @@ import java.util.Properties;
 
 public class AdvisorProperties {
 
-    private static final String SPOTIFY_DEFAUL_ACCESS_THOST_PROPERTY_NAME = "spotify.default_access_host";
-    private static final String SPOTIFY_DEFAUL_RESOURCE_HOST_PROPERTY_NAME = "spotify.default_resource_host";
-    private static final String SPOTIFY_CLIENT_SECRET_PROPERTY_NAME = "spotify.client_secret";
-    private static final String SPOTIFY_CLIENTID_PROPERTY_NAME = "spotify.clientid";
-    private static final String REDIRECT_URI_PROPERTY_NAME = "redirect_uri";
-    private static final String PAGE_SIZE_PROPERTY_NAME = "page_size";
-
     private String spotifyClientId;
     private String spotifyClientSecret;
     private String redirectUri;
@@ -46,15 +39,15 @@ public class AdvisorProperties {
         Properties properties = new Properties();
         properties.load(Objects.requireNonNull(
                 this.getClass().getClassLoader().getResourceAsStream(propertiesFileName)));
-        spotifyClientId = properties.getProperty(SPOTIFY_CLIENTID_PROPERTY_NAME);
-        spotifyClientSecret = properties.getProperty(SPOTIFY_CLIENT_SECRET_PROPERTY_NAME);
-        redirectUri = properties.getProperty(REDIRECT_URI_PROPERTY_NAME);
+        spotifyClientId = properties.getProperty("spotify.clientid");
+        spotifyClientSecret = properties.getProperty("spotify.client_secret");
+        redirectUri = properties.getProperty("redirect_uri");
         spotifyAccessHost = Optional.ofNullable(spotifyAccessHost)
-                .orElse(properties.getProperty(SPOTIFY_DEFAUL_ACCESS_THOST_PROPERTY_NAME));
+                .orElse(properties.getProperty("spotify.default_access_host"));
         spotifyResourceHost = Optional.ofNullable(spotifyResourceHost)
-                .orElse(properties.getProperty(SPOTIFY_DEFAUL_RESOURCE_HOST_PROPERTY_NAME));
+                .orElse(properties.getProperty("spotify.default_resource_host"));
         pageSize = Optional.ofNullable(pageSize)
-                .orElse(Integer.parseInt(properties.getProperty(PAGE_SIZE_PROPERTY_NAME)));
+                .orElse(Integer.parseInt(properties.getProperty("page_size")));
     }
 
     String getSpotifyClientId() {
