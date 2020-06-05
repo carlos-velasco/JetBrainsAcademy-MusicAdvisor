@@ -1,0 +1,44 @@
+plugins {
+    id 'java'
+    id "application"
+    id "io.freefair.lombok" version "5.1.0"
+}
+
+group 'advisor'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 11
+mainClassName = 'advisor.Main'
+
+repositories {
+    mavenCentral()
+    maven { url "https://jitpack.io" }
+}
+
+dependencies {
+    implementation 'org.springframework:spring-core:5.2.6.RELEASE'
+    implementation 'org.springframework:spring-context:5.2.6.RELEASE'
+    implementation 'com.google.code.gson:gson:+'
+    implementation 'org.apache.httpcomponents:httpcore:4.4.13'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.12'
+
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.hamcrest:hamcrest:2.2'
+    testImplementation 'com.github.tomakehurst:wiremock:2.26.3'
+    testImplementation 'org.mockito:mockito-core:3.3.3'
+    testImplementation 'org.assertj:assertj-swing-junit:3.8.0'
+    testImplementation 'com.github.hyperskill:hs-test:v7.0.1'
+}
+
+compileJava.options.encoding = 'UTF-8'
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+test {
+    systemProperty "file.encoding", "utf-8"
+}
+
+wrapper {
+    gradleVersion = '5.3.1'
+}
