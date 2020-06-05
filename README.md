@@ -1,3 +1,5 @@
+![CI](https://github.com/carlos-velasco/JetBrainsAcademy-MusicAdvisor/workflows/CI/badge.svg)
+
 # JetBrains Academy - Music Advisor
 This repository contains my implementation of the [Music Advisor](https://hyperskill.org/projects/62) project in [JetBrains Academy](https://www.jetbrains.com/academy/).
 
