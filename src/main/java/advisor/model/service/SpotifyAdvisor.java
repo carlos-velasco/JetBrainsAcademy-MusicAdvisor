@@ -44,33 +44,33 @@ public class SpotifyAdvisor implements Advisor {
 
     @Override
     public Page<Category> getCategories(int pageNumber) throws AdvisorException {
-        return getResourceChunk(buildResourceURI("categories", pageNumber),
+        return getResourcePage(buildResourceURI("categories", pageNumber),
                 pageNumber, "categories", Category.class);
     }
 
     @Override
     public Page<Category> getCategories() throws AdvisorException {
-        return getResourceChunk(buildResourceURI("categories"),
+        return getResourcePage(buildResourceURI("categories"),
                 0, "categories", Category.class);
     }
 
     @Override
     public Page<Release> getNewReleases(int pageNumber) throws AdvisorException {
-        return getResourceChunk(buildResourceURI(
+        return getResourcePage(buildResourceURI(
                 "new-releases", pageNumber),
                 pageNumber, "albums", Release.class);
     }
 
     @Override
     public Page<Playlist> getCategoryPlaylists(Category category, int pageNumber) throws AdvisorException {
-        return getResourceChunk(
+        return getResourcePage(
                 buildResourceURI("categories/" + category.getId() + "/playlists", pageNumber),
                 pageNumber,"playlists", Playlist.class);
     }
 
     @Override
     public Page<Playlist> getFeaturedPlaylists(int pageNumber) throws AdvisorException {
-        return getResourceChunk(
+        return getResourcePage(
                 buildResourceURI("featured-playlists", pageNumber),
                 pageNumber, "playlists", Playlist.class);
     }
@@ -97,7 +97,7 @@ public class SpotifyAdvisor implements Advisor {
         }
     }
 
-    private <T extends CommandLinePrintable> Page<T> getResourceChunk(
+    private <T extends CommandLinePrintable> Page<T> getResourcePage(
             URI resourceCollectionURI,
             int pageNumber,
             String entityKey,
