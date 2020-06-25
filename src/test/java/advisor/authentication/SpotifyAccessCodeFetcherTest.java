@@ -3,14 +3,13 @@ package advisor.authentication;
 import advisor.view.CommandLineView;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.utils.URIBuilder;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
+import org.junit.rules.ExternalResource;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.ServerSocket;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -25,25 +24,25 @@ import static org.hamcrest.core.Is.is;
 public final class SpotifyAccessCodeFetcherTest {
     private final String spotifyAccessHost = "mySpotifyHost";
     private final String clientId = "myClientId";
-    private final int serverPort = 45456;
-    private final String redirectUri = "http://localhost" + ":" + serverPort;
-    private final ByteArrayOutputStream output = new ByteArrayOutputStream();
-    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
-    private final SpotifyAccessCodeFetcher target;
     private final HttpClient client = HttpClient.newBuilder().build();
     private final URIBuilder uriBuilder = new URIBuilder();
     private final int testExecutionServiceAwaitSeconds = 2;
+    private final ByteArrayOutputStream output = new ByteArrayOutputStream();
+    private final CommandLineView commandLineView = new CommandLineView(new Scanner(System.in), new PrintStream(output), 5);
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private String redirectUri;
+    private SpotifyAccessCodeFetcher target;
 
-    public SpotifyAccessCodeFetcherTest() {
-        CommandLineView commandLineView = new CommandLineView(new Scanner(System.in), new PrintStream(output), 5);
+    @Rule
+    public FreePort freePort = new FreePort();
+
+    @Before
+    public void setUriSchemeHostAndPort() throws URISyntaxException {
+        uriBuilder.setScheme("http").setHost("localhost").setPort(freePort.getPort());
+        redirectUri = uriBuilder.build().toString();
         int accessCodeServerTimeoutSeconds = 1;
         target = new SpotifyAccessCodeFetcher(
                 spotifyAccessHost, clientId, redirectUri, commandLineView, accessCodeServerTimeoutSeconds);
-    }
-
-    @Before
-    public void setUriSchemeHostAndPort() {
-        uriBuilder.setScheme("http").setHost("localhost").setPort(serverPort);
     }
 
     @After
@@ -192,5 +191,22 @@ public final class SpotifyAccessCodeFetcherTest {
         Assert.assertTrue(result.isDone());
         Optional<String> optionalAccessCode = result.get();
         Assert.assertTrue(optionalAccessCode.isEmpty());
+    }
+}
+
+class FreePort extends ExternalResource {
+
+    private int port;
+
+    @Override
+    protected void before() throws Throwable {
+        try (ServerSocket socket = new ServerSocket(0)) {
+            socket.setReuseAddress(true);
+            port = socket.getLocalPort();
+        }
+    }
+
+    public int getPort() {
+        return port;
     }
 }
