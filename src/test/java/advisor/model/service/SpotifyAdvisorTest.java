@@ -4,7 +4,6 @@ import advisor.authentication.AlwaysAuthenticatedUserCommandAuthentication;
 import advisor.authentication.UserCommandAuthenticationFacade;
 import advisor.model.AdvisorException;
 import advisor.model.dto.*;
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.apache.http.HttpStatus;
 import org.assertj.core.api.Assertions;
@@ -15,6 +14,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 
 public class SpotifyAdvisorTest {
 
@@ -25,7 +25,7 @@ public class SpotifyAdvisorTest {
     private SpotifyAdvisor target;
 
     @Rule
-    public WireMockRule wireMockRule = new WireMockRule(WireMockConfiguration.wireMockConfig().dynamicPort());
+    public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().dynamicPort());
 
     @Before
     public void prepareTarget() {
