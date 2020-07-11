@@ -13,7 +13,6 @@ import feign.gson.GsonDecoder;
 import feign.gson.GsonEncoder;
 import lombok.RequiredArgsConstructor;
 
-import java.net.http.HttpClient;
 import java.util.Locale;
 
 @RequiredArgsConstructor
@@ -22,10 +21,6 @@ public class SpotifyAdvisor implements Advisor {
     private final String spotifyResourceHost;
     private final UserCommandAuthenticationFacade userCommandAuthenticationFacade;
     private final int pageSize;
-    private final HttpClient httpClient = HttpClient.newHttpClient();
-    private final GsonBuilder gsonBuilder = new GsonBuilder()
-            .registerTypeAdapter(Release.class, new ReleaseDeserializer())
-            .registerTypeAdapter(Playlist.class, new PlaylistDeserializer());
 
     @Override
     public Page<Category> getCategories(int pageNumber) throws AdvisorException {
@@ -66,7 +61,9 @@ public class SpotifyAdvisor implements Advisor {
             String entityKey,
             Class<T> type) throws AdvisorException {
 
-        final Gson gson = gsonBuilder
+        final Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Release.class, new ReleaseDeserializer())
+                .registerTypeAdapter(Playlist.class, new PlaylistDeserializer())
                 .registerTypeAdapter(Page.class,
                         new PageDeserializer<>(entityKey, type, pageNumber == null ? 0 : pageNumber))
                 .create();
