@@ -69,7 +69,6 @@ public class SpotifyAdvisor implements Advisor {
                 .create();
 
         final SpotifyAdvisorClient spotifyAdvisorClient = Feign.builder()
-                .encoder(new GsonEncoder(gson))
                 .decoder(new GsonDecoder(gson))
                 .errorDecoder(new ResourceErrorDecoder())
                 .target(SpotifyAdvisorClient.class, spotifyResourceHost);
