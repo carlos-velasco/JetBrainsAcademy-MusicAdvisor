@@ -19,7 +19,7 @@ public class PageDeserializer<T extends CommandLinePrintable> implements JsonDes
     @Override
     public Page <T> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject collection = json.getAsJsonObject().get(entityKey).getAsJsonObject();
-        return new Page<T>(
+        return new Page<>(
                 context.deserialize(collection.getAsJsonArray("items"),
                         TypeToken.getParameterized(List.class, type).getType()),
                 collection.get("total").getAsInt(),

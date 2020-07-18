@@ -11,7 +11,10 @@ import advisor.view.CommandLineView;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.Scanner;
 
 import static org.hamcrest.Matchers.emptyString;

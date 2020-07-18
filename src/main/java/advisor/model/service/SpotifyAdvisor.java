@@ -10,7 +10,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import feign.Feign;
 import feign.gson.GsonDecoder;
-import feign.gson.GsonEncoder;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Locale;
