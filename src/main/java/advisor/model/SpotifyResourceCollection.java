@@ -2,16 +2,14 @@ package advisor.model;
 
 import advisor.model.dto.CommandLinePrintable;
 import advisor.model.dto.Page;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public abstract class SpotifyResourceCollection {
 
-    private int pageSize;
+    private final int pageSize;
     protected int pageNumber;
     protected Integer totalResources;
-
-    protected SpotifyResourceCollection(int pageSize) {
-        this.pageSize = pageSize;
-    }
 
     protected <T extends CommandLinePrintable> Page<T> firstPage(SpotifyAdvisorFunction<Integer, Page<T>> advisorFunction) throws AdvisorException {
         Page<T> firstPage = advisorFunction.apply(1);
