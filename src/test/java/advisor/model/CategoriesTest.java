@@ -3,7 +3,6 @@ package advisor.model;
 import advisor.model.dto.Category;
 import advisor.model.dto.Page;
 import advisor.model.service.Advisor;
-import org.assertj.swing.assertions.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,6 +11,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Mockito.when;
 
@@ -58,7 +58,7 @@ public class CategoriesTest {
         Page<Category> categoryPage = target.firstPage();
 
         // THEN
-        Assertions.assertThat(categoryPage).as("First categories page").isEqualTo(CATEGORIES_FIRST_PAGE);
+        assertThat(categoryPage).as("First categories page").isEqualTo(CATEGORIES_FIRST_PAGE);
     }
 
     @Test
@@ -67,7 +67,7 @@ public class CategoriesTest {
         Throwable thrown = catchThrowable(() -> target.nextPage());
 
         // THEN
-        Assertions.assertThat(thrown).isInstanceOf(AdvisorException.class)
+        assertThat(thrown).isInstanceOf(AdvisorException.class)
                 .hasMessage("No more pages");
     }
 
@@ -77,7 +77,7 @@ public class CategoriesTest {
         Throwable thrown = catchThrowable(() -> target.previousPage());
 
         // THEN
-        Assertions.assertThat(thrown).isInstanceOf(AdvisorException.class)
+        assertThat(thrown).isInstanceOf(AdvisorException.class)
                 .hasMessage("No previous pages");
     }
 
@@ -90,7 +90,7 @@ public class CategoriesTest {
         Page<Category> categoryPage = target.nextPage();
 
         // THEN
-        Assertions.assertThat(categoryPage).as("Second categories page").isEqualTo(CATEGORIES_SECOND_PAGE);
+        assertThat(categoryPage).as("Second categories page").isEqualTo(CATEGORIES_SECOND_PAGE);
     }
 
     @Test
@@ -103,7 +103,7 @@ public class CategoriesTest {
         Page<Category> categoryPage = target.nextPage();
 
         // THEN
-        Assertions.assertThat(categoryPage).as("Third categories page").isEqualTo(CATEGORIES_THIRD_PAGE);
+        assertThat(categoryPage).as("Third categories page").isEqualTo(CATEGORIES_THIRD_PAGE);
     }
 
     @Test
@@ -118,7 +118,7 @@ public class CategoriesTest {
         Throwable thrown = catchThrowable(() -> target.nextPage());
 
         // THEN
-        Assertions.assertThat(thrown).isInstanceOf(AdvisorException.class)
+        assertThat(thrown).isInstanceOf(AdvisorException.class)
                 .hasMessage("No more pages");
     }
 
@@ -131,7 +131,7 @@ public class CategoriesTest {
         Throwable thrown = catchThrowable(() -> target.previousPage());
 
         // THEN
-        Assertions.assertThat(thrown).isInstanceOf(AdvisorException.class)
+        assertThat(thrown).isInstanceOf(AdvisorException.class)
                 .hasMessage("No previous pages");
     }
 
@@ -145,7 +145,7 @@ public class CategoriesTest {
         Page<Category> categoryPage = target.previousPage();
 
         // THEN
-        Assertions.assertThat(categoryPage).as("First categories page").isEqualTo(CATEGORIES_FIRST_PAGE);
+        assertThat(categoryPage).as("First categories page").isEqualTo(CATEGORIES_FIRST_PAGE);
     }
 
     @Test
@@ -159,7 +159,7 @@ public class CategoriesTest {
         Throwable thrown = catchThrowable(() -> target.previousPage());
 
         // THEN
-        Assertions.assertThat(thrown).isInstanceOf(AdvisorException.class)
+        assertThat(thrown).isInstanceOf(AdvisorException.class)
                 .hasMessage("No previous pages");
     }
 
@@ -174,6 +174,6 @@ public class CategoriesTest {
         Page<Category> categoryPage = target.firstPage();
 
         // THEN
-        Assertions.assertThat(categoryPage).as("First categories page").isEqualTo(CATEGORIES_FIRST_PAGE);
+        assertThat(categoryPage).as("First categories page").isEqualTo(CATEGORIES_FIRST_PAGE);
     }
 }

@@ -3,7 +3,6 @@ package advisor.model;
 import advisor.model.dto.Page;
 import advisor.model.dto.Playlist;
 import advisor.model.service.Advisor;
-import org.assertj.swing.assertions.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,6 +11,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Mockito.when;
 
@@ -63,7 +63,7 @@ public class FeaturedPlaylistsTest {
         Page<Playlist> featuredPlaylistsPage = target.firstPage();
 
         // THEN
-        Assertions.assertThat(featuredPlaylistsPage).as("First featured playlists page").isEqualTo(FEATURED_PLAYLISTS_FIRST_PAGE);
+        assertThat(featuredPlaylistsPage).as("First featured playlists page").isEqualTo(FEATURED_PLAYLISTS_FIRST_PAGE);
     }
 
     @Test
@@ -72,7 +72,7 @@ public class FeaturedPlaylistsTest {
         Throwable thrown = catchThrowable(() -> target.nextPage());
 
         // THEN
-        Assertions.assertThat(thrown).isInstanceOf(AdvisorException.class)
+        assertThat(thrown).isInstanceOf(AdvisorException.class)
                 .hasMessage("No more pages");
     }
 
@@ -82,7 +82,7 @@ public class FeaturedPlaylistsTest {
         Throwable thrown = catchThrowable(() -> target.previousPage());
 
         // THEN
-        Assertions.assertThat(thrown).isInstanceOf(AdvisorException.class)
+        assertThat(thrown).isInstanceOf(AdvisorException.class)
                 .hasMessage("No previous pages");
     }
 
@@ -95,7 +95,7 @@ public class FeaturedPlaylistsTest {
         Page<Playlist> featuredPlaylistsPage = target.nextPage();
 
         // THEN
-        Assertions.assertThat(featuredPlaylistsPage).as("Second featured playlists page").isEqualTo(FEATURED_PLAYLISTS_SECOND_PAGE);
+        assertThat(featuredPlaylistsPage).as("Second featured playlists page").isEqualTo(FEATURED_PLAYLISTS_SECOND_PAGE);
     }
 
     @Test
@@ -108,7 +108,7 @@ public class FeaturedPlaylistsTest {
         Page<Playlist> featuredPlaylistsPage = target.nextPage();
 
         // THEN
-        Assertions.assertThat(featuredPlaylistsPage).as("Third featured playlists page").isEqualTo(FEATURED_PLAYLISTS_THIRD_PAGE);
+        assertThat(featuredPlaylistsPage).as("Third featured playlists page").isEqualTo(FEATURED_PLAYLISTS_THIRD_PAGE);
     }
 
     @Test
@@ -123,7 +123,7 @@ public class FeaturedPlaylistsTest {
         Throwable thrown = catchThrowable(() -> target.nextPage());
 
         // THEN
-        Assertions.assertThat(thrown).isInstanceOf(AdvisorException.class)
+        assertThat(thrown).isInstanceOf(AdvisorException.class)
                 .hasMessage("No more pages");
     }
 
@@ -136,7 +136,7 @@ public class FeaturedPlaylistsTest {
         Throwable thrown = catchThrowable(() -> target.previousPage());
 
         // THEN
-        Assertions.assertThat(thrown).isInstanceOf(AdvisorException.class)
+        assertThat(thrown).isInstanceOf(AdvisorException.class)
                 .hasMessage("No previous pages");
     }
 
@@ -150,7 +150,7 @@ public class FeaturedPlaylistsTest {
         Page<Playlist> featuredPlaylistsPage = target.previousPage();
 
         // THEN
-        Assertions.assertThat(featuredPlaylistsPage).as("First featured playlists page").isEqualTo(FEATURED_PLAYLISTS_FIRST_PAGE);
+        assertThat(featuredPlaylistsPage).as("First featured playlists page").isEqualTo(FEATURED_PLAYLISTS_FIRST_PAGE);
     }
 
     @Test
@@ -164,7 +164,7 @@ public class FeaturedPlaylistsTest {
         Throwable thrown = catchThrowable(() -> target.previousPage());
 
         // THEN
-        Assertions.assertThat(thrown).isInstanceOf(AdvisorException.class)
+        assertThat(thrown).isInstanceOf(AdvisorException.class)
                 .hasMessage("No previous pages");
     }
 
@@ -179,6 +179,6 @@ public class FeaturedPlaylistsTest {
         Page<Playlist> featuredPlaylistsPage = target.firstPage();
 
         // THEN
-        Assertions.assertThat(featuredPlaylistsPage).as("First featured playlists page").isEqualTo(FEATURED_PLAYLISTS_FIRST_PAGE);
+        assertThat(featuredPlaylistsPage).as("First featured playlists page").isEqualTo(FEATURED_PLAYLISTS_FIRST_PAGE);
     }
 }

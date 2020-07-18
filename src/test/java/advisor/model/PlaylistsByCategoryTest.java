@@ -1,8 +1,9 @@
 package advisor.model;
 
-import advisor.model.dto.*;
+import advisor.model.dto.Category;
+import advisor.model.dto.Page;
+import advisor.model.dto.Playlist;
 import advisor.model.service.Advisor;
-import org.assertj.swing.assertions.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,6 +12,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Mockito.when;
 
@@ -73,7 +75,7 @@ public class PlaylistsByCategoryTest {
         Page<Playlist> newReleasesPage = target.firstPage(EXISTING_CATEGORY.getName());
 
         // THEN
-        Assertions.assertThat(newReleasesPage).as("First playlists by category page").isEqualTo(CATEGORY_PLAYLISTS_FIRST_PAGE);
+        assertThat(newReleasesPage).as("First playlists by category page").isEqualTo(CATEGORY_PLAYLISTS_FIRST_PAGE);
     }
 
     @Test
@@ -82,7 +84,7 @@ public class PlaylistsByCategoryTest {
         Throwable thrown = catchThrowable(() -> target.nextPage());
 
         // THEN
-        Assertions.assertThat(thrown).isInstanceOf(AdvisorException.class)
+        assertThat(thrown).isInstanceOf(AdvisorException.class)
                 .hasMessage("Category must be specified first");
     }
 
@@ -92,7 +94,7 @@ public class PlaylistsByCategoryTest {
         Throwable thrown = catchThrowable(() -> target.previousPage());
 
         // THEN
-        Assertions.assertThat(thrown).isInstanceOf(AdvisorException.class)
+        assertThat(thrown).isInstanceOf(AdvisorException.class)
                 .hasMessage("Category must be specified first");
     }
 
@@ -105,7 +107,7 @@ public class PlaylistsByCategoryTest {
         Page<Playlist> newReleasesPage = target.nextPage();
 
         // THEN
-        Assertions.assertThat(newReleasesPage).as("Second playlists by category page").isEqualTo(CATEGORY_PLAYLISTS_SECOND_PAGE);
+        assertThat(newReleasesPage).as("Second playlists by category page").isEqualTo(CATEGORY_PLAYLISTS_SECOND_PAGE);
     }
 
     @Test
@@ -118,7 +120,7 @@ public class PlaylistsByCategoryTest {
         Page<Playlist> newReleasesPage = target.nextPage();
 
         // THEN
-        Assertions.assertThat(newReleasesPage).as("Third playlists by category page").isEqualTo(CATEGORY_PLAYLISTS_THIRD_PAGE);
+        assertThat(newReleasesPage).as("Third playlists by category page").isEqualTo(CATEGORY_PLAYLISTS_THIRD_PAGE);
     }
 
     @Test
@@ -133,7 +135,7 @@ public class PlaylistsByCategoryTest {
         Throwable thrown = catchThrowable(() -> target.nextPage());
 
         // THEN
-        Assertions.assertThat(thrown).isInstanceOf(AdvisorException.class)
+        assertThat(thrown).isInstanceOf(AdvisorException.class)
                 .hasMessage("No more pages");
     }
 
@@ -146,7 +148,7 @@ public class PlaylistsByCategoryTest {
         Throwable thrown = catchThrowable(() -> target.previousPage());
 
         // THEN
-        Assertions.assertThat(thrown).isInstanceOf(AdvisorException.class)
+        assertThat(thrown).isInstanceOf(AdvisorException.class)
                 .hasMessage("No previous pages");
     }
 
@@ -160,7 +162,7 @@ public class PlaylistsByCategoryTest {
         Page<Playlist> newReleasesPage = target.previousPage();
 
         // THEN
-        Assertions.assertThat(newReleasesPage).as("First playlists by category page").isEqualTo(CATEGORY_PLAYLISTS_FIRST_PAGE);
+        assertThat(newReleasesPage).as("First playlists by category page").isEqualTo(CATEGORY_PLAYLISTS_FIRST_PAGE);
     }
 
     @Test
@@ -174,7 +176,7 @@ public class PlaylistsByCategoryTest {
         Throwable thrown = catchThrowable(() -> target.previousPage());
 
         // THEN
-        Assertions.assertThat(thrown).isInstanceOf(AdvisorException.class)
+        assertThat(thrown).isInstanceOf(AdvisorException.class)
                 .hasMessage("No previous pages");
     }
 
@@ -189,7 +191,7 @@ public class PlaylistsByCategoryTest {
         Page<Playlist> newReleasesPage = target.firstPage(EXISTING_CATEGORY.getName());
 
         // THEN
-        Assertions.assertThat(newReleasesPage).as("First playlists by category page").isEqualTo(CATEGORY_PLAYLISTS_FIRST_PAGE);
+        assertThat(newReleasesPage).as("First playlists by category page").isEqualTo(CATEGORY_PLAYLISTS_FIRST_PAGE);
     }
 
     @Test
@@ -198,7 +200,7 @@ public class PlaylistsByCategoryTest {
         Throwable thrown = catchThrowable(() -> target.firstPage(NON_EXISTING_CATEGORY.getName()));
 
         // THEN
-        Assertions.assertThat(thrown).isInstanceOf(AdvisorException.class)
+        assertThat(thrown).isInstanceOf(AdvisorException.class)
                 .hasMessage("Unknown category name.");
     }
 }

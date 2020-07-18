@@ -4,7 +4,6 @@ import advisor.model.dto.Artist;
 import advisor.model.dto.Page;
 import advisor.model.dto.Release;
 import advisor.model.service.Advisor;
-import org.assertj.swing.assertions.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +12,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Mockito.when;
 
@@ -74,7 +74,7 @@ public class NewReleasesTest {
         Page<Release> newReleasesPage = target.firstPage();
 
         // THEN
-        Assertions.assertThat(newReleasesPage).as("First new releases page").isEqualTo(NEW_RELEASES_FIRST_PAGE);
+        assertThat(newReleasesPage).as("First new releases page").isEqualTo(NEW_RELEASES_FIRST_PAGE);
     }
 
     @Test
@@ -83,7 +83,7 @@ public class NewReleasesTest {
         Throwable thrown = catchThrowable(() -> target.nextPage());
 
         // THEN
-        Assertions.assertThat(thrown).isInstanceOf(AdvisorException.class)
+        assertThat(thrown).isInstanceOf(AdvisorException.class)
                 .hasMessage("No more pages");
     }
 
@@ -93,7 +93,7 @@ public class NewReleasesTest {
         Throwable thrown = catchThrowable(() -> target.previousPage());
 
         // THEN
-        Assertions.assertThat(thrown).isInstanceOf(AdvisorException.class)
+        assertThat(thrown).isInstanceOf(AdvisorException.class)
                 .hasMessage("No previous pages");
     }
 
@@ -106,7 +106,7 @@ public class NewReleasesTest {
         Page<Release> newReleasesPage = target.nextPage();
 
         // THEN
-        Assertions.assertThat(newReleasesPage).as("Second new releases page").isEqualTo(NEW_RELEASES_SECOND_PAGE);
+        assertThat(newReleasesPage).as("Second new releases page").isEqualTo(NEW_RELEASES_SECOND_PAGE);
     }
 
     @Test
@@ -119,7 +119,7 @@ public class NewReleasesTest {
         Page<Release> newReleasesPage = target.nextPage();
 
         // THEN
-        Assertions.assertThat(newReleasesPage).as("Third new releases page").isEqualTo(NEW_RELEASES_THIRD_PAGE);
+        assertThat(newReleasesPage).as("Third new releases page").isEqualTo(NEW_RELEASES_THIRD_PAGE);
     }
 
     @Test
@@ -133,7 +133,7 @@ public class NewReleasesTest {
         Throwable thrown = catchThrowable(() -> target.nextPage());
 
         // THEN
-        Assertions.assertThat(thrown).isInstanceOf(AdvisorException.class)
+        assertThat(thrown).isInstanceOf(AdvisorException.class)
                 .hasMessage("No more pages");
     }
 
@@ -146,7 +146,7 @@ public class NewReleasesTest {
         Throwable thrown = catchThrowable(() -> target.previousPage());
 
         // THEN
-        Assertions.assertThat(thrown).isInstanceOf(AdvisorException.class)
+        assertThat(thrown).isInstanceOf(AdvisorException.class)
                 .hasMessage("No previous pages");
     }
 
@@ -160,7 +160,7 @@ public class NewReleasesTest {
         Page<Release> newReleasesPage = target.previousPage();
 
         // THEN
-        Assertions.assertThat(newReleasesPage).as("First new releases page").isEqualTo(NEW_RELEASES_FIRST_PAGE);
+        assertThat(newReleasesPage).as("First new releases page").isEqualTo(NEW_RELEASES_FIRST_PAGE);
     }
 
     @Test
@@ -174,7 +174,7 @@ public class NewReleasesTest {
         Throwable thrown = catchThrowable(() -> target.previousPage());
 
         // THEN
-        Assertions.assertThat(thrown).isInstanceOf(AdvisorException.class)
+        assertThat(thrown).isInstanceOf(AdvisorException.class)
                 .hasMessage("No previous pages");
     }
 
@@ -189,6 +189,6 @@ public class NewReleasesTest {
         Page<Release> newReleasesPage = target.firstPage();
 
         // THEN
-        Assertions.assertThat(newReleasesPage).as("First new releases page").isEqualTo(NEW_RELEASES_FIRST_PAGE);
+        assertThat(newReleasesPage).as("First new releases page").isEqualTo(NEW_RELEASES_FIRST_PAGE);
     }    
 }

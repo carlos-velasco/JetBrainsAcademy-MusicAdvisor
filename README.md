@@ -15,11 +15,3 @@ redirect_uri=your_spotify_app_redirect_uri
 ```
 
 For more information on how to configure / obtain that information in your Spotify application, check https://developer.spotify.com/documentation/general/guides/app-settings/.
-
-
-## Disclaimer
-The tests in the package ``jetbrainsacademy`` were implemented by [HyperSkill](https://hyperskill.org/) and they are the tests that are run to verify the implementation of the project in JetBrains Academy. They are included in this repo as a way to quickly verify changes over the code in the `main` module.
-
-The author of this repo claims no ownership over the the tests in package ``jetbrainsacademy``.
-
-Tests in the ``test`` module not in the ``jetbrainsacademy`` package are authored and owned by the owner of this repository.
