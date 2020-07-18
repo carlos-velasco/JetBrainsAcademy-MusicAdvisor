@@ -20,6 +20,9 @@ dependencies {
     implementation 'com.google.code.gson:gson:+'
     implementation 'org.apache.httpcomponents:httpcore:4.4.13'
     implementation 'org.apache.httpcomponents:httpclient:4.5.12'
+    implementation 'io.github.openfeign:feign-core:10.11'
+    implementation 'io.github.openfeign:feign-gson:10.11'
+    implementation 'io.github.openfeign.form:feign-form:3.8.0'
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.hamcrest:hamcrest:2.2'
