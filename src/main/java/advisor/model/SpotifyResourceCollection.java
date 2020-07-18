@@ -20,7 +20,7 @@ public abstract class SpotifyResourceCollection {
         return firstPage;
     }
 
-    protected <T extends CommandLinePrintable> Page<T>  nextPage(SpotifyAdvisorFunction<Integer, Page<T>> advisorFunction) throws AdvisorException {
+    protected <T extends CommandLinePrintable> Page<T> nextPage(SpotifyAdvisorFunction<Integer, Page<T>> advisorFunction) throws AdvisorException {
         validateNextPage(pageNumber);
         Page<T> nextPage = advisorFunction.apply(pageNumber + 1);
         totalResources = nextPage.getTotal();
