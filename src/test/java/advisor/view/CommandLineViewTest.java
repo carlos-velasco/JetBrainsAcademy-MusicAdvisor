@@ -1,6 +1,5 @@
 package advisor.view;
 
-import advisor.model.AdvisorException;
 import advisor.model.dto.Category;
 import advisor.model.dto.Page;
 import org.junit.Assert;
@@ -15,12 +14,12 @@ import static org.hamcrest.core.Is.is;
 
 public class CommandLineViewTest {
 
-    private ByteArrayOutputStream output = new ByteArrayOutputStream();
+    private final ByteArrayOutputStream output = new ByteArrayOutputStream();
     private CommandLineView target;
     private static final int PAGE_SIZE = 10;
 
     @Test
-    public void givenPageTotalIsOneUnitLessThanPageSize_whenPrintingAPage_thenTotalOfPagesIsOne() throws AdvisorException {
+    public void givenPageTotalIsOneUnitLessThanPageSize_whenPrintingAPage_thenTotalOfPagesIsOne() {
         // GIVEN
         target = new CommandLineView(new Scanner(System.in), new PrintStream(output), PAGE_SIZE);
         Page<Category> page = new Page<>(List.of(), PAGE_SIZE - 1, 1);
@@ -33,7 +32,7 @@ public class CommandLineViewTest {
     }
 
     @Test
-    public void givenPageTotalIsEqualToPageSize_whenPrintingAPage_thenTotalOfPagesIsOne() throws AdvisorException {
+    public void givenPageTotalIsEqualToPageSize_whenPrintingAPage_thenTotalOfPagesIsOne() {
         // GIVEN
         target = new CommandLineView(new Scanner(System.in), new PrintStream(output), PAGE_SIZE);
         Page<Category> page = new Page<>(List.of(), PAGE_SIZE, 1);
@@ -46,7 +45,7 @@ public class CommandLineViewTest {
     }
 
     @Test
-    public void givenPageTotalIsOneUnitGreaterThanPageSize_whenPrintingAPage_thenTotalOfPagesIsTwo() throws AdvisorException {
+    public void givenPageTotalIsOneUnitGreaterThanPageSize_whenPrintingAPage_thenTotalOfPagesIsTwo() {
         // GIVEN
         target = new CommandLineView(new Scanner(System.in), new PrintStream(output), PAGE_SIZE);
         Page<Category> page = new Page<>(List.of(), PAGE_SIZE + 1, 1);

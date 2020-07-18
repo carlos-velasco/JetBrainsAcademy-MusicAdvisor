@@ -1,29 +1,21 @@
 package advisor.authentication;
 
 import advisor.view.CommandLineView;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Service("userCommandAuthentication")
 public class SpotifyOAuthUserCommandAuthentication implements UserCommandAuthentication {
 
     private boolean isAuthenticated;
     private String accessToken;
-    private CommandLineView commandLineView;
-    private SpotifyAccessCodeFetcher spotifyAccessCodeFetcher;
-    private SpotifyAccessTokenFetcher spotifyAccessTokenFetcher;
-
-    @Autowired
-    public SpotifyOAuthUserCommandAuthentication(
-            SpotifyAccessCodeFetcher spotifyAccessCodeFetcher,
-            SpotifyAccessTokenFetcher spotifyAccessTokenFetcher,
-            CommandLineView commandLineView) {
-        this.spotifyAccessCodeFetcher = spotifyAccessCodeFetcher;
-        this.spotifyAccessTokenFetcher = spotifyAccessTokenFetcher;
-        this.commandLineView = commandLineView;
-    }
+    private final SpotifyAccessCodeFetcher spotifyAccessCodeFetcher;
+    private final SpotifyAccessTokenFetcher spotifyAccessTokenFetcher;
+    private final CommandLineView commandLineView;
 
     @Override
     public boolean authenticate() {

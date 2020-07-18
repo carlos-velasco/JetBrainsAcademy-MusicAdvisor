@@ -2,6 +2,7 @@ package advisor.authentication;
 
 import advisor.view.CommandLineView;
 import com.sun.net.httpserver.HttpServer;
+import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpStatus;
 
 import java.io.IOException;
@@ -14,6 +15,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+@RequiredArgsConstructor
 public class SpotifyAccessCodeFetcher {
 
     public static final int ACCESS_CODE_SERVER_TIMEOUT_SECONDS = 3 * 60;
@@ -22,16 +24,8 @@ public class SpotifyAccessCodeFetcher {
     private final String clientId;
     private final String redirectUri;
     private final CommandLineView commandLineView;
-    private int serverTimeoutSeconds;
+    private final int serverTimeoutSeconds;
     private String accessCode;
-
-    public SpotifyAccessCodeFetcher(String spotifyAccessHost, String clientId, String redirectUri, CommandLineView commandLineView, int serverTimeoutSeconds) {
-        this.spotifyAccessHost = spotifyAccessHost;
-        this.clientId = clientId;
-        this.redirectUri = redirectUri;
-        this.commandLineView = commandLineView;
-        this.serverTimeoutSeconds = serverTimeoutSeconds;
-    }
 
     public Optional<String> fetchAccessCode() throws IOException, InterruptedException {
         final String codeReceivedMessage = "Got the code. Return back to your program.";

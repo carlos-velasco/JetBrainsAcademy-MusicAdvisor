@@ -9,6 +9,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 public class ReleaseDeserializer implements JsonDeserializer<Release> {
+
     @Override
     public Release deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();

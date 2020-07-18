@@ -13,13 +13,13 @@ import java.util.Scanner;
 @ComponentScan("advisor")
 public class AppConfig {
 
-        @Bean
-        Scanner scanner () {
-            return new Scanner(System.in);
-        }
+    @Bean
+    Scanner scanner() {
+        return new Scanner(System.in);
+    }
 
-        @Bean
-        PrintStream printStream () {
-            return new PrintStream(System.out);
-        }
+    @Bean
+    PrintStream printStream() {
+        return new PrintStream(System.out);
+    }
 }

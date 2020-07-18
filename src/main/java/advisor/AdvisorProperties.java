@@ -7,9 +7,9 @@ import java.util.Properties;
 
 public class AdvisorProperties {
 
-    private String spotifyClientId;
-    private String spotifyClientSecret;
-    private String redirectUri;
+    private final String spotifyClientId;
+    private final String spotifyClientSecret;
+    private final String redirectUri;
     private String spotifyAccessHost;
     private String spotifyResourceHost;
     private Integer pageSize;

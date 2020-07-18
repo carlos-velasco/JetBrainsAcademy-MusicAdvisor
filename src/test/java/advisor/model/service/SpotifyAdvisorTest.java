@@ -17,6 +17,7 @@ import java.util.List;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
 public class SpotifyAdvisorTest {
+
     private static final String RESOURCE_COMMON_PATH = "/v1/browse/";
     private final UserCommandAuthenticationFacade userCommandAuthenticationFacade =
             new UserCommandAuthenticationFacade(new AlwaysAuthenticatedUserCommandAuthentication());

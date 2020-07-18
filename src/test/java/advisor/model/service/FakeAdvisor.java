@@ -2,9 +2,11 @@ package advisor.model.service;
 
 import advisor.model.AdvisorException;
 import advisor.model.dto.*;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 public final class FakeAdvisor implements Advisor {
 
     private static final List<Category> CATEGORIES = List.of(
@@ -55,10 +57,6 @@ public final class FakeAdvisor implements Advisor {
                     .link("https://open.spotify.com/playlist/r4rst43t4").build());
 
     private final int pageSize;
-
-    public FakeAdvisor(int pageSize) {
-        this.pageSize = pageSize;
-    }
 
     @Override
     public Page<Category> getCategories(int pageNumber) {

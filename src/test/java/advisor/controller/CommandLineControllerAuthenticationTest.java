@@ -5,6 +5,7 @@ import advisor.authentication.NeverAuthenticatedUserCommandAuthentication;
 import advisor.model.service.Advisor;
 import advisor.model.service.FakeAdvisor;
 import advisor.view.CommandLineView;
+import lombok.RequiredArgsConstructor;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,6 +23,7 @@ import java.util.Scanner;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
 
+@RequiredArgsConstructor
 @RunWith(Parameterized.class)
 public final class CommandLineControllerAuthenticationTest {
     
@@ -30,15 +32,9 @@ public final class CommandLineControllerAuthenticationTest {
     private final boolean needsAuthentication;
     private final int defaultPageSize = 5;
     private CommandLineController target;
-    private ByteArrayOutputStream output = new ByteArrayOutputStream();
-    private Advisor advisor = new FakeAdvisor(defaultPageSize);
+    private final ByteArrayOutputStream output = new ByteArrayOutputStream();
+    private final Advisor advisor = new FakeAdvisor(defaultPageSize);
     private CommandLineView commandLineView;
-
-
-    public CommandLineControllerAuthenticationTest(String userCommandInput, boolean needsAuthentication) {
-        this.userCommandInput = userCommandInput;
-        this.needsAuthentication = needsAuthentication;
-    }
 
     @Parameters(
             name = "User input={0}, Needs authentication={1}"

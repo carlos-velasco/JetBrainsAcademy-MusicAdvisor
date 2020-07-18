@@ -27,22 +27,18 @@ public final class SpotifyAccessCodeFetcherTest {
     private final String clientId = "myClientId";
     private final int serverPort = 45456;
     private final String redirectUri = "http://localhost" + ":" + serverPort;
-    private final int accessCodeServerTimeoutSeconds = 1;
     private final ByteArrayOutputStream output = new ByteArrayOutputStream();
-    private final CommandLineView commandLineView;
-    private final ExecutorService executorService;
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private final SpotifyAccessCodeFetcher target;
-    private final HttpClient client;
-    private final URIBuilder uriBuilder;
+    private final HttpClient client = HttpClient.newBuilder().build();
+    private final URIBuilder uriBuilder = new URIBuilder();
     private final int testExecutionServiceAwaitSeconds = 2;
 
     public SpotifyAccessCodeFetcherTest() {
-        commandLineView = new CommandLineView(new Scanner(System.in), new PrintStream(output), 5);
-        executorService = Executors.newSingleThreadExecutor();
+        CommandLineView commandLineView = new CommandLineView(new Scanner(System.in), new PrintStream(output), 5);
+        int accessCodeServerTimeoutSeconds = 1;
         target = new SpotifyAccessCodeFetcher(
                 spotifyAccessHost, clientId, redirectUri, commandLineView, accessCodeServerTimeoutSeconds);
-        client = HttpClient.newBuilder().build();
-        uriBuilder = new URIBuilder();
     }
 
     @Before

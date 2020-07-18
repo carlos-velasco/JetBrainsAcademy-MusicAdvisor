@@ -1,7 +1,11 @@
 package advisor.controller;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.stream.Stream;
 
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public enum UserCommand {
 
     NEW_RELEASES("new", true),
@@ -16,11 +20,6 @@ public enum UserCommand {
 
     private final String commandText;
     private final boolean needsAuth;
-
-    UserCommand(String commandText, boolean needsAuth) {
-        this.commandText = commandText;
-        this.needsAuth = needsAuth;
-    }
 
     public boolean needsAuth() {
         return needsAuth;

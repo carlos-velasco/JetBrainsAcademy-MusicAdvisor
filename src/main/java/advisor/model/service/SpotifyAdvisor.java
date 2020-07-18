@@ -12,6 +12,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.utils.URIBuilder;
+import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
 import java.net.URI;
@@ -21,6 +22,7 @@ import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Locale;
 
+@RequiredArgsConstructor
 public class SpotifyAdvisor implements Advisor {
 
     private static final String RESOURCE_COMMON_PATH = "/v1/browse/";
@@ -33,14 +35,6 @@ public class SpotifyAdvisor implements Advisor {
             .registerTypeAdapter(Release.class, new ReleaseDeserializer())
             .registerTypeAdapter(Playlist.class, new PlaylistDeserializer())
             .create();
-
-    public SpotifyAdvisor(String spotifyResourceHost,
-                          UserCommandAuthenticationFacade userCommandAuthenticationFacade,
-                          int pageSize) {
-        this.spotifyResourceHost = spotifyResourceHost;
-        this.userCommandAuthenticationFacade = userCommandAuthenticationFacade;
-        this.pageSize = pageSize;
-    }
 
     @Override
     public Page<Category> getCategories(int pageNumber) throws AdvisorException {
