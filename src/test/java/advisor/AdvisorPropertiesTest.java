@@ -11,6 +11,8 @@ import static org.hamcrest.Matchers.*;
 
 public final class AdvisorPropertiesTest {
 
+    private final AdvisorProperties advisorProperties = new AdvisorProperties();
+
     @Test
     public void givenNoAccessCommandLineArgument_whenInitializingAdvisorProperties_thenSpotifyHostTakesDefaultValue() throws IOException {
         // GIVEN
@@ -18,7 +20,7 @@ public final class AdvisorPropertiesTest {
         String[] args = {};
 
         // WHEN
-        AdvisorProperties advisorProperties = new AdvisorProperties(args);
+        advisorProperties.initializeProperties(args);
 
         // THEN
         Assert.assertThat(advisorProperties.getSpotifyAccessHost(), is(defaultSpotifyAccessHost));
@@ -31,7 +33,7 @@ public final class AdvisorPropertiesTest {
         String[] args = {"-access", expectedSpotifyAccessHost};
 
         // WHEN
-        AdvisorProperties advisorProperties = new AdvisorProperties(args);
+        advisorProperties.initializeProperties(args);
 
         // THEN
         Assert.assertThat(advisorProperties.getSpotifyAccessHost(), is(expectedSpotifyAccessHost));
@@ -44,7 +46,7 @@ public final class AdvisorPropertiesTest {
         String[] args = {};
 
         // WHEN
-        AdvisorProperties advisorProperties = new AdvisorProperties(args);
+        advisorProperties.initializeProperties(args);
 
         // THEN
         Assert.assertThat(advisorProperties.getSpotifyResourceHost(), is(defaultSpotifyResourceHost));
@@ -57,7 +59,7 @@ public final class AdvisorPropertiesTest {
         String[] args = {"-resource", expectedSpotifyResourceHost};
 
         // WHEN
-        AdvisorProperties advisorProperties = new AdvisorProperties(args);
+        advisorProperties.initializeProperties(args);
 
         // THEN
         Assert.assertThat(advisorProperties.getSpotifyResourceHost(), is(expectedSpotifyResourceHost));
@@ -70,7 +72,7 @@ public final class AdvisorPropertiesTest {
         String[] args = {};
 
         // WHEN
-        AdvisorProperties advisorProperties = new AdvisorProperties(args);
+        advisorProperties.initializeProperties(args);
 
         // THEN
         Assert.assertThat(advisorProperties.getPageSize(), is(defaultPageSize));
@@ -83,7 +85,7 @@ public final class AdvisorPropertiesTest {
         String[] args = {"-page", String.valueOf(expectedPageSize)};
 
         // WHEN
-        AdvisorProperties advisorProperties = new AdvisorProperties(args);
+        advisorProperties.initializeProperties(args);
 
         // THEN
         Assert.assertThat(advisorProperties.getPageSize(), is(expectedPageSize));
@@ -100,7 +102,7 @@ public final class AdvisorPropertiesTest {
                 "-page", String.valueOf(expectedPageSize) };
 
         // WHEN
-        AdvisorProperties advisorProperties = new AdvisorProperties(args);
+        advisorProperties.initializeProperties(args);
 
         // THEN
         Assert.assertThat(advisorProperties.getSpotifyResourceHost(), is(expectedSpotifyResourceHost));
@@ -118,7 +120,7 @@ public final class AdvisorPropertiesTest {
         String expectedSpotifyClientId = properties.getProperty("spotify.clientid");
 
         // WHEN
-        AdvisorProperties advisorProperties = new AdvisorProperties(args);
+        advisorProperties.initializeProperties(args);
 
         // THEN
         Assert.assertThat(advisorProperties.getSpotifyClientId(), not(emptyOrNullString()));
@@ -135,7 +137,7 @@ public final class AdvisorPropertiesTest {
         String expectedSpotifyClientSecret = properties.getProperty("spotify.client_secret");
 
         // WHEN
-        AdvisorProperties advisorProperties = new AdvisorProperties(args);
+        advisorProperties.initializeProperties(args);
 
         // THEN
         Assert.assertThat(advisorProperties.getSpotifyClientSecret(), not(emptyOrNullString()));
@@ -152,7 +154,7 @@ public final class AdvisorPropertiesTest {
         String expectedRedirectUri = properties.getProperty("redirect_uri");
 
         // WHEN
-        AdvisorProperties advisorProperties = new AdvisorProperties(args);
+        advisorProperties.initializeProperties(args);
 
         // THEN
         Assert.assertThat(advisorProperties.getRedirectUri(), not(emptyOrNullString()));
