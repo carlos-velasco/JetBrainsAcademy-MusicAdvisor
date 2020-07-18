@@ -12,7 +12,7 @@ import java.util.Scanner;
 import static advisor.authentication.SpotifyAccessCodeFetcher.ACCESS_CODE_SERVER_TIMEOUT_SECONDS;
 
 public class Main {
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
+    public static void main(String[] args) throws IOException {
 
         // Initialization using Spring (does not work with tests, since they do not initialize the bean)
 //        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
@@ -20,7 +20,8 @@ public class Main {
 //        OAuthUserCommandAuthentication oAuthUserCommandAuthentication = context.getBean(OAuthUserCommandAuthentication.class);
 //        // TODO: the approach above does not take into account the commmand line arguments
 
-        AdvisorProperties advisorProperties = new AdvisorProperties(args);
+        AdvisorProperties advisorProperties = new AdvisorProperties();
+        advisorProperties.initializeProperties(args);
         CommandLineView commandLineView =
                 new CommandLineView(new Scanner(System.in), System.out, advisorProperties.getPageSize());
 

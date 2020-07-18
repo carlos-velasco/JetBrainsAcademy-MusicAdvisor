@@ -1,40 +1,44 @@
 package advisor;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+
 import java.io.IOException;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Properties;
 
+@Getter(AccessLevel.PACKAGE)
 public class AdvisorProperties {
 
-    private final String spotifyClientId;
-    private final String spotifyClientSecret;
-    private final String redirectUri;
+    private String spotifyClientId;
+    private String spotifyClientSecret;
+    private String redirectUri;
     private String spotifyAccessHost;
     private String spotifyResourceHost;
     private Integer pageSize;
 
-    public AdvisorProperties(String[] args) throws IOException {
-        final String accessCommandLineArgument = "-access";
-        final String resourceCommandLineArgument = "-resource";
-        final String pageCommandLineArgument = "-page";
-        for (int index = 0; (index < args.length - 1)
-                && !(spotifyAccessHost != null && spotifyResourceHost != null && pageSize != null);
-             index++) {
-            if (args[index].equals(accessCommandLineArgument) && ((args.length - 1) >= index)) {
+    public void initializeProperties(String[] args) throws IOException {
+        initializePropertiesFromCommandLineArguments(args);
+        initializePropertiesFromPropertyFile();
+    }
+
+    private void initializePropertiesFromCommandLineArguments(String[] args) {
+        for (int index = 0; isNotLastArgument(args, index) && !allCommandLinePropertiesInitialized(); index++) {
+            if (args[index].equals("-access")) {
                 spotifyAccessHost = args[index + 1];
             }
 
-            if (args[index].equals(resourceCommandLineArgument) && ((args.length - 1) >= index)) {
+            if (args[index].equals("-resource")) {
                 spotifyResourceHost = args[index + 1];
             }
 
-            if (args[index].equals(pageCommandLineArgument) && ((args.length - 1) >= index)) {
+            if (args[index].equals("-page")) {
                 pageSize = Integer.parseInt(args[index + 1]);
             }
         }
+    }
 
-        // Initialize authentication with defaults
+    private void initializePropertiesFromPropertyFile() throws IOException {
         final String propertiesFileName = "application.properties";
         Properties properties = new Properties();
         properties.load(Objects.requireNonNull(
@@ -42,35 +46,22 @@ public class AdvisorProperties {
         spotifyClientId = properties.getProperty("spotify.clientid");
         spotifyClientSecret = properties.getProperty("spotify.client_secret");
         redirectUri = properties.getProperty("redirect_uri");
-        spotifyAccessHost = Optional.ofNullable(spotifyAccessHost)
-                .orElse(properties.getProperty("spotify.default_access_host"));
-        spotifyResourceHost = Optional.ofNullable(spotifyResourceHost)
-                .orElse(properties.getProperty("spotify.default_resource_host"));
-        pageSize = Optional.ofNullable(pageSize)
-                .orElse(Integer.parseInt(properties.getProperty("page_size")));
+        spotifyAccessHost = spotifyAccessHost != null
+                ? spotifyAccessHost
+                : properties.getProperty("spotify.default_access_host");
+        spotifyResourceHost = spotifyResourceHost != null
+                ? spotifyResourceHost
+                : properties.getProperty("spotify.default_resource_host");
+        pageSize = pageSize != null
+                ? pageSize
+                : Integer.parseInt(properties.getProperty("page_size"));
     }
 
-    String getSpotifyClientId() {
-        return spotifyClientId;
+    private boolean isNotLastArgument(String[] args, int index) {
+        return index < (args.length - 1);
     }
 
-    String getSpotifyClientSecret() {
-        return spotifyClientSecret;
-    }
-
-    String getRedirectUri() {
-        return redirectUri;
-    }
-
-    String getSpotifyAccessHost() {
-        return spotifyAccessHost;
-    }
-
-    String getSpotifyResourceHost() {
-        return spotifyResourceHost;
-    }
-
-    int getPageSize() {
-        return pageSize;
+    private boolean allCommandLinePropertiesInitialized() {
+        return spotifyAccessHost != null && spotifyResourceHost != null && pageSize != null;
     }
 }
