@@ -23,7 +23,7 @@ public class AdvisorProperties {
     }
 
     private void initializePropertiesFromCommandLineArguments(String[] args) {
-        for (int index = 0; isNotLastArgument(args, index) && !allCommandLinePropertiesInitialized(); index++) {
+        for (int index = 0; isNotLastCommandLineArgument(args, index) && !allCommandLinePropertiesInitialized(); index++) {
             if (args[index].equals("-access")) {
                 spotifyAccessHost = args[index + 1];
             }
@@ -57,7 +57,7 @@ public class AdvisorProperties {
                 : Integer.parseInt(properties.getProperty("page_size"));
     }
 
-    private boolean isNotLastArgument(String[] args, int index) {
+    private boolean isNotLastCommandLineArgument(String[] args, int index) {
         return index < (args.length - 1);
     }
 
