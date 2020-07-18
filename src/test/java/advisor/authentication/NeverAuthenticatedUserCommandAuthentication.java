@@ -3,8 +3,7 @@ package advisor.authentication;
 public class NeverAuthenticatedUserCommandAuthentication implements UserCommandAuthentication {
 
     @Override
-    public boolean authenticate() {
-        return false;
+    public void authenticate() {
     }
 
     @Override

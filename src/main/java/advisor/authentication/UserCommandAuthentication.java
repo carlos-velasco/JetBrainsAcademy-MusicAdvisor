@@ -2,7 +2,7 @@ package advisor.authentication;
 
 public interface UserCommandAuthentication {
 
-    boolean authenticate();
+    void authenticate();
 
     boolean isAuthenticated();
 

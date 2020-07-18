@@ -18,23 +18,22 @@ public class SpotifyOAuthUserCommandAuthentication implements UserCommandAuthent
     private final CommandLineView commandLineView;
 
     @Override
-    public boolean authenticate() {
+    public void authenticate() {
         try {
             final Optional<String> accessCode = spotifyAccessCodeFetcher.fetchAccessCode();
             if (accessCode.isEmpty()) {
                 commandLineView.printMessage("code not received");
-                return false;
+                return;
             }
             commandLineView.printMessage("code received");
 
             final Optional<String> accessToken = spotifyAccessTokenFetcher.fetchAccessToken(accessCode.get());
             if (accessToken.isEmpty()) {
                 commandLineView.printMessage("token not received");
-                return false;
+                return;
             }
             isAuthenticated = true;
             this.accessToken = accessToken.get();
-            return true;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -1,7 +1,6 @@
 package advisor.authentication;
 
 import advisor.view.CommandLineView;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -15,6 +14,7 @@ import java.util.Scanner;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -40,12 +40,11 @@ public final class SpotifyOAuthUserCommandAuthenticationTest {
                 new SpotifyOAuthUserCommandAuthentication(spotifyAccessCodeFetcher, spotifyAccessTokenFetcher, commandLineView);
 
         // WHEN
-        boolean result = target.authenticate();
+        target.authenticate();
 
         // THEN
-        Assert.assertThat(result, is(true));
-        Assert.assertThat(target.getAccessToken(), is(accessToken));
-        Assert.assertThat(target.isAuthenticated(), is(true));
+        assertThat(target.getAccessToken(), is(accessToken));
+        assertThat(target.isAuthenticated(), is(true));
     }
 
     @Test
@@ -68,7 +67,7 @@ public final class SpotifyOAuthUserCommandAuthenticationTest {
 
         // THEN
         String expectedMessages = "code received" + System.lineSeparator();
-        Assert.assertThat(output.toString(), is(expectedMessages));
+        assertThat(output.toString(), is(expectedMessages));
     }
 
     @Test
@@ -85,12 +84,11 @@ public final class SpotifyOAuthUserCommandAuthenticationTest {
                 new SpotifyOAuthUserCommandAuthentication(spotifyAccessCodeFetcher, spotifyAccessTokenFetcher, commandLineView);
 
         // WHEN
-        boolean result = target.authenticate();
+        target.authenticate();
 
         // THEN
-        Assert.assertThat(result, is(false));
-        Assert.assertThat(target.getAccessToken(), nullValue());
-        Assert.assertThat(target.isAuthenticated(), is(false));
+        assertThat(target.getAccessToken(), nullValue());
+        assertThat(target.isAuthenticated(), is(false));
     }
 
     @Test
@@ -112,7 +110,7 @@ public final class SpotifyOAuthUserCommandAuthenticationTest {
         // THEN
         String expectedMessages = "code received" + System.lineSeparator()
                 + "token not received" + System.lineSeparator();
-        Assert.assertThat(output.toString(), is(expectedMessages));
+        assertThat(output.toString(), is(expectedMessages));
     }
 
     @Test
@@ -126,12 +124,11 @@ public final class SpotifyOAuthUserCommandAuthenticationTest {
         SpotifyOAuthUserCommandAuthentication target = new SpotifyOAuthUserCommandAuthentication(spotifyAccessCodeFetcher, spotifyAccessTokenFetcher, commandLineView);
 
         // WHEN
-        boolean result = target.authenticate();
+        target.authenticate();
 
         // THEN
-        Assert.assertThat(result, is(false));
-        Assert.assertThat(target.getAccessToken(), nullValue());
-        Assert.assertThat(target.isAuthenticated(), is(false));
+        assertThat(target.getAccessToken(), nullValue());
+        assertThat(target.isAuthenticated(), is(false));
     }
 
     @Test
@@ -149,6 +146,6 @@ public final class SpotifyOAuthUserCommandAuthenticationTest {
 
         // THEN
         String expectedMessages = "code not received" + System.lineSeparator();
-        Assert.assertThat(output.toString(), is(expectedMessages));
+        assertThat(output.toString(), is(expectedMessages));
     }
 }

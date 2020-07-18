@@ -3,7 +3,6 @@ package advisor.controller;
 import advisor.authentication.UserCommandAuthentication;
 import advisor.model.*;
 import advisor.model.service.Advisor;
-import advisor.model.AdvisorException;
 import advisor.view.CommandLineView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -89,7 +88,8 @@ public final class CommandLineController {
                     view.printMessage("---GOODBYE!---");
                     break;
                 case AUTH:
-                    if (userCommandAuthentication.authenticate()) {
+                    userCommandAuthentication.authenticate();
+                    if (userCommandAuthentication.isAuthenticated()){
                         view.printMessage("Success!");
                     }
                     break;

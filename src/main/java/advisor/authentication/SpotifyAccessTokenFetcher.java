@@ -3,6 +3,7 @@ package advisor.authentication;
 import advisor.view.CommandLineView;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.utils.URIBuilder;
 
@@ -15,6 +16,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 public class SpotifyAccessTokenFetcher {
 
     private final String spotifyAccessHost;
@@ -23,19 +25,6 @@ public class SpotifyAccessTokenFetcher {
     private final String redirectUri;
     private final CommandLineView commandLineView;
     private final HttpClient client = HttpClient.newHttpClient();
-
-    public SpotifyAccessTokenFetcher(
-            String spotifyAccessHost,
-            String clientId,
-            String clientSecret,
-            String redirectUri,
-            CommandLineView commandLineView) {
-        this.spotifyAccessHost = spotifyAccessHost;
-        this.clientId = clientId;
-        this.clientSecret = clientSecret;
-        this.redirectUri = redirectUri;
-        this.commandLineView = commandLineView;
-    }
 
     public Optional<String> fetchAccessToken(String accessCode) throws URISyntaxException, IOException, InterruptedException {
         URIBuilder uriBuilder = new URIBuilder(this.spotifyAccessHost)

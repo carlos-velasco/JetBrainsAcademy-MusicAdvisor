@@ -3,8 +3,7 @@ package advisor.authentication;
 public class AlwaysAuthenticatedUserCommandAuthentication implements UserCommandAuthentication {
 
     @Override
-    public boolean authenticate() {
-        return true;
+    public void authenticate() {
     }
 
     @Override
