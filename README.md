@@ -6,7 +6,7 @@ This repository contains my implementation of the [Music Advisor](https://hypers
 ## Configuration
 This Java application interacts with Spotify's API via a [Spotify application](https://developer.spotify.com/). 
 
-Some data of the Spotify application must be specified in `application.properties`: Client ID, Client Secret, and Redirect URI.
+Some data of the Spotify application must be specified in [`application.properties`](https://github.com/carlos-velasco/JetBrainsAcademy-MusicAdvisor/blob/master/src/main/resources/application.properties): Client ID, Client Secret, and Redirect URI.
 ```
 spotify.clientid=your_spotify_app_client_id
 spotify.client_secret=your_spotify_app_client_secret
