@@ -1,11 +1,12 @@
 package advisor.authentication;
 
+import advisor.model.service.SpotifyAdvisorException;
 import advisor.view.CommandLineView;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.io.IOException;
 
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Service("userCommandAuthentication")
@@ -20,23 +21,26 @@ public class SpotifyOAuthUserCommandAuthentication implements UserCommandAuthent
     @Override
     public void authenticate() {
         try {
-            final Optional<String> accessCode = spotifyAccessCodeFetcher.fetchAccessCode();
-            if (accessCode.isEmpty()) {
-                commandLineView.printMessage("code not received");
-                return;
-            }
-            commandLineView.printMessage("code received");
-
-            final Optional<String> accessToken = spotifyAccessTokenFetcher.fetchAccessToken(accessCode.get());
-            if (accessToken.isEmpty()) {
-                commandLineView.printMessage("token not received");
-                return;
-            }
-            isAuthenticated = true;
-            this.accessToken = accessToken.get();
+            fetchAccessCodeAndAccessToken();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new SpotifyAdvisorException(e);
         }
+    }
+
+    private void fetchAccessCodeAndAccessToken() throws IOException, InterruptedException {
+        spotifyAccessCodeFetcher.fetchAccessCode().ifPresentOrElse(
+                accessCode -> {
+                    commandLineView.printMessage("code received");
+                    fetchAccessTokenAndSetAuthenticationState(accessCode); },
+                () -> commandLineView.printMessage("code not received"));
+    }
+
+    private void fetchAccessTokenAndSetAuthenticationState(String accessCode) {
+        spotifyAccessTokenFetcher.fetchAccessToken(accessCode).ifPresentOrElse(
+                token -> {
+                    this.accessToken = token;
+                    isAuthenticated = true; },
+                () -> commandLineView.printMessage("token not received"));
     }
 
     @Override
