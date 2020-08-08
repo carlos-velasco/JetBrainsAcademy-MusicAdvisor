@@ -2,6 +2,7 @@ package advisor.controller;
 
 import advisor.authentication.UserCommandAuthentication;
 import advisor.model.*;
+import advisor.model.dto.CommandLinePrintable;
 import advisor.model.service.Advisor;
 import advisor.view.CommandLineView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public final class CommandLineController {
 
     private final CommandLineView view;
     private final UserCommandAuthentication userCommandAuthentication;
-    private PageableSpotifyModel pageableSpotifyModel;
+    private PageableSpotifyModel<? extends CommandLinePrintable> pageableSpotifyModel;
 
     private final Categories categories;
     private final FeaturedPlaylists featuredPlaylists;
