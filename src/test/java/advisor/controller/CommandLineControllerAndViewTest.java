@@ -3,7 +3,6 @@ package advisor.controller;
 import advisor.authentication.AlwaysAuthenticatedUserCommandAuthentication;
 import advisor.authentication.NeverAuthenticatedUserCommandAuthentication;
 import advisor.authentication.UserCommandAuthentication;
-import advisor.model.AdvisorException;
 import advisor.model.dto.Category;
 import advisor.model.service.Advisor;
 import advisor.model.service.FakeAdvisor;
@@ -30,7 +29,7 @@ public final class CommandLineControllerAndViewTest {
     private UserCommandAuthentication userCommandAuthentication = new AlwaysAuthenticatedUserCommandAuthentication();
 
     @Test
-    public void whenInputNew_thenNewReleasesFirstPageIsPrinted() throws AdvisorException {
+    public void whenInputNew_thenNewReleasesFirstPageIsPrinted() {
         // GIVEN
         String input = "new";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
@@ -49,7 +48,7 @@ public final class CommandLineControllerAndViewTest {
     }
 
     @Test
-    public void whenInputFeatured_thenFeaturedPlaylistsArePrinted() throws AdvisorException {
+    public void whenInputFeatured_thenFeaturedPlaylistsArePrinted() {
         // GIVEN
         String input = "featured";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
@@ -69,7 +68,7 @@ public final class CommandLineControllerAndViewTest {
     }
 
     @Test
-    public void whenInputCategories_thenCategoriesArePrinted() throws AdvisorException {
+    public void whenInputCategories_thenCategoriesArePrinted() {
         // GIVEN
         String input = "categories";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
@@ -88,7 +87,7 @@ public final class CommandLineControllerAndViewTest {
     }
 
     @Test
-    public void whenInputPlaylistsAndExistingCategory_thenCategoryPlaylistsArePrinted() throws AdvisorException {
+    public void whenInputPlaylistsAndExistingCategory_thenCategoryPlaylistsArePrinted() {
         // GIVEN
         String input = "playlists Good mood";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
@@ -168,7 +167,7 @@ public final class CommandLineControllerAndViewTest {
     }
 
     @Test
-    public void givenCategoriesFirstPageHasBeenDisplayed_whenUserInputsNext_thenNextCategoriesPageIsDisplayed() throws AdvisorException {
+    public void givenCategoriesFirstPageHasBeenDisplayed_whenUserInputsNext_thenNextCategoriesPageIsDisplayed() {
         // GIVEN
         String input = "categories" + System.lineSeparator() + "next";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
@@ -189,7 +188,7 @@ public final class CommandLineControllerAndViewTest {
     }
 
     @Test
-    public void givenCategoriesFirstTwoPagesHasBeenDisplayed_whenUserInputsPrev_thenPreviousCategoriesPageIsDisplayed() throws AdvisorException {
+    public void givenCategoriesFirstTwoPagesHasBeenDisplayed_whenUserInputsPrev_thenPreviousCategoriesPageIsDisplayed() {
         // GIVEN
         String input = "categories" + System.lineSeparator() + "next" + System.lineSeparator() + "prev";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
@@ -211,7 +210,7 @@ public final class CommandLineControllerAndViewTest {
     }
 
     @Test
-    public void givenNewReleasesFirstPageHasBeenDisplayed_whenUserInputsNext_thenNextNewReleasesPageIsDisplayed() throws AdvisorException {
+    public void givenNewReleasesFirstPageHasBeenDisplayed_whenUserInputsNext_thenNextNewReleasesPageIsDisplayed() {
         // GIVEN
         String input = "new" + System.lineSeparator() + "next";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
@@ -232,7 +231,7 @@ public final class CommandLineControllerAndViewTest {
     }
 
     @Test
-    public void givenNewReleasesFirstTwoPagesHasBeenDisplayed_whenUserInputsPrev_thenPreviousNewReleasesPageIsDisplayed() throws AdvisorException {
+    public void givenNewReleasesFirstTwoPagesHasBeenDisplayed_whenUserInputsPrev_thenPreviousNewReleasesPageIsDisplayed() {
         // GIVEN
         String input = "new" + System.lineSeparator() + "next" + System.lineSeparator() + "prev";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
@@ -254,7 +253,7 @@ public final class CommandLineControllerAndViewTest {
     }
 
     @Test
-    public void givenFeaturedPlaylistsFirstPageHasBeenDisplayed_whenUserInputsNext_thenNextFeaturedPlaylistsPageIsDisplayed() throws AdvisorException {
+    public void givenFeaturedPlaylistsFirstPageHasBeenDisplayed_whenUserInputsNext_thenNextFeaturedPlaylistsPageIsDisplayed() {
         // GIVEN
         String input = "featured" + System.lineSeparator() + "next";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
@@ -275,7 +274,7 @@ public final class CommandLineControllerAndViewTest {
     }
 
     @Test
-    public void givenFeaturedPlaylistsFirstTwoPagesHasBeenDisplayed_whenUserInputsPrev_thenPreviousFeaturedPlaylistsPageIsDisplayed() throws AdvisorException {
+    public void givenFeaturedPlaylistsFirstTwoPagesHasBeenDisplayed_whenUserInputsPrev_thenPreviousFeaturedPlaylistsPageIsDisplayed() {
         // GIVEN
         String input = "featured" + System.lineSeparator() + "next" + System.lineSeparator() + "prev";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
@@ -297,7 +296,7 @@ public final class CommandLineControllerAndViewTest {
     }
 
     @Test
-    public void givenPlaylistsByCategoryFirstPageHasBeenDisplayed_whenUserInputsNext_thenNextPlaylistsByCategoryPageIsDisplayed() throws AdvisorException {
+    public void givenPlaylistsByCategoryFirstPageHasBeenDisplayed_whenUserInputsNext_thenNextPlaylistsByCategoryPageIsDisplayed() {
         // GIVEN
         String input = "playlists Good mood" + System.lineSeparator() + "next";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
@@ -318,7 +317,7 @@ public final class CommandLineControllerAndViewTest {
     }
 
     @Test
-    public void givenPlaylistsByCategoryFirstTwoPagesHasBeenDisplayed_whenUserInputsPrev_thenPreviousPlaylistsByCategoryPageIsDisplayed() throws AdvisorException {
+    public void givenPlaylistsByCategoryFirstTwoPagesHasBeenDisplayed_whenUserInputsPrev_thenPreviousPlaylistsByCategoryPageIsDisplayed() {
         // GIVEN
         String input = "playlists Good mood" + System.lineSeparator() + "next" + System.lineSeparator() + "prev";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());

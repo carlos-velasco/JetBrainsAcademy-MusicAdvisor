@@ -45,7 +45,7 @@ public class CategoriesTest {
     private Categories target;
 
     @Before
-    public void prepareTarget() throws AdvisorException {
+    public void prepareTarget() {
         target = new Categories(advisor, pageSize);
         when(advisor.getCategories(1)).thenReturn(CATEGORIES_FIRST_PAGE);
         when(advisor.getCategories(2)).thenReturn(CATEGORIES_SECOND_PAGE);
@@ -53,7 +53,7 @@ public class CategoriesTest {
     }
 
     @Test
-    public void whenGettingTheFirstCategoriesPage_thenTheFirstCategoriesPageIsReturned() throws AdvisorException {
+    public void whenGettingTheFirstCategoriesPage_thenTheFirstCategoriesPageIsReturned() {
         // WHEN
         Page<Category> categoryPage = target.firstPage();
 
@@ -82,7 +82,7 @@ public class CategoriesTest {
     }
 
     @Test
-    public void givenFirstCategoriesPageHasBeenObtained_whenGettingTheNextCategoriesPage_thenTheNextCategoryPageIsReturned() throws AdvisorException {
+    public void givenFirstCategoriesPageHasBeenObtained_whenGettingTheNextCategoriesPage_thenTheNextCategoryPageIsReturned() {
         // GIVEN
         target.firstPage();
 
@@ -94,7 +94,7 @@ public class CategoriesTest {
     }
 
     @Test
-    public void givenAllWholeCategoriesPagesHaveBeenObtained_whenGettingTheNextCategoriesPage_thenTheLastCategoryPageIsReturned() throws AdvisorException {
+    public void givenAllWholeCategoriesPagesHaveBeenObtained_whenGettingTheNextCategoriesPage_thenTheLastCategoryPageIsReturned() {
         // GIVEN
         target.firstPage();
         target.nextPage();
@@ -107,7 +107,7 @@ public class CategoriesTest {
     }
 
     @Test
-    public void givenAllNextCategoryPagesHaveBeenObtained_whenGettingTheNextCategoriesPage_thenAnExceptionIsThrown() throws AdvisorException {
+    public void givenAllNextCategoryPagesHaveBeenObtained_whenGettingTheNextCategoriesPage_thenAnExceptionIsThrown() {
         // GIVEN
         target.firstPage();
         target.nextPage();
@@ -123,7 +123,7 @@ public class CategoriesTest {
     }
 
     @Test
-    public void givenFirstCategoriesPageHasBeenObtained_whenGettingThePreviousCategoriesPage_thenAnExceptionIsThrown() throws AdvisorException {
+    public void givenFirstCategoriesPageHasBeenObtained_whenGettingThePreviousCategoriesPage_thenAnExceptionIsThrown() {
         // GIVEN
         target.firstPage();
 
@@ -136,7 +136,7 @@ public class CategoriesTest {
     }
 
     @Test
-    public void givenFirstTwoCategoriesPagesHaveBeenObtained_whenGettingThePreviousCategoriesPage_thenFirstPageIsObtained() throws AdvisorException {
+    public void givenFirstTwoCategoriesPagesHaveBeenObtained_whenGettingThePreviousCategoriesPage_thenFirstPageIsObtained() {
         // GIVEN
         target.firstPage();
         target.nextPage();
@@ -149,7 +149,7 @@ public class CategoriesTest {
     }
 
     @Test
-    public void givenFirstTwoCategoriesPagesHaveBeenObtainedAndOnePreviousCategoryPageHasBeenObtained_whenGettingThePreviousCategoriesPage_thenAnExceptionIsThrown() throws AdvisorException {
+    public void givenFirstTwoCategoriesPagesHaveBeenObtainedAndOnePreviousCategoryPageHasBeenObtained_whenGettingThePreviousCategoriesPage_thenAnExceptionIsThrown() {
         // GIVEN
         target.firstPage();
         target.nextPage();
@@ -164,7 +164,7 @@ public class CategoriesTest {
     }
 
     @Test
-    public void givenAllNextCategoriesPagesHaveBeenObtained_whenGettingFirstCategoriesPage_thenFirstCategoriesPageIsObtained() throws AdvisorException {
+    public void givenAllNextCategoriesPagesHaveBeenObtained_whenGettingFirstCategoriesPage_thenFirstCategoriesPageIsObtained() {
         // GIVEN
         target.firstPage();
         target.nextPage();

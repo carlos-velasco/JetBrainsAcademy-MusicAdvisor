@@ -1,7 +1,6 @@
 package advisor.model.service;
 
 import advisor.authentication.UserCommandAuthenticationFacade;
-import advisor.model.AdvisorException;
 import advisor.model.deserializer.PageDeserializer;
 import advisor.model.deserializer.PlaylistDeserializer;
 import advisor.model.deserializer.ReleaseDeserializer;
@@ -24,33 +23,33 @@ public class SpotifyAdvisor implements Advisor {
     private final int pageSize;
 
     @Override
-    public Page<Category> getCategories(int pageNumber) throws AdvisorException {
+    public Page<Category> getCategories(int pageNumber) {
         return getResourcePage(CATEGORIES_RESOURCE_PATH, pageNumber,
                 CATEGORIES_ENTITY_KEY, Category.class);
     }
 
     @Override
-    public Page<Category> getCategories() throws AdvisorException {
+    public Page<Category> getCategories() {
         return getResourcePage(CATEGORIES_RESOURCE_PATH, null,
                 CATEGORIES_ENTITY_KEY, Category.class);
     }
 
     @Override
-    public Page<Release> getNewReleases(int pageNumber) throws AdvisorException {
+    public Page<Release> getNewReleases(int pageNumber) {
         return getResourcePage(
                 "new-releases", pageNumber,
                 "albums", Release.class);
     }
 
     @Override
-    public Page<Playlist> getCategoryPlaylists(Category category, int pageNumber) throws AdvisorException {
+    public Page<Playlist> getCategoryPlaylists(Category category, int pageNumber) {
         return getResourcePage(
                 "categories/" + category.getId() + "/playlists", pageNumber,
                 "playlists", Playlist.class);
     }
 
     @Override
-    public Page<Playlist> getFeaturedPlaylists(int pageNumber) throws AdvisorException {
+    public Page<Playlist> getFeaturedPlaylists(int pageNumber) {
         return getResourcePage(
                 "featured-playlists", pageNumber,
                 "playlists", Playlist.class);
@@ -60,7 +59,7 @@ public class SpotifyAdvisor implements Advisor {
             String resourcePath,
             Integer pageNumber,
             String entityKey,
-            Class<T> type) throws AdvisorException {
+            Class<T> type) {
 
         final Gson gson = new GsonBuilder()
                 .registerTypeAdapter(Release.class, new ReleaseDeserializer())

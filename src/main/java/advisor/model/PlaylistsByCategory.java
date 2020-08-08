@@ -17,7 +17,7 @@ public class PlaylistsByCategory extends SpotifyResourceCollection implements Pa
         this.advisor = advisor;
     }
 
-    public Page<Playlist> firstPage(String categoryName) throws AdvisorException {
+    public Page<Playlist> firstPage(String categoryName) {
         category = advisor.getCategories().getElements().stream()
                 .filter(cat -> cat.getName().equals(categoryName))
                 .findFirst()
@@ -29,7 +29,7 @@ public class PlaylistsByCategory extends SpotifyResourceCollection implements Pa
     }
 
     @Override
-    public Page<Playlist> nextPage() throws AdvisorException {
+    public Page<Playlist> nextPage() {
         validateCategory();
         validateNextPage(pageNumber);
         Page<Playlist> nextPage = advisor.getCategoryPlaylists(category, pageNumber + 1);
@@ -39,7 +39,7 @@ public class PlaylistsByCategory extends SpotifyResourceCollection implements Pa
     }
 
     @Override
-    public Page<Playlist> previousPage() throws AdvisorException {
+    public Page<Playlist> previousPage() {
         validateCategory();
         validatePreviousPage(pageNumber);
         Page<Playlist> previousPage = advisor.getCategoryPlaylists(category, pageNumber - 1);
@@ -48,7 +48,7 @@ public class PlaylistsByCategory extends SpotifyResourceCollection implements Pa
         return previousPage;
     }
 
-    private void validateCategory() throws AdvisorException {
+    private void validateCategory() {
         Optional.ofNullable(category)
                 .orElseThrow(() -> new AdvisorException("Category must be specified first"));
     }

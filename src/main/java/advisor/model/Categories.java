@@ -13,17 +13,17 @@ public class Categories extends SpotifyResourceCollection implements PageableSpo
         this.advisor = advisor;
     }
 
-    public Page<Category> firstPage() throws AdvisorException {
+    public Page<Category> firstPage() {
         return firstPage(advisor::getCategories);
     }
 
     @Override
-    public Page<Category> nextPage() throws AdvisorException {
+    public Page<Category> nextPage() {
         return nextPage(advisor::getCategories);
     }
 
     @Override
-    public Page<Category> previousPage() throws AdvisorException {
+    public Page<Category> previousPage() {
         return previousPage(advisor::getCategories);
     }
 }

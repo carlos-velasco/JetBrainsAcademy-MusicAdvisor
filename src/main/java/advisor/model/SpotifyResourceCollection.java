@@ -11,14 +11,14 @@ public abstract class SpotifyResourceCollection {
     protected int pageNumber;
     protected Integer totalResources;
 
-    protected <T extends CommandLinePrintable> Page<T> firstPage(SpotifyAdvisorFunction<Integer, Page<T>> advisorFunction) throws AdvisorException {
+    protected <T extends CommandLinePrintable> Page<T> firstPage(SpotifyAdvisorFunction<Integer, Page<T>> advisorFunction) {
         Page<T> firstPage = advisorFunction.apply(1);
         pageNumber = 1;
         totalResources = firstPage.getTotal();
         return firstPage;
     }
 
-    protected <T extends CommandLinePrintable> Page<T> nextPage(SpotifyAdvisorFunction<Integer, Page<T>> advisorFunction) throws AdvisorException {
+    protected <T extends CommandLinePrintable> Page<T> nextPage(SpotifyAdvisorFunction<Integer, Page<T>> advisorFunction) {
         validateNextPage(pageNumber);
         Page<T> nextPage = advisorFunction.apply(pageNumber + 1);
         totalResources = nextPage.getTotal();
@@ -26,7 +26,7 @@ public abstract class SpotifyResourceCollection {
         return nextPage;
     }
 
-    protected <T extends CommandLinePrintable> Page<T> previousPage(SpotifyAdvisorFunction<Integer, Page<T>> advisorFunction) throws AdvisorException {
+    protected <T extends CommandLinePrintable> Page<T> previousPage(SpotifyAdvisorFunction<Integer, Page<T>> advisorFunction) {
         validatePreviousPage(pageNumber);
         Page<T> previousPage = advisorFunction.apply(pageNumber - 1);
         totalResources = previousPage.getTotal();
@@ -34,13 +34,13 @@ public abstract class SpotifyResourceCollection {
         return previousPage;
     }
 
-    protected void validateNextPage(int currentPageNumber) throws AdvisorException {
+    protected void validateNextPage(int currentPageNumber) {
         if (totalResources ==  null || currentPageNumber * pageSize >= totalResources) {
             throw new AdvisorException("No more pages");
         }
     }
 
-    protected void validatePreviousPage(int currentPageNumber) throws AdvisorException {
+    protected void validatePreviousPage(int currentPageNumber) {
         if (currentPageNumber <= 1) {
             throw new AdvisorException("No previous pages");
         }
@@ -49,5 +49,5 @@ public abstract class SpotifyResourceCollection {
 
 @FunctionalInterface
 interface SpotifyAdvisorFunction<T, R> {
-    R apply(T t) throws AdvisorException;
+    R apply(T t);
 }

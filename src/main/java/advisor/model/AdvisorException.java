@@ -1,6 +1,6 @@
 package advisor.model;
 
-public class AdvisorException extends Exception {
+public class AdvisorException extends RuntimeException {
 
     public AdvisorException(String errorMessage) {
         super(errorMessage);

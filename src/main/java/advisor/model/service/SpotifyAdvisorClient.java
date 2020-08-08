@@ -1,6 +1,5 @@
 package advisor.model.service;
 
-import advisor.model.AdvisorException;
 import advisor.model.dto.CommandLinePrintable;
 import advisor.model.dto.Page;
 import feign.Headers;
@@ -21,7 +20,7 @@ public interface SpotifyAdvisorClient {
             @Param("limit") int limit,
             @Param("offset") int offset,
             @Param("country") String country,
-            @Param("locale") String locale) throws AdvisorException;
+            @Param("locale") String locale);
 
     @RequestLine("GET /v1/browse/{resourcePath}?country={country}&locale={locale}")
     @Headers({
@@ -32,5 +31,5 @@ public interface SpotifyAdvisorClient {
             @Param("resourcePath") String resourcePath,
             @Param("accessToken") String accessToken,
             @Param("country") String country,
-            @Param("locale") String locale) throws AdvisorException;
+            @Param("locale") String locale);
 }

@@ -61,7 +61,7 @@ public class PlaylistsByCategoryTest {
     private PlaylistsByCategory target;
 
     @Before
-    public void prepareTarget() throws AdvisorException {
+    public void prepareTarget() {
         target = new PlaylistsByCategory(advisor, pageSize);
         when(advisor.getCategoryPlaylists(EXISTING_CATEGORY, 1)).thenReturn(CATEGORY_PLAYLISTS_FIRST_PAGE);
         when(advisor.getCategoryPlaylists(EXISTING_CATEGORY, 2)).thenReturn(CATEGORY_PLAYLISTS_SECOND_PAGE);
@@ -70,7 +70,7 @@ public class PlaylistsByCategoryTest {
     }
 
     @Test
-    public void whenGettingTheFirstPlaylistsByCategoryPage_thenTheFirstPlaylistsByCategoryPageIsReturned() throws AdvisorException {
+    public void whenGettingTheFirstPlaylistsByCategoryPage_thenTheFirstPlaylistsByCategoryPageIsReturned() {
         // WHEN
         Page<Playlist> newReleasesPage = target.firstPage(EXISTING_CATEGORY.getName());
 
@@ -99,7 +99,7 @@ public class PlaylistsByCategoryTest {
     }
 
     @Test
-    public void givenFirstPlaylistsByCategoryPageHasBeenObtained_whenGettingTheNextPlaylistsByCategoryPage_thenTheNextPlaylistsByCategoryPageIsReturned() throws AdvisorException {
+    public void givenFirstPlaylistsByCategoryPageHasBeenObtained_whenGettingTheNextPlaylistsByCategoryPage_thenTheNextPlaylistsByCategoryPageIsReturned() {
         // GIVEN
         target.firstPage(EXISTING_CATEGORY.getName());
 
@@ -111,7 +111,7 @@ public class PlaylistsByCategoryTest {
     }
 
     @Test
-    public void givenAllWholePlaylistsByCategoryPagesHaveBeenObtained_whenGettingTheNextPlaylistsByCategoryPage_thenTheLastPlaylistsByCategoryPageIsReturned() throws AdvisorException {
+    public void givenAllWholePlaylistsByCategoryPagesHaveBeenObtained_whenGettingTheNextPlaylistsByCategoryPage_thenTheLastPlaylistsByCategoryPageIsReturned() {
         // GIVEN
         target.firstPage(EXISTING_CATEGORY.getName());
         target.nextPage();
@@ -124,7 +124,7 @@ public class PlaylistsByCategoryTest {
     }
 
     @Test
-    public void givenAllNextNewReleasePagesHaveBeenObtained_whenGettingTheNextPlaylistsByCategoryPage_thenAnExceptionIsThrown() throws AdvisorException {
+    public void givenAllNextNewReleasePagesHaveBeenObtained_whenGettingTheNextPlaylistsByCategoryPage_thenAnExceptionIsThrown() {
         // GIVEN
         target.firstPage(EXISTING_CATEGORY.getName());
         target.nextPage();
@@ -140,7 +140,7 @@ public class PlaylistsByCategoryTest {
     }
 
     @Test
-    public void givenFirstPlaylistsByCategoryPageHasBeenObtained_whenGettingThePreviousPlaylistsByCategoryPage_thenAnExceptionIsThrown() throws AdvisorException {
+    public void givenFirstPlaylistsByCategoryPageHasBeenObtained_whenGettingThePreviousPlaylistsByCategoryPage_thenAnExceptionIsThrown() {
         // GIVEN
         target.firstPage(EXISTING_CATEGORY.getName());
 
@@ -153,7 +153,7 @@ public class PlaylistsByCategoryTest {
     }
 
     @Test
-    public void givenFirstTwoPlaylistsByCategoryPagesHaveBeenObtained_whenGettingThePreviousPlaylistsByCategoryPage_thenFirstPageIsObtained() throws AdvisorException {
+    public void givenFirstTwoPlaylistsByCategoryPagesHaveBeenObtained_whenGettingThePreviousPlaylistsByCategoryPage_thenFirstPageIsObtained() {
         // GIVEN
         target.firstPage(EXISTING_CATEGORY.getName());
         target.nextPage();
@@ -166,7 +166,7 @@ public class PlaylistsByCategoryTest {
     }
 
     @Test
-    public void givenFirstTwoPlaylistsByCategoryPagesHaveBeenObtainedAndOnePreviousPlaylistsByCategoryPageHasBeenObtained_whenGettingThePreviousPlaylistsByCategoryPage_thenAnExceptionIsThrown() throws AdvisorException {
+    public void givenFirstTwoPlaylistsByCategoryPagesHaveBeenObtainedAndOnePreviousPlaylistsByCategoryPageHasBeenObtained_whenGettingThePreviousPlaylistsByCategoryPage_thenAnExceptionIsThrown() {
         // GIVEN
         target.firstPage(EXISTING_CATEGORY.getName());
         target.nextPage();
@@ -181,7 +181,7 @@ public class PlaylistsByCategoryTest {
     }
 
     @Test
-    public void givenAllNextPlaylistsByCategoryPagesHaveBeenObtained_whenGettingFirstPlaylistsByCategoryPage_thenFirstPlaylistsByCategoryPageIsObtained() throws AdvisorException {
+    public void givenAllNextPlaylistsByCategoryPagesHaveBeenObtained_whenGettingFirstPlaylistsByCategoryPage_thenFirstPlaylistsByCategoryPageIsObtained() {
         // GIVEN
         target.firstPage(EXISTING_CATEGORY.getName());
         target.nextPage();

@@ -13,17 +13,17 @@ public class NewReleases extends SpotifyResourceCollection implements PageableSp
         this.advisor = advisor;
     }
 
-    public Page<Release> firstPage() throws AdvisorException {
+    public Page<Release> firstPage() {
         return firstPage(advisor::getNewReleases);
     }
 
     @Override
-    public Page<Release> nextPage() throws AdvisorException {
+    public Page<Release> nextPage() {
         return nextPage(advisor::getNewReleases);
     }
 
     @Override
-    public Page<Release> previousPage() throws AdvisorException {
+    public Page<Release> previousPage() {
         return previousPage(advisor::getNewReleases);
     }
 }

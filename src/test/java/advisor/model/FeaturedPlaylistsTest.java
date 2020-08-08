@@ -50,7 +50,7 @@ public class FeaturedPlaylistsTest {
     private FeaturedPlaylists target;
 
     @Before
-    public void prepareTarget() throws AdvisorException {
+    public void prepareTarget() {
         target = new FeaturedPlaylists(advisor, pageSize);
         when(advisor.getFeaturedPlaylists(1)).thenReturn(FEATURED_PLAYLISTS_FIRST_PAGE);
         when(advisor.getFeaturedPlaylists(2)).thenReturn(FEATURED_PLAYLISTS_SECOND_PAGE);
@@ -58,7 +58,7 @@ public class FeaturedPlaylistsTest {
     }
 
     @Test
-    public void whenGettingTheFirstFeaturedPlaylistsPage_thenTheFirstFeaturedPlaylistsPageIsReturned() throws AdvisorException {
+    public void whenGettingTheFirstFeaturedPlaylistsPage_thenTheFirstFeaturedPlaylistsPageIsReturned() {
         // WHEN
         Page<Playlist> featuredPlaylistsPage = target.firstPage();
 
@@ -87,7 +87,7 @@ public class FeaturedPlaylistsTest {
     }
 
     @Test
-    public void givenFirstFeaturedPlaylistsPageHasBeenObtained_whenGettingTheNextFeaturedPlaylistsPage_thenTheNextFeaturedPlaylistsPageIsReturned() throws AdvisorException {
+    public void givenFirstFeaturedPlaylistsPageHasBeenObtained_whenGettingTheNextFeaturedPlaylistsPage_thenTheNextFeaturedPlaylistsPageIsReturned() {
         // GIVEN
         target.firstPage();
 
@@ -99,7 +99,7 @@ public class FeaturedPlaylistsTest {
     }
 
     @Test
-    public void givenAllWholeFeaturedPlaylistsPagesHaveBeenObtained_whenGettingTheNextFeaturedPlaylistsPage_thenTheLastFeaturedPlaylistsPageIsReturned() throws AdvisorException {
+    public void givenAllWholeFeaturedPlaylistsPagesHaveBeenObtained_whenGettingTheNextFeaturedPlaylistsPage_thenTheLastFeaturedPlaylistsPageIsReturned() {
         // GIVEN
         target.firstPage();
         target.nextPage();
@@ -112,7 +112,7 @@ public class FeaturedPlaylistsTest {
     }
 
     @Test
-    public void givenAllNextFeaturedPlaylistsPagesHaveBeenObtained_whenGettingTheNextFeaturedPlaylistsPage_thenAnExceptionIsThrown() throws AdvisorException {
+    public void givenAllNextFeaturedPlaylistsPagesHaveBeenObtained_whenGettingTheNextFeaturedPlaylistsPage_thenAnExceptionIsThrown() {
         // GIVEN
         target.firstPage();
         target.nextPage();
@@ -128,7 +128,7 @@ public class FeaturedPlaylistsTest {
     }
 
     @Test
-    public void givenFirstFeaturedPlaylistsPageHasBeenObtained_whenGettingThePreviousFeaturedPlaylistsPage_thenAnExceptionIsThrown() throws AdvisorException {
+    public void givenFirstFeaturedPlaylistsPageHasBeenObtained_whenGettingThePreviousFeaturedPlaylistsPage_thenAnExceptionIsThrown() {
         // GIVEN
         target.firstPage();
 
@@ -141,7 +141,7 @@ public class FeaturedPlaylistsTest {
     }
 
     @Test
-    public void givenFirstTwoFeaturedPlaylistsPagesHaveBeenObtained_whenGettingThePreviousFeaturedPlaylistsPage_thenFirstPageIsObtained() throws AdvisorException {
+    public void givenFirstTwoFeaturedPlaylistsPagesHaveBeenObtained_whenGettingThePreviousFeaturedPlaylistsPage_thenFirstPageIsObtained() {
         // GIVEN
         target.firstPage();
         target.nextPage();
@@ -154,7 +154,7 @@ public class FeaturedPlaylistsTest {
     }
 
     @Test
-    public void givenFirstTwoFeaturedPlaylistsPagesHaveBeenObtainedAndOnePreviousFeaturedPlaylistsPageHasBeenObtained_whenGettingThePreviousFeaturedPlaylistsPage_thenAnExceptionIsThrown() throws AdvisorException {
+    public void givenFirstTwoFeaturedPlaylistsPagesHaveBeenObtainedAndOnePreviousFeaturedPlaylistsPageHasBeenObtained_whenGettingThePreviousFeaturedPlaylistsPage_thenAnExceptionIsThrown() {
         // GIVEN
         target.firstPage();
         target.nextPage();
@@ -169,7 +169,7 @@ public class FeaturedPlaylistsTest {
     }
 
     @Test
-    public void givenAllNextFeaturedPlaylistsPagesHaveBeenObtained_whenGettingFirstFeaturedPlaylistsPage_thenFirstFeaturedPlaylistsPageIsObtained() throws AdvisorException {
+    public void givenAllNextFeaturedPlaylistsPagesHaveBeenObtained_whenGettingFirstFeaturedPlaylistsPage_thenFirstFeaturedPlaylistsPageIsObtained() {
         // GIVEN
         target.firstPage();
         target.nextPage();

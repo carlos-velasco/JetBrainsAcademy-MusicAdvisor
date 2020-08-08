@@ -61,7 +61,7 @@ public class NewReleasesTest {
     private NewReleases target;
 
     @Before
-    public void prepareTarget() throws AdvisorException {
+    public void prepareTarget() {
         target = new NewReleases(advisor, pageSize);
         when(advisor.getNewReleases(1)).thenReturn(NEW_RELEASES_FIRST_PAGE);
         when(advisor.getNewReleases(2)).thenReturn(NEW_RELEASES_SECOND_PAGE);
@@ -69,7 +69,7 @@ public class NewReleasesTest {
     }
 
     @Test
-    public void whenGettingTheFirstNewReleasesPage_thenTheFirstNewReleasesPageIsReturned() throws AdvisorException {
+    public void whenGettingTheFirstNewReleasesPage_thenTheFirstNewReleasesPageIsReturned() {
         // WHEN
         Page<Release> newReleasesPage = target.firstPage();
 
@@ -98,7 +98,7 @@ public class NewReleasesTest {
     }
 
     @Test
-    public void givenFirstNewReleasesPageHasBeenObtained_whenGettingTheNextNewReleasesPage_thenTheNextNewReleasesPageIsReturned() throws AdvisorException {
+    public void givenFirstNewReleasesPageHasBeenObtained_whenGettingTheNextNewReleasesPage_thenTheNextNewReleasesPageIsReturned() {
         // GIVEN
         target.firstPage();
 
@@ -110,7 +110,7 @@ public class NewReleasesTest {
     }
 
     @Test
-    public void givenAllWholeNewReleasesPagesHaveBeenObtained_whenGettingTheNextNewReleasesPage_thenTheLastNewReleasesPageIsReturned() throws AdvisorException {
+    public void givenAllWholeNewReleasesPagesHaveBeenObtained_whenGettingTheNextNewReleasesPage_thenTheLastNewReleasesPageIsReturned() {
         // GIVEN
         target.firstPage();
         target.nextPage();
@@ -123,7 +123,7 @@ public class NewReleasesTest {
     }
 
     @Test
-    public void givenAllNextNewReleasePagesHaveBeenObtained_whenGettingTheNextNewReleasesPage_thenAnExceptionIsThrown() throws AdvisorException {
+    public void givenAllNextNewReleasePagesHaveBeenObtained_whenGettingTheNextNewReleasesPage_thenAnExceptionIsThrown() {
         // GIVEN
         target.firstPage();
         target.nextPage();
@@ -138,7 +138,7 @@ public class NewReleasesTest {
     }
 
     @Test
-    public void givenFirstNewReleasesPageHasBeenObtained_whenGettingThePreviousNewReleasesPage_thenAnExceptionIsThrown() throws AdvisorException {
+    public void givenFirstNewReleasesPageHasBeenObtained_whenGettingThePreviousNewReleasesPage_thenAnExceptionIsThrown() {
         // GIVEN
         target.firstPage();
 
@@ -151,7 +151,7 @@ public class NewReleasesTest {
     }
 
     @Test
-    public void givenFirstTwoNewReleasesPagesHaveBeenObtained_whenGettingThePreviousNewReleasesPage_thenFirstPageIsObtained() throws AdvisorException {
+    public void givenFirstTwoNewReleasesPagesHaveBeenObtained_whenGettingThePreviousNewReleasesPage_thenFirstPageIsObtained() {
         // GIVEN
         target.firstPage();
         target.nextPage();
@@ -164,7 +164,7 @@ public class NewReleasesTest {
     }
 
     @Test
-    public void givenFirstTwoNewReleasesPagesHaveBeenObtainedAndOnePreviousNewReleasesPageHasBeenObtained_whenGettingThePreviousNewReleasesPage_thenAnExceptionIsThrown() throws AdvisorException {
+    public void givenFirstTwoNewReleasesPagesHaveBeenObtainedAndOnePreviousNewReleasesPageHasBeenObtained_whenGettingThePreviousNewReleasesPage_thenAnExceptionIsThrown() {
         // GIVEN
         target.firstPage();
         target.nextPage();
@@ -179,7 +179,7 @@ public class NewReleasesTest {
     }
 
     @Test
-    public void givenAllNextNewReleasesPagesHaveBeenObtained_whenGettingFirstNewReleasesPage_thenFirstNewReleasesPageIsObtained() throws AdvisorException {
+    public void givenAllNextNewReleasesPagesHaveBeenObtained_whenGettingFirstNewReleasesPage_thenFirstNewReleasesPageIsObtained() {
         // GIVEN
         target.firstPage();
         target.nextPage();

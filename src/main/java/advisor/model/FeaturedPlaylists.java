@@ -12,17 +12,17 @@ public class FeaturedPlaylists extends SpotifyResourceCollection implements Page
         this.advisor = advisor;
     }
 
-    public Page<Playlist> firstPage() throws AdvisorException {
+    public Page<Playlist> firstPage() {
         return firstPage(advisor::getFeaturedPlaylists);
     }
 
     @Override
-    public Page<Playlist> nextPage() throws AdvisorException {
+    public Page<Playlist> nextPage() {
         return nextPage(advisor::getFeaturedPlaylists);
     }
 
     @Override
-    public Page<Playlist> previousPage() throws AdvisorException {
+    public Page<Playlist> previousPage() {
         return previousPage(advisor::getFeaturedPlaylists);
     }
 }

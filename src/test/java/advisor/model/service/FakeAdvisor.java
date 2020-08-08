@@ -80,7 +80,7 @@ public final class FakeAdvisor implements Advisor {
     }
 
     @Override
-    public Page<Playlist> getCategoryPlaylists(Category category, int pageNumber) throws AdvisorException {
+    public Page<Playlist> getCategoryPlaylists(Category category, int pageNumber) {
         if (category.equals(new Category("Good mood", "goodMood"))) {
             if (pageNumber * pageSize > GOOD_MOOD_CATEGORY_PLAYLISTS.size()) {
                 return new Page<>(List.of(), GOOD_MOOD_CATEGORY_PLAYLISTS.size(), pageNumber);
