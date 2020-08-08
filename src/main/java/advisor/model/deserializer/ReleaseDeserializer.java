@@ -11,7 +11,7 @@ import java.util.List;
 public class ReleaseDeserializer implements JsonDeserializer<Release> {
 
     @Override
-    public Release deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+    public Release deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
         JsonObject jsonObject = json.getAsJsonObject();
         String title = jsonObject.get("name").getAsString();
         String link = jsonObject.getAsJsonObject("external_urls").get("spotify").getAsString();

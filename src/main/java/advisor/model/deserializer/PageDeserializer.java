@@ -2,7 +2,10 @@ package advisor.model.deserializer;
 
 import advisor.model.dto.CommandLinePrintable;
 import advisor.model.dto.Page;
-import com.google.gson.*;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import lombok.RequiredArgsConstructor;
 
@@ -17,7 +20,7 @@ public class PageDeserializer<T extends CommandLinePrintable> implements JsonDes
     private final int pageNumber;
 
     @Override
-    public Page <T> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+    public Page <T> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
         JsonObject collection = json.getAsJsonObject().get(entityKey).getAsJsonObject();
         return new Page<>(
                 context.deserialize(collection.getAsJsonArray("items"),
