@@ -11,24 +11,24 @@ public abstract class SpotifyResourceCollection {
     protected int pageNumber;
     protected Integer totalResources;
 
-    protected <T extends CommandLinePrintable> Page<T> firstPage(SpotifyAdvisorFunction<Integer, Page<T>> advisorFunction) {
-        Page<T> firstPage = advisorFunction.apply(1);
+    protected <T extends CommandLinePrintable> Page<T> firstPage(SpotifyResourcePageFetcher<Integer, Page<T>> resourcePageFetcher) {
+        Page<T> firstPage = resourcePageFetcher.getResourcePage(1);
         pageNumber = 1;
         totalResources = firstPage.getTotal();
         return firstPage;
     }
 
-    protected <T extends CommandLinePrintable> Page<T> nextPage(SpotifyAdvisorFunction<Integer, Page<T>> advisorFunction) {
+    protected <T extends CommandLinePrintable> Page<T> nextPage(SpotifyResourcePageFetcher<Integer, Page<T>> resourcePageFetcher) {
         ensureNextPage(pageNumber);
-        Page<T> nextPage = advisorFunction.apply(pageNumber + 1);
+        Page<T> nextPage = resourcePageFetcher.getResourcePage(pageNumber + 1);
         totalResources = nextPage.getTotal();
         pageNumber++;
         return nextPage;
     }
 
-    protected <T extends CommandLinePrintable> Page<T> previousPage(SpotifyAdvisorFunction<Integer, Page<T>> advisorFunction) {
+    protected <T extends CommandLinePrintable> Page<T> previousPage(SpotifyResourcePageFetcher<Integer, Page<T>> resourcePageFetcher) {
         ensurePreviousPage(pageNumber);
-        Page<T> previousPage = advisorFunction.apply(pageNumber - 1);
+        Page<T> previousPage = resourcePageFetcher.getResourcePage(pageNumber - 1);
         totalResources = previousPage.getTotal();
         pageNumber--;
         return previousPage;
@@ -48,6 +48,6 @@ public abstract class SpotifyResourceCollection {
 }
 
 @FunctionalInterface
-interface SpotifyAdvisorFunction<T, R> {
-    R apply(T t);
+interface SpotifyResourcePageFetcher<T, R> {
+    R getResourcePage(T t);
 }
