@@ -17,20 +17,22 @@ import java.util.Locale;
 @RequiredArgsConstructor
 public class SpotifyAdvisor implements Advisor {
 
+    private static final String CATEGORIES_RESOURCE_PATH = "categories";
+    private static final String CATEGORIES_ENTITY_KEY = "categories";
     private final String spotifyResourceHost;
     private final UserCommandAuthenticationFacade userCommandAuthenticationFacade;
     private final int pageSize;
 
     @Override
     public Page<Category> getCategories(int pageNumber) throws AdvisorException {
-        return getResourcePage("categories", pageNumber,
-                "categories", Category.class);
+        return getResourcePage(CATEGORIES_RESOURCE_PATH, pageNumber,
+                CATEGORIES_ENTITY_KEY, Category.class);
     }
 
     @Override
     public Page<Category> getCategories() throws AdvisorException {
-        return getResourcePage("categories", null,
-                "categories", Category.class);
+        return getResourcePage(CATEGORIES_RESOURCE_PATH, null,
+                CATEGORIES_ENTITY_KEY, Category.class);
     }
 
     @Override
