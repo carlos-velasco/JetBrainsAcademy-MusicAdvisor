@@ -6,7 +6,6 @@ import advisor.model.service.Advisor;
 import advisor.model.service.FakeAdvisor;
 import advisor.view.CommandLineView;
 import lombok.RequiredArgsConstructor;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -20,8 +19,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Scanner;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.not;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RequiredArgsConstructor
 @RunWith(Parameterized.class)
@@ -31,9 +29,9 @@ public final class CommandLineControllerAuthenticationTest {
     private final String userCommandInput;
     private final boolean needsAuthentication;
     private final int defaultPageSize = 5;
-    private CommandLineController target;
     private final ByteArrayOutputStream output = new ByteArrayOutputStream();
     private final Advisor advisor = new FakeAdvisor(defaultPageSize);
+    private CommandLineController target;
     private CommandLineView commandLineView;
 
     @Parameters(
@@ -63,9 +61,9 @@ public final class CommandLineControllerAuthenticationTest {
         target.processInput();
 
         // THEN
-        Assert.assertThat(output.toString().toLowerCase(), not(containsString(PROVIDE_ACCESS_MESSAGE)));
+        assertThat(output.toString().toLowerCase()).doesNotContain(PROVIDE_ACCESS_MESSAGE);
         if (!userCommandInput.equals("not supported")) {
-            Assert.assertThat(output.toString(), not(containsString("Unsupported operation")));
+            assertThat(output.toString()).doesNotContain("Unsupported operation");
         }
     }
 
@@ -81,12 +79,12 @@ public final class CommandLineControllerAuthenticationTest {
 
         // THEN
         if (needsAuthentication) {
-            Assert.assertThat(output.toString().toLowerCase(), containsString(PROVIDE_ACCESS_MESSAGE));
+            assertThat(output.toString()).containsIgnoringCase(PROVIDE_ACCESS_MESSAGE);
         } else {
-            Assert.assertThat(output.toString().toLowerCase(), not(containsString(PROVIDE_ACCESS_MESSAGE)));
+            assertThat(output.toString().toLowerCase()).doesNotContain(PROVIDE_ACCESS_MESSAGE);
         }
         if (!userCommandInput.equals("not supported")) {
-            Assert.assertThat(output.toString(), not(containsString("Unsupported operation")));
+            assertThat(output.toString()).doesNotContain("Unsupported operation");
         }
     }
 }

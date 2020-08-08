@@ -15,6 +15,7 @@ import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class SpotifyAdvisorTest {
 
@@ -56,13 +57,13 @@ public class SpotifyAdvisorTest {
         Page<Category> categories = target.getCategories(pageNumber);
 
         // THEN
-        Assertions.assertThat(categories.getElements())
+        assertThat(categories.getElements())
                 .as("Categories")
                 .containsExactlyElementsOf(expectedCategories);
-        Assertions.assertThat(categories.getTotal())
+        assertThat(categories.getTotal())
                 .as("Total")
                 .isEqualTo(total);
-        Assertions.assertThat(categories.getPageNumber())
+        assertThat(categories.getPageNumber())
                 .as("Page number")
                 .isEqualTo(pageNumber);
     }
@@ -162,10 +163,10 @@ public class SpotifyAdvisorTest {
         Page<Category> categories = target.getCategories();
 
         // THEN
-        Assertions.assertThat(categories.getElements())
+        assertThat(categories.getElements())
                 .as("Categories")
                 .containsExactlyElementsOf(expectedCategories);
-        Assertions.assertThat(categories.getTotal())
+        assertThat(categories.getTotal())
                 .as("Total")
                 .isEqualTo(total);
     }
@@ -208,7 +209,7 @@ public class SpotifyAdvisorTest {
         Throwable thrown = Assertions.catchThrowable(() -> target.getCategories(1));
 
         // THEN
-        Assertions.assertThat(thrown)
+        assertThat(thrown)
                 .isInstanceOf(AdvisorException.class).hasMessage(errorMessage);
     }
 
@@ -231,7 +232,7 @@ public class SpotifyAdvisorTest {
         Throwable thrown = Assertions.catchThrowable(() -> target.getCategories());
 
         // THEN
-        Assertions.assertThat(thrown)
+        assertThat(thrown)
                 .isInstanceOf(AdvisorException.class).hasMessage(errorMessage);
     }
 
@@ -260,13 +261,13 @@ public class SpotifyAdvisorTest {
         Page<Release> releases = target.getNewReleases(pageNumber);
 
         // THEN
-        Assertions.assertThat(releases.getElements())
+        assertThat(releases.getElements())
                 .as("New Releases")
                 .containsExactlyElementsOf(expectedReleases);
-        Assertions.assertThat(releases.getTotal())
+        assertThat(releases.getTotal())
                 .as("Total")
                 .isEqualTo(total);
-        Assertions.assertThat(releases.getPageNumber())
+        assertThat(releases.getPageNumber())
                 .as("Page number")
                 .isEqualTo(pageNumber);
     }
@@ -290,7 +291,7 @@ public class SpotifyAdvisorTest {
         Throwable thrown = Assertions.catchThrowable(() -> target.getNewReleases(1));
 
         // THEN
-        Assertions.assertThat(thrown).isInstanceOf(AdvisorException.class)
+        assertThat(thrown).isInstanceOf(AdvisorException.class)
                 .hasMessage(errorMessage);
     }
 
@@ -375,13 +376,13 @@ public class SpotifyAdvisorTest {
         Page<Playlist> featuredPlaylists = target.getFeaturedPlaylists(pageNumber);
 
         // THEN
-        Assertions.assertThat(featuredPlaylists.getElements())
+        assertThat(featuredPlaylists.getElements())
                 .as("Featured playlists")
                 .containsExactlyElementsOf(expectedFeaturedPlaylists);
-        Assertions.assertThat(featuredPlaylists.getTotal())
+        assertThat(featuredPlaylists.getTotal())
                 .as("Total")
                 .isEqualTo(total);
-        Assertions.assertThat(featuredPlaylists.getPageNumber())
+        assertThat(featuredPlaylists.getPageNumber())
                 .as("Page Number")
                 .isEqualTo(pageNumber);
     }
@@ -404,7 +405,7 @@ public class SpotifyAdvisorTest {
         Throwable thrown = Assertions.catchThrowable(() -> target.getFeaturedPlaylists(1));
 
         // THEN
-        Assertions.assertThat(thrown).isInstanceOf(AdvisorException.class)
+        assertThat(thrown).isInstanceOf(AdvisorException.class)
                 .hasMessage(errorMessage);
     }
 
@@ -490,13 +491,13 @@ public class SpotifyAdvisorTest {
         Page<Playlist> categoryPlaylists = target.getCategoryPlaylists(category, pageNumber);
 
         // THEN
-        Assertions.assertThat(categoryPlaylists.getElements())
+        assertThat(categoryPlaylists.getElements())
                 .as("Featured playlists")
                 .containsExactlyElementsOf(expectedCategoryPlaylists);
-        Assertions.assertThat(categoryPlaylists.getTotal())
+        assertThat(categoryPlaylists.getTotal())
                 .as("Total")
                 .isEqualTo(total);
-        Assertions.assertThat(categoryPlaylists.getPageNumber())
+        assertThat(categoryPlaylists.getPageNumber())
                 .as("Page Number")
                 .isEqualTo(pageNumber);
     }
@@ -522,7 +523,7 @@ public class SpotifyAdvisorTest {
         Throwable thrown = Assertions.catchThrowable(() -> target.getCategoryPlaylists(category, 1));
 
         // THEN
-        Assertions.assertThat(thrown).isInstanceOf(AdvisorException.class)
+        assertThat(thrown).isInstanceOf(AdvisorException.class)
                 .hasMessage(errorMessage);
     }
 

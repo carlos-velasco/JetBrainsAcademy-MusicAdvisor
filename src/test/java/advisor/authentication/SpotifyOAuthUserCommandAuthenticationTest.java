@@ -8,13 +8,10 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.net.URISyntaxException;
 import java.util.Optional;
 import java.util.Scanner;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -25,7 +22,7 @@ public final class SpotifyOAuthUserCommandAuthenticationTest {
     private final CommandLineView commandLineView = new CommandLineView(new Scanner(System.in), new PrintStream(output), 5);
 
     @Test
-    public void givenAccessTokenAndAuthTokenAreObtained_whenAuthenticating_thenAccessTokenIsPopulated() throws IOException, InterruptedException, URISyntaxException {
+    public void givenAccessTokenAndAuthTokenAreObtained_whenAuthenticating_thenAccessTokenIsPopulated() throws IOException, InterruptedException {
         // GIVEN
         String accessCode = "myAccessCode";
         String accessToken = "myAccessToken";
@@ -43,12 +40,12 @@ public final class SpotifyOAuthUserCommandAuthenticationTest {
         target.authenticate();
 
         // THEN
-        assertThat(target.getAccessToken(), is(accessToken));
-        assertThat(target.isAuthenticated(), is(true));
+        assertThat(target.getAccessToken()).isEqualTo(accessToken);
+        assertThat(target.isAuthenticated()).isTrue();
     }
 
     @Test
-    public void givenAccessTokenAndAuthTokenAreObtained_whenAuthenticating_thenSuccessMessagesAreWritten() throws IOException, InterruptedException, URISyntaxException {
+    public void givenAccessTokenAndAuthTokenAreObtained_whenAuthenticating_thenSuccessMessagesAreWritten() throws IOException, InterruptedException {
         // GIVEN
         String accessCode = "myAccessCode";
         String accessToken = "myAccessToken";
@@ -67,11 +64,11 @@ public final class SpotifyOAuthUserCommandAuthenticationTest {
 
         // THEN
         String expectedMessages = "code received" + System.lineSeparator();
-        assertThat(output.toString(), is(expectedMessages));
+        assertThat(output).hasToString(expectedMessages);
     }
 
     @Test
-    public void givenAccessCodeObtainedAndAccessTokenNotObtained_whenAuthenticating_thenAccessTokenIsPopulated() throws IOException, InterruptedException, URISyntaxException {
+    public void givenAccessCodeObtainedAndAccessTokenNotObtained_whenAuthenticating_thenAccessTokenIsPopulated() throws IOException, InterruptedException {
         // GIVEN
         String accessCode = "myAccessCode";
         SpotifyAccessCodeFetcher spotifyAccessCodeFetcher = mock(SpotifyAccessCodeFetcher.class);
@@ -87,12 +84,12 @@ public final class SpotifyOAuthUserCommandAuthenticationTest {
         target.authenticate();
 
         // THEN
-        assertThat(target.getAccessToken(), nullValue());
-        assertThat(target.isAuthenticated(), is(false));
+        assertThat(target.getAccessToken()).isNull();
+        assertThat(target.isAuthenticated()).isFalse();
     }
 
     @Test
-    public void givenAccessCodeObtainedAndAccessTokenNotObtained_whenAuthenticating_thenMessagesAreWritten() throws IOException, InterruptedException, URISyntaxException {
+    public void givenAccessCodeObtainedAndAccessTokenNotObtained_whenAuthenticating_thenMessagesAreWritten() throws IOException, InterruptedException {
         // GIVEN
         String accessCode = "myAccessCode";
 
@@ -110,7 +107,7 @@ public final class SpotifyOAuthUserCommandAuthenticationTest {
         // THEN
         String expectedMessages = "code received" + System.lineSeparator()
                 + "token not received" + System.lineSeparator();
-        assertThat(output.toString(), is(expectedMessages));
+        assertThat(output).hasToString(expectedMessages);
     }
 
     @Test
@@ -127,8 +124,8 @@ public final class SpotifyOAuthUserCommandAuthenticationTest {
         target.authenticate();
 
         // THEN
-        assertThat(target.getAccessToken(), nullValue());
-        assertThat(target.isAuthenticated(), is(false));
+        assertThat(target.getAccessToken()).isNull();
+        assertThat(target.isAuthenticated()).isFalse();
     }
 
     @Test
@@ -146,6 +143,6 @@ public final class SpotifyOAuthUserCommandAuthenticationTest {
 
         // THEN
         String expectedMessages = "code not received" + System.lineSeparator();
-        assertThat(output.toString(), is(expectedMessages));
+        assertThat(output).hasToString(expectedMessages);
     }
 }

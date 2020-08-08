@@ -6,7 +6,6 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.apache.http.HttpStatus;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,14 +19,15 @@ import java.util.Scanner;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public final class SpotifyAccessTokenFetcherTest {
-    private final String clientId = "myClientId";
-    private final String clientSecret = "myClientSecret";
-    private final String redirectUri = "myRedirectUri";
+    private static final String clientId = "myClientId";
+    private static final String clientSecret = "myClientSecret";
+    private static final String redirectUri = "myRedirectUri";
+    private static final String ACCESS_TOKEN = "BQBSZ0CA3KR0cf0LxmiNK_E87ZqnkJKDD89VOWAZ9f0QXJcsCiHtl5Om-" +
+            "EVhkIfwt1AZs5WeXgfEF69e4JxL3YX6IIW9zl9WegTmgLkb4xLXWwhryty488CLoL2SM9VIY6H" +
+            "aHgxYxdmRFGWSzrgH3dEqcvPoLpd26D8Y";
     private final ByteArrayOutputStream output = new ByteArrayOutputStream();
     private final CommandLineView commandLineView =
             new CommandLineView(new Scanner(System.in), new PrintStream(output), 5);
@@ -47,37 +47,28 @@ public final class SpotifyAccessTokenFetcherTest {
     @Test
     public void givenValidResponse_whenRequestingAccessToken_thenAccessTokenIsReturned() {
         // GIVEN
-        final String expectedAccessToken = "BQBSZ0CA3KR0cf0LxmiNK_E87ZqnkJKDD89VOWAZ9f0QXJcsCiHtl5Om-" +
-                "EVhkIfwt1AZs5WeXgfEF69e4JxL3YX6IIW9zl9WegTmgLkb4xLXWwhryty488CLoL2SM9VIY6H" +
-                "aHgxYxdmRFGWSzrgH3dEqcvPoLpd26D8Y";
-        final SpotifyAccessTokenResponse expectedResponse = buildValidResponseBody(expectedAccessToken);
-
         stubFor(post("/api/token")
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.SC_OK)
                         .withHeader("Content-Type", "application/json")
-                        .withBody(new Gson().toJson(expectedResponse))));
+                        .withBody(new Gson().toJson(buildValidResponseBody(ACCESS_TOKEN)))));
 
         // WHEN
         Optional<String> accessToken = target.fetchAccessToken("myAccessCode");
 
         // THEN
-        Assert.assertTrue(accessToken.isPresent());
-        assertThat(accessToken.get(), is(expectedAccessToken));
+        assertThat(accessToken).isNotEmpty().contains(ACCESS_TOKEN);
     }
 
     @Test
     public void givenValidResponse_whenRequestingAccessToken_thenSuccessfulMessagesAndAccessTokenArePrinted() {
         // GIVEN
-        String expectedAccessToken = "BQBSZ0CA3KR0cf0LxmiNK_E87ZqnkJKDD89VOWAZ9f0QXJcsCiHtl5Om-" +
-                "EVhkIfwt1AZs5WeXgfEF69e4JxL3YX6IIW9zl9WegTmgLkb4xLXWwhryty488CLoL2SM9VIY6H" +
-                "aHgxYxdmRFGWSzrgH3dEqcvPoLpd26D8Y";
-
+        final String requestBody = new Gson().toJson(buildValidResponseBody(ACCESS_TOKEN));
         stubFor(post("/api/token")
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.SC_OK)
                         .withHeader("Content-Type", "application/json")
-                        .withBody(new Gson().toJson(buildValidResponseBody(expectedAccessToken)))));
+                        .withBody(requestBody)));
 
         // WHEN
         target.fetchAccessToken("myAccessCode");
@@ -85,8 +76,8 @@ public final class SpotifyAccessTokenFetcherTest {
         // THEN
         String expectedMessages = "making http request for access_token..." + System.lineSeparator()
                 + "response:" + System.lineSeparator()
-                + new Gson().toJson(buildValidResponseBody(expectedAccessToken)) + System.lineSeparator();
-        assertThat(output.toString(), is(expectedMessages));
+                + requestBody + System.lineSeparator();
+        assertThat(output).hasToString(expectedMessages);
     }
 
     @Test
@@ -102,7 +93,7 @@ public final class SpotifyAccessTokenFetcherTest {
         Optional<String> accessToken = target.fetchAccessToken("myAccessCode");
 
         // THEN
-        assertFalse(accessToken.isPresent());
+        assertThat(accessToken).isEmpty();
     }
 
     @Test
@@ -122,20 +113,17 @@ public final class SpotifyAccessTokenFetcherTest {
                 + "Auth token not retrieved" + System.lineSeparator()
                 + "Status code: 400" + System.lineSeparator()
                 + "Response body: " + buildInvalidResponseBody() + System.lineSeparator();
-        assertThat(output.toString(), is(expectedMessages));
+        assertThat(output).hasToString(expectedMessages);
     }
 
     @Test
     public void givenValidResponse_whenRequestingAccessToken_thenCallDoneWithCorrectHeaderAndBody() {
         // GIVEN
-        String expectedAccessToken = "BQBSZ0CA3KR0cf0LxmiNK_E87ZqnkJKDD89VOWAZ9f0QXJcsCiHtl5Om-" +
-                "EVhkIfwt1AZs5WeXgfEF69e4JxL3YX6IIW9zl9WegTmgLkb4xLXWwhryty488CLoL2SM9VIY6H" +
-                "aHgxYxdmRFGWSzrgH3dEqcvPoLpd26D8Y";
         stubFor(post("/api/token")
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.SC_OK)
                         .withHeader("Content-Type", "application/json")
-                        .withBody(new Gson().toJson(buildValidResponseBody(expectedAccessToken)))));
+                        .withBody(new Gson().toJson(buildValidResponseBody(ACCESS_TOKEN)))));
 
         // WHEN
         String accessCode = "myAccessCode";

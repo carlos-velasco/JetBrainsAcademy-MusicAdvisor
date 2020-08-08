@@ -1,13 +1,12 @@
 package advisor;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Properties;
 
-import static org.hamcrest.Matchers.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public final class AdvisorPropertiesTest {
 
@@ -23,7 +22,7 @@ public final class AdvisorPropertiesTest {
         advisorProperties.initializeProperties(args);
 
         // THEN
-        Assert.assertThat(advisorProperties.getSpotifyAccessHost(), is(defaultSpotifyAccessHost));
+        assertThat(advisorProperties.getSpotifyAccessHost()).isEqualTo(defaultSpotifyAccessHost);
     }
 
     @Test
@@ -36,7 +35,7 @@ public final class AdvisorPropertiesTest {
         advisorProperties.initializeProperties(args);
 
         // THEN
-        Assert.assertThat(advisorProperties.getSpotifyAccessHost(), is(expectedSpotifyAccessHost));
+        assertThat(advisorProperties.getSpotifyAccessHost()).isEqualTo(expectedSpotifyAccessHost);
     }
 
     @Test
@@ -49,7 +48,7 @@ public final class AdvisorPropertiesTest {
         advisorProperties.initializeProperties(args);
 
         // THEN
-        Assert.assertThat(advisorProperties.getSpotifyResourceHost(), is(defaultSpotifyResourceHost));
+        assertThat(advisorProperties.getSpotifyResourceHost()).isEqualTo(defaultSpotifyResourceHost);
     }
 
     @Test
@@ -62,7 +61,7 @@ public final class AdvisorPropertiesTest {
         advisorProperties.initializeProperties(args);
 
         // THEN
-        Assert.assertThat(advisorProperties.getSpotifyResourceHost(), is(expectedSpotifyResourceHost));
+        assertThat(advisorProperties.getSpotifyResourceHost()).isEqualTo(expectedSpotifyResourceHost);
     }
 
     @Test
@@ -75,7 +74,7 @@ public final class AdvisorPropertiesTest {
         advisorProperties.initializeProperties(args);
 
         // THEN
-        Assert.assertThat(advisorProperties.getPageSize(), is(defaultPageSize));
+        assertThat(advisorProperties.getPageSize()).isEqualTo(defaultPageSize);
     }
 
     @Test
@@ -88,7 +87,7 @@ public final class AdvisorPropertiesTest {
         advisorProperties.initializeProperties(args);
 
         // THEN
-        Assert.assertThat(advisorProperties.getPageSize(), is(expectedPageSize));
+        assertThat(advisorProperties.getPageSize()).isEqualTo(expectedPageSize);
     }
 
     @Test
@@ -105,9 +104,9 @@ public final class AdvisorPropertiesTest {
         advisorProperties.initializeProperties(args);
 
         // THEN
-        Assert.assertThat(advisorProperties.getSpotifyResourceHost(), is(expectedSpotifyResourceHost));
-        Assert.assertThat(advisorProperties.getSpotifyAccessHost(), is(expectedSpotifyAccessHost));
-        Assert.assertThat(advisorProperties.getPageSize(), is(expectedPageSize));
+        assertThat(advisorProperties.getSpotifyResourceHost()).isEqualTo(expectedSpotifyResourceHost);
+        assertThat(advisorProperties.getSpotifyAccessHost()).isEqualTo(expectedSpotifyAccessHost);
+        assertThat(advisorProperties.getPageSize()).isEqualTo(expectedPageSize);
     }
 
     @Test
@@ -123,8 +122,8 @@ public final class AdvisorPropertiesTest {
         advisorProperties.initializeProperties(args);
 
         // THEN
-        Assert.assertThat(advisorProperties.getSpotifyClientId(), not(emptyOrNullString()));
-        Assert.assertThat(advisorProperties.getSpotifyClientId(), is(expectedSpotifyClientId));
+        assertThat(advisorProperties.getSpotifyClientId()).isNotEmpty();
+        assertThat(advisorProperties.getSpotifyClientId()).isEqualTo(expectedSpotifyClientId);
     }
 
     @Test
@@ -140,8 +139,8 @@ public final class AdvisorPropertiesTest {
         advisorProperties.initializeProperties(args);
 
         // THEN
-        Assert.assertThat(advisorProperties.getSpotifyClientSecret(), not(emptyOrNullString()));
-        Assert.assertThat(advisorProperties.getSpotifyClientSecret(), is(expectedSpotifyClientSecret));
+        assertThat(advisorProperties.getSpotifyClientSecret()).isNotEmpty();
+        assertThat(advisorProperties.getSpotifyClientSecret()).isEqualTo(expectedSpotifyClientSecret);
     }
 
     @Test
@@ -157,7 +156,7 @@ public final class AdvisorPropertiesTest {
         advisorProperties.initializeProperties(args);
 
         // THEN
-        Assert.assertThat(advisorProperties.getRedirectUri(), not(emptyOrNullString()));
-        Assert.assertThat(advisorProperties.getRedirectUri(), is(expectedRedirectUri));
+        assertThat(advisorProperties.getRedirectUri()).isNotEmpty();
+        assertThat(advisorProperties.getRedirectUri()).isEqualTo(expectedRedirectUri);
     }
 }

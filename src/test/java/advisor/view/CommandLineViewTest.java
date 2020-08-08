@@ -2,7 +2,6 @@ package advisor.view;
 
 import advisor.model.dto.Category;
 import advisor.model.dto.Page;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -10,7 +9,7 @@ import java.io.PrintStream;
 import java.util.List;
 import java.util.Scanner;
 
-import static org.hamcrest.core.Is.is;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class CommandLineViewTest {
 
@@ -28,7 +27,7 @@ public class CommandLineViewTest {
         target.printPage(page);
 
         // THEN
-        Assert.assertThat(output.toString(), is("---PAGE 1 OF 1---" + System.lineSeparator()));
+        assertThat(output).hasToString("---PAGE 1 OF 1---" + System.lineSeparator());
     }
 
     @Test
@@ -41,7 +40,7 @@ public class CommandLineViewTest {
         target.printPage(page);
 
         // THEN
-        Assert.assertThat(output.toString(), is("---PAGE 1 OF 1---" + System.lineSeparator()));
+        assertThat(output).hasToString("---PAGE 1 OF 1---" + System.lineSeparator());
     }
 
     @Test
@@ -54,6 +53,6 @@ public class CommandLineViewTest {
         target.printPage(page);
 
         // THEN
-        Assert.assertThat(output.toString(), is("---PAGE 1 OF 2---" + System.lineSeparator()));
+        assertThat(output).hasToString("---PAGE 1 OF 2---" + System.lineSeparator());
     }
 }

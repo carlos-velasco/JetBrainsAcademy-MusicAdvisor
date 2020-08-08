@@ -1,9 +1,11 @@
 package advisor.authentication;
 
 import advisor.view.CommandLineView;
-import org.apache.http.HttpStatus;
 import org.apache.http.client.utils.URIBuilder;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.ExternalResource;
 
 import java.io.ByteArrayOutputStream;
@@ -19,7 +21,8 @@ import java.util.Optional;
 import java.util.Scanner;
 import java.util.concurrent.*;
 
-import static org.hamcrest.core.Is.is;
+import static org.apache.http.HttpStatus.SC_OK;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public final class SpotifyAccessCodeFetcherTest {
     private final String spotifyAccessHost = "mySpotifyHost";
@@ -67,10 +70,8 @@ public final class SpotifyAccessCodeFetcherTest {
         executorService.awaitTermination(testExecutionServiceAwaitSeconds, TimeUnit.SECONDS);
         
         // THEN
-        Assert.assertTrue(result.isDone());
-        Optional<String> optionalAccessCode = result.get();
-        Assert.assertTrue(optionalAccessCode.isPresent());
-        Assert.assertThat(optionalAccessCode.get(), is(accessCode));
+        assertThat(result.isDone()).isTrue();
+        assertThat((result.get())).isNotEmpty().contains(accessCode);
     }
 
     @Test
@@ -89,9 +90,8 @@ public final class SpotifyAccessCodeFetcherTest {
         executorService.awaitTermination(testExecutionServiceAwaitSeconds, TimeUnit.SECONDS);
         
         // THEN
-        Assert.assertTrue(result.isDone());
-        Optional<String> optionalAccessCode = result.get();
-        Assert.assertTrue(optionalAccessCode.isEmpty());
+        assertThat(result.isDone()).isTrue();
+        assertThat((result.get())).isEmpty();
     }
 
     @Test
@@ -109,9 +109,8 @@ public final class SpotifyAccessCodeFetcherTest {
         executorService.awaitTermination(testExecutionServiceAwaitSeconds, TimeUnit.SECONDS);
         
         // THEN
-        Assert.assertTrue(result.isDone());
-        Optional<String> optionalAccessCode = result.get();
-        Assert.assertTrue(optionalAccessCode.isEmpty());
+        assertThat(result.isDone()).isTrue();
+        assertThat((result.get())).isEmpty();
     }
 
     @Test
@@ -135,7 +134,7 @@ public final class SpotifyAccessCodeFetcherTest {
         String expectedMessages = "use this link to request the access code:" + System.lineSeparator()
                 + accessCodeUrl + System.lineSeparator()
                 + "waiting for code..." + System.lineSeparator();
-        Assert.assertThat(output.toString(), is(expectedMessages));
+        assertThat(output).hasToString(expectedMessages);
     }
 
     @Test
@@ -154,9 +153,9 @@ public final class SpotifyAccessCodeFetcherTest {
         HttpResponse<String> httpResponse = client.send(request, BodyHandlers.ofString());
         executorService.awaitTermination(testExecutionServiceAwaitSeconds, TimeUnit.SECONDS);
 
-        // THEN        
-        Assert.assertThat(httpResponse.statusCode(), is(HttpStatus.SC_OK));
-        Assert.assertThat(httpResponse.body(), is("Got the code. Return back to your program."));
+        // THEN
+        assertThat(httpResponse.statusCode()).isEqualTo(SC_OK);
+        assertThat(httpResponse.body()).isEqualTo("Got the code. Return back to your program.");
     }
 
     @Test
@@ -174,9 +173,9 @@ public final class SpotifyAccessCodeFetcherTest {
         HttpResponse<String> httpResponse = client.send(request, BodyHandlers.ofString());
         executorService.awaitTermination(testExecutionServiceAwaitSeconds, TimeUnit.SECONDS);
 
-        // THEN        
-        Assert.assertThat(httpResponse.statusCode(), is(HttpStatus.SC_OK));
-        Assert.assertThat(httpResponse.body(), is("Not found authorization code. Try again."));
+        // THEN
+        assertThat(httpResponse.statusCode()).isEqualTo(SC_OK);
+        assertThat(httpResponse.body()).isEqualTo("Not found authorization code. Try again.");
     }
 
     @Test(timeout = testExecutionServiceAwaitSeconds * 1000)
@@ -188,9 +187,8 @@ public final class SpotifyAccessCodeFetcherTest {
         executorService.awaitTermination(testExecutionServiceAwaitSeconds, TimeUnit.SECONDS);
         
         // THEN
-        Assert.assertTrue(result.isDone());
-        Optional<String> optionalAccessCode = result.get();
-        Assert.assertTrue(optionalAccessCode.isEmpty());
+        assertThat(result.isDone()).isTrue();
+        assertThat((result.get())).isEmpty();
     }
 }
 

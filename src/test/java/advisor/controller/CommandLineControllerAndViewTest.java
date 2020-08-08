@@ -7,7 +7,6 @@ import advisor.model.dto.Category;
 import advisor.model.service.Advisor;
 import advisor.model.service.FakeAdvisor;
 import advisor.view.CommandLineView;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -16,17 +15,16 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-import static org.hamcrest.Matchers.emptyString;
-import static org.hamcrest.Matchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public final class CommandLineControllerAndViewTest {
 
     private final int defaultPageSize = 2;
-    private CommandLineController target;
-    private ByteArrayOutputStream output = new ByteArrayOutputStream();
-    private Advisor fakeAdvisor = new FakeAdvisor(defaultPageSize);
+    private final ByteArrayOutputStream output = new ByteArrayOutputStream();
+    private final Advisor fakeAdvisor = new FakeAdvisor(defaultPageSize);
+    private final UserCommandAuthentication userCommandAuthentication = new AlwaysAuthenticatedUserCommandAuthentication();
     private CommandLineView commandLineView;
-    private UserCommandAuthentication userCommandAuthentication = new AlwaysAuthenticatedUserCommandAuthentication();
+    private CommandLineController target;
 
     @Test
     public void whenInputNew_thenNewReleasesFirstPageIsPrinted() {
@@ -44,7 +42,7 @@ public final class CommandLineControllerAndViewTest {
         fakeAdvisor.getNewReleases(1).getElements().forEach((release) ->
                 expectedOutput.append(release.commandLineStringRepresentation()).append(System.lineSeparator()));
         expectedOutput.append("---PAGE 1 OF 2---").append(System.lineSeparator());
-        Assert.assertThat(output.toString(), is(expectedOutput.toString()));
+        assertThat(output).hasToString(expectedOutput.toString());
     }
 
     @Test
@@ -64,7 +62,7 @@ public final class CommandLineControllerAndViewTest {
             expectedOutput
                     .append(playlist.commandLineStringRepresentation()).append(System.lineSeparator()));
         expectedOutput.append("---PAGE 1 OF 2---").append(System.lineSeparator());
-        Assert.assertThat(output.toString(), is(expectedOutput.toString()));
+        assertThat(output).hasToString(expectedOutput.toString());
     }
 
     @Test
@@ -83,7 +81,7 @@ public final class CommandLineControllerAndViewTest {
         fakeAdvisor.getCategories(1).getElements().forEach((category) ->
                 expectedOutput.append(category.commandLineStringRepresentation()).append(System.lineSeparator()));
         expectedOutput.append("---PAGE 1 OF 3---").append(System.lineSeparator());
-        Assert.assertThat(output.toString(), is(expectedOutput.toString()));
+        assertThat(output).hasToString(expectedOutput.toString());
     }
 
     @Test
@@ -102,7 +100,7 @@ public final class CommandLineControllerAndViewTest {
         fakeAdvisor.getCategoryPlaylists(new Category("Good mood", "goodMood"), 1).getElements().forEach((playlist) ->
             expectedOutput.append(playlist.commandLineStringRepresentation()).append(System.lineSeparator()));
         expectedOutput.append("---PAGE 1 OF 2---").append(System.lineSeparator());
-        Assert.assertThat(output.toString(), is(expectedOutput.toString()));
+        assertThat(output).hasToString(expectedOutput.toString());
     }
 
     @Test
@@ -117,7 +115,7 @@ public final class CommandLineControllerAndViewTest {
         target.processInput();
 
         // THEN
-        Assert.assertThat(output.toString(), is("Unknown category name." + System.lineSeparator()));
+        assertThat(output).hasToString("Unknown category name." + System.lineSeparator());
     }
 
     @Test
@@ -132,7 +130,7 @@ public final class CommandLineControllerAndViewTest {
         target.processInput();
 
         // THEN
-        Assert.assertThat(output.toString(), is("---GOODBYE!---" + System.lineSeparator()));
+        assertThat(output).hasToString("---GOODBYE!---" + System.lineSeparator());
     }
 
     @Test
@@ -148,7 +146,7 @@ public final class CommandLineControllerAndViewTest {
 
         // THEN
         String expectedOutput = "Success!" + System.lineSeparator();
-        Assert.assertThat(output.toString(), is(expectedOutput));
+        assertThat(output).hasToString(expectedOutput);
     }
 
     @Test
@@ -163,7 +161,7 @@ public final class CommandLineControllerAndViewTest {
         target.processInput();
 
         // THEN
-        Assert.assertThat(output.toString(), emptyString());
+        assertThat(output.toString()).isEmpty();
     }
 
     @Test
@@ -184,7 +182,7 @@ public final class CommandLineControllerAndViewTest {
         fakeAdvisor.getCategories(2).getElements().forEach((category) ->
                 expectedOutput.append(category.commandLineStringRepresentation()).append(System.lineSeparator()));
         expectedOutput.append("---PAGE 2 OF 3---").append(System.lineSeparator());
-        Assert.assertThat(output.toString(), is(expectedOutput.toString()));
+        assertThat(output).hasToString(expectedOutput.toString());
     }
 
     @Test
@@ -206,7 +204,7 @@ public final class CommandLineControllerAndViewTest {
         fakeAdvisor.getCategories(1).getElements().forEach((category) ->
                 expectedOutput.append(category.commandLineStringRepresentation()).append(System.lineSeparator()));
         expectedOutput.append("---PAGE 1 OF 3---").append(System.lineSeparator());
-        Assert.assertThat(output.toString(), is(expectedOutput.toString()));
+        assertThat(output).hasToString(expectedOutput.toString());
     }
 
     @Test
@@ -227,7 +225,7 @@ public final class CommandLineControllerAndViewTest {
         fakeAdvisor.getNewReleases(2).getElements().forEach((release) ->
                 expectedOutput.append(release.commandLineStringRepresentation()).append(System.lineSeparator()));
         expectedOutput.append("---PAGE 2 OF 2---").append(System.lineSeparator());
-        Assert.assertThat(output.toString(), is(expectedOutput.toString()));
+        assertThat(output).hasToString(expectedOutput.toString());
     }
 
     @Test
@@ -249,7 +247,7 @@ public final class CommandLineControllerAndViewTest {
         fakeAdvisor.getNewReleases(1).getElements().forEach((release) ->
                 expectedOutput.append(release.commandLineStringRepresentation()).append(System.lineSeparator()));
         expectedOutput.append("---PAGE 1 OF 2---").append(System.lineSeparator());
-        Assert.assertThat(output.toString(), is(expectedOutput.toString()));
+        assertThat(output).hasToString(expectedOutput.toString());
     }
 
     @Test
@@ -270,7 +268,7 @@ public final class CommandLineControllerAndViewTest {
         fakeAdvisor.getFeaturedPlaylists(2).getElements().forEach((playlist) ->
                 expectedOutput.append(playlist.commandLineStringRepresentation()).append(System.lineSeparator()));
         expectedOutput.append("---PAGE 2 OF 2---").append(System.lineSeparator());
-        Assert.assertThat(output.toString(), is(expectedOutput.toString()));
+        assertThat(output).hasToString(expectedOutput.toString());
     }
 
     @Test
@@ -292,7 +290,7 @@ public final class CommandLineControllerAndViewTest {
         fakeAdvisor.getFeaturedPlaylists(1).getElements().forEach((playlist) ->
                 expectedOutput.append(playlist.commandLineStringRepresentation()).append(System.lineSeparator()));
         expectedOutput.append("---PAGE 1 OF 2---").append(System.lineSeparator());
-        Assert.assertThat(output.toString(), is(expectedOutput.toString()));
+        assertThat(output).hasToString(expectedOutput.toString());
     }
 
     @Test
@@ -313,7 +311,7 @@ public final class CommandLineControllerAndViewTest {
         fakeAdvisor.getCategoryPlaylists(new Category("Good mood", "goodMood"), 2).getElements().forEach((playlist) ->
                 expectedOutput.append(playlist.commandLineStringRepresentation()).append(System.lineSeparator()));
         expectedOutput.append("---PAGE 2 OF 2---").append(System.lineSeparator());
-        Assert.assertThat(output.toString(), is(expectedOutput.toString()));
+        assertThat(output).hasToString(expectedOutput.toString());
     }
 
     @Test
@@ -335,7 +333,7 @@ public final class CommandLineControllerAndViewTest {
         fakeAdvisor.getCategoryPlaylists(new Category("Good mood", "goodMood"),1).getElements().forEach((playlist) ->
                 expectedOutput.append(playlist.commandLineStringRepresentation()).append(System.lineSeparator()));
         expectedOutput.append("---PAGE 1 OF 2---").append(System.lineSeparator());
-        Assert.assertThat(output.toString(), is(expectedOutput.toString()));
+        assertThat(output).hasToString(expectedOutput.toString());
     }
 
     @Test
@@ -352,7 +350,7 @@ public final class CommandLineControllerAndViewTest {
         // THEN
         String expectedOutput = "Execute first one of the following commands: new, categories, featured, playlists"
                 + System.lineSeparator();
-        Assert.assertThat(output.toString(), is(expectedOutput));
+        assertThat(output).hasToString(expectedOutput);
     }
 
     @Test
@@ -369,6 +367,6 @@ public final class CommandLineControllerAndViewTest {
         // THEN
         String expectedOutput = "Execute first one of the following commands: new, categories, featured, playlists"
                 + System.lineSeparator();
-        Assert.assertThat(output.toString(), is(expectedOutput));
+        assertThat(output).hasToString(expectedOutput);
     }
 }
