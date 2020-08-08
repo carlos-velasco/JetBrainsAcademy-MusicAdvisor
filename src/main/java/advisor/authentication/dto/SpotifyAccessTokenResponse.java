@@ -1,22 +1,18 @@
 package advisor.authentication.dto;
 
 import com.google.gson.annotations.SerializedName;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.Value;
 
-@Getter
-@RequiredArgsConstructor
-@EqualsAndHashCode
+@Value
 public class SpotifyAccessTokenResponse {
 
     @SerializedName("access_token")
-    private final String accessToken;
+    String accessToken;
     @SerializedName("expires_in")
-    private final int expiresIn;
+    int expiresIn;
     @SerializedName("token_type")
-    private final String tokenType;
+    String tokenType;
     @SerializedName("refresh_token")
-    private final String refreshToken;
-    private final String scope;
+    String refreshToken;
+    String scope;
 }
