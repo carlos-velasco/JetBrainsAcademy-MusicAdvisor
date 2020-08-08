@@ -5,8 +5,6 @@ import advisor.model.dto.Page;
 import advisor.model.dto.Playlist;
 import advisor.model.service.Advisor;
 
-import java.util.Optional;
-
 public class PlaylistsByCategory extends SpotifyResourceCollection implements PageableSpotifyModel<Playlist> {
 
     private final Advisor advisor;
@@ -30,7 +28,7 @@ public class PlaylistsByCategory extends SpotifyResourceCollection implements Pa
 
     @Override
     public Page<Playlist> nextPage() {
-        ensureCategory();
+        ensureCategoryHasBeenSet();
         ensureNextPage(pageNumber);
         Page<Playlist> nextPage = advisor.getCategoryPlaylists(category, pageNumber + 1);
         totalResources = nextPage.getTotal();
@@ -40,7 +38,7 @@ public class PlaylistsByCategory extends SpotifyResourceCollection implements Pa
 
     @Override
     public Page<Playlist> previousPage() {
-        ensureCategory();
+        ensureCategoryHasBeenSet();
         ensurePreviousPage(pageNumber);
         Page<Playlist> previousPage = advisor.getCategoryPlaylists(category, pageNumber - 1);
         totalResources = previousPage.getTotal();
@@ -48,8 +46,9 @@ public class PlaylistsByCategory extends SpotifyResourceCollection implements Pa
         return previousPage;
     }
 
-    private void ensureCategory() {
-        Optional.ofNullable(category)
-                .orElseThrow(() -> new AdvisorException("Category must be specified first"));
+    private void ensureCategoryHasBeenSet() {
+        if (category == null) {
+            throw new AdvisorException("Category must be specified first");
+        }
     }
 }
