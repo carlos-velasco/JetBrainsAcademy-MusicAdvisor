@@ -19,7 +19,7 @@ public abstract class SpotifyResourceCollection {
     }
 
     protected <T extends CommandLinePrintable> Page<T> nextPage(SpotifyAdvisorFunction<Integer, Page<T>> advisorFunction) {
-        validateNextPage(pageNumber);
+        ensureNextPage(pageNumber);
         Page<T> nextPage = advisorFunction.apply(pageNumber + 1);
         totalResources = nextPage.getTotal();
         pageNumber++;
@@ -27,20 +27,20 @@ public abstract class SpotifyResourceCollection {
     }
 
     protected <T extends CommandLinePrintable> Page<T> previousPage(SpotifyAdvisorFunction<Integer, Page<T>> advisorFunction) {
-        validatePreviousPage(pageNumber);
+        ensurePreviousPage(pageNumber);
         Page<T> previousPage = advisorFunction.apply(pageNumber - 1);
         totalResources = previousPage.getTotal();
         pageNumber--;
         return previousPage;
     }
 
-    protected void validateNextPage(int currentPageNumber) {
+    protected void ensureNextPage(int currentPageNumber) {
         if (totalResources ==  null || currentPageNumber * pageSize >= totalResources) {
             throw new AdvisorException("No more pages");
         }
     }
 
-    protected void validatePreviousPage(int currentPageNumber) {
+    protected void ensurePreviousPage(int currentPageNumber) {
         if (currentPageNumber <= 1) {
             throw new AdvisorException("No previous pages");
         }

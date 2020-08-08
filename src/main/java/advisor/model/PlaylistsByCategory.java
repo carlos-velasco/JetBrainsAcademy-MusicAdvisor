@@ -30,8 +30,8 @@ public class PlaylistsByCategory extends SpotifyResourceCollection implements Pa
 
     @Override
     public Page<Playlist> nextPage() {
-        validateCategory();
-        validateNextPage(pageNumber);
+        ensureCategory();
+        ensureNextPage(pageNumber);
         Page<Playlist> nextPage = advisor.getCategoryPlaylists(category, pageNumber + 1);
         totalResources = nextPage.getTotal();
         pageNumber++;
@@ -40,15 +40,15 @@ public class PlaylistsByCategory extends SpotifyResourceCollection implements Pa
 
     @Override
     public Page<Playlist> previousPage() {
-        validateCategory();
-        validatePreviousPage(pageNumber);
+        ensureCategory();
+        ensurePreviousPage(pageNumber);
         Page<Playlist> previousPage = advisor.getCategoryPlaylists(category, pageNumber - 1);
         totalResources = previousPage.getTotal();
         pageNumber--;
         return previousPage;
     }
 
-    private void validateCategory() {
+    private void ensureCategory() {
         Optional.ofNullable(category)
                 .orElseThrow(() -> new AdvisorException("Category must be specified first"));
     }
