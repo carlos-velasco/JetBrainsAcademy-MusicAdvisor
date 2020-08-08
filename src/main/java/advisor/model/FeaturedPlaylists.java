@@ -5,6 +5,7 @@ import advisor.model.dto.Playlist;
 import advisor.model.service.Advisor;
 
 public class FeaturedPlaylists extends SpotifyResourceCollection implements PageableSpotifyModel<Playlist> {
+
     private final Advisor advisor;
 
     public FeaturedPlaylists(Advisor advisor, int pageSize) {

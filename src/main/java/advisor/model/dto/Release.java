@@ -9,9 +9,9 @@ import java.util.List;
 @Builder
 public class Release implements CommandLinePrintable {
 
-    private String title;
-    private List<Artist> artists;
-    private String link;
+    String title;
+    List<Artist> artists;
+    String link;
 
     @Override
     public String commandLineStringRepresentation() {

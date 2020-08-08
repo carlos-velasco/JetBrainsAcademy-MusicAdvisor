@@ -7,9 +7,9 @@ import lombok.Value;
 @Builder
 public class Playlist implements CommandLinePrintable {
 
-    private Category category;
-    private String title;
-    private String link;
+    Category category;
+    String title;
+    String link;
 
     @Override
     public String commandLineStringRepresentation() {

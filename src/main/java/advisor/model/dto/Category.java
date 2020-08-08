@@ -5,8 +5,8 @@ import lombok.Value;
 @Value
 public class Category implements CommandLinePrintable {
 
-    private String name;
-    private String id;
+    String name;
+    String id;
 
     @Override
     public String commandLineStringRepresentation() {
