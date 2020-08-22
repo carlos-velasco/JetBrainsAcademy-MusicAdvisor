@@ -9,6 +9,7 @@ public class CommandLineAdvisorRunner implements AdvisorRunner {
 
     private final CommandLineController commandLineController;
 
+    @Override
     public void run() {
         UserCommand userCommand;
         do {
