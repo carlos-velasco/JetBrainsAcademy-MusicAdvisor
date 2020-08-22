@@ -4,6 +4,8 @@ import advisor.authentication.*;
 import advisor.controller.CommandLineController;
 import advisor.model.service.Advisor;
 import advisor.model.service.SpotifyAdvisor;
+import advisor.runner.AdvisorRunner;
+import advisor.runner.CommandLineAdvisorRunner;
 import advisor.view.CommandLineView;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -78,5 +80,10 @@ public class AppConfig {
                 advisorProperties.getSpotifyResourceHost(),
                 new UserCommandAuthenticationFacade(userCommandAuthentication()),
                 advisorProperties.getPageSize());
+    }
+
+    @Bean
+    AdvisorRunner advisorRunner() {
+        return new CommandLineAdvisorRunner(commandLineController());
     }
 }
