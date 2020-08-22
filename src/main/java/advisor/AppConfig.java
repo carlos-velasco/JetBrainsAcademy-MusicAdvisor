@@ -13,8 +13,6 @@ import org.springframework.context.annotation.Configuration;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-import static advisor.authentication.SpotifyAccessCodeFetcher.ACCESS_CODE_SERVER_TIMEOUT_SECONDS;
-
 @Configuration
 @ComponentScan("advisor")
 @RequiredArgsConstructor
@@ -44,7 +42,7 @@ public class AppConfig {
                 advisorProperties.getSpotifyClientId(),
                 advisorProperties.getRedirectUri(),
                 commandLineView(),
-                ACCESS_CODE_SERVER_TIMEOUT_SECONDS);
+                advisorProperties.getAccessCodeServerTimeoutSeconds());
     }
 
     @Bean

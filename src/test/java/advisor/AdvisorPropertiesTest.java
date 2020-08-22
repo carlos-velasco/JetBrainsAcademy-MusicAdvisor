@@ -159,4 +159,20 @@ public final class AdvisorPropertiesTest {
         assertThat(advisorProperties.getRedirectUri()).isNotEmpty();
         assertThat(advisorProperties.getRedirectUri()).isEqualTo(expectedRedirectUri);
     }
+
+    @Test
+    public void whenInitializingAdvisorProperties_thenAccessCodeServerTimeoutTakesValueFromProperties() throws IOException {
+        // GIVEN
+        String[] args = {};
+        Properties properties = new Properties();
+        properties.load(Objects.requireNonNull(
+                getClass().getClassLoader().getResourceAsStream("application.properties")));
+        Integer serverTimeoutSeconds = Integer.parseInt(properties.getProperty("access_code_server_timeout_seconds"));
+
+        // WHEN
+        advisorProperties.initializeProperties(args);
+
+        // THEN
+        assertThat(advisorProperties.getAccessCodeServerTimeoutSeconds()).isEqualTo(serverTimeoutSeconds);
+    }
 }
