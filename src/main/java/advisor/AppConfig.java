@@ -9,14 +9,12 @@ import advisor.runner.CommandLineAdvisorRunner;
 import advisor.view.CommandLineView;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.PrintStream;
 import java.util.Scanner;
 
 @Configuration
-@ComponentScan("advisor")
 @RequiredArgsConstructor
 public class AppConfig {
 

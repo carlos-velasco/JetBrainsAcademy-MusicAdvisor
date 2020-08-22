@@ -1,11 +1,10 @@
 package advisor.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.stream.Stream;
 
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 public enum UserCommand {
 
     NEW_RELEASES("new", true),

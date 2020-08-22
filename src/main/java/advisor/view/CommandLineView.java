@@ -4,8 +4,6 @@ import advisor.controller.UserCommand;
 import advisor.model.dto.CommandLinePrintable;
 import advisor.model.dto.Page;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -13,8 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
-@Component
+@RequiredArgsConstructor
 public class CommandLineView {
 
     private final Scanner scanner;
