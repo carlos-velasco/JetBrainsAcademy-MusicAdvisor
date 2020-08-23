@@ -17,6 +17,7 @@ public class AdvisorProperties {
     private String spotifyResourceHost;
     private Integer pageSize;
     private Integer accessCodeServerTimeoutSeconds;
+    private String locale;
 
     public void initializeProperties(String[] args) throws IOException {
         initializePropertiesFromCommandLineArguments(args);
@@ -49,6 +50,7 @@ public class AdvisorProperties {
         redirectUri = properties.getProperty("redirect_uri");
         accessCodeServerTimeoutSeconds = Integer.parseInt(
                 properties.getProperty("access_code_server_timeout_seconds"));
+        locale = properties.getProperty("locale");
         spotifyAccessHost = spotifyAccessHost != null
                 ? spotifyAccessHost
                 : properties.getProperty("spotify.default_access_host");

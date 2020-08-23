@@ -77,7 +77,7 @@ public class AppConfig {
         return new SpotifyAdvisor(
                 advisorProperties.getSpotifyResourceHost(),
                 new UserCommandAuthenticationFacade(userCommandAuthentication()),
-                advisorProperties.getPageSize());
+                advisorProperties.getPageSize(), advisorProperties.getLocale());
     }
 
     @Bean

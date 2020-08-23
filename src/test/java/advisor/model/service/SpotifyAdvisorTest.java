@@ -22,7 +22,8 @@ public class SpotifyAdvisorTest {
     private static final String RESOURCE_COMMON_PATH = "/v1/browse/";
     private final UserCommandAuthenticationFacade userCommandAuthenticationFacade =
             new UserCommandAuthenticationFacade(new AlwaysAuthenticatedUserCommandAuthentication());
-    private final int defaultPageSize = 5;
+    private static final int DEFAULT_PAGE_SIZE = 5;
+    private static final String LOCALE = "es-ES";
     private SpotifyAdvisor target;
 
     @Rule
@@ -32,7 +33,10 @@ public class SpotifyAdvisorTest {
     public void prepareTarget() {
         String spotifyResourceHost = "http://localhost";
         target = new SpotifyAdvisor(
-                spotifyResourceHost + ":" + wireMockRule.port(), userCommandAuthenticationFacade, defaultPageSize);
+                spotifyResourceHost + ":" + wireMockRule.port(),
+                userCommandAuthenticationFacade,
+                DEFAULT_PAGE_SIZE,
+                LOCALE);
     }
 
     @Test
@@ -102,7 +106,7 @@ public class SpotifyAdvisorTest {
         // THEN
         verify(getRequestedFor(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories"))
                 .withQueryParam("offset", equalTo(String.valueOf(0)))
-                .withQueryParam("limit", equalTo(String.valueOf(defaultPageSize))));
+                .withQueryParam("limit", equalTo(String.valueOf(DEFAULT_PAGE_SIZE))));
     }
 
     @Test
@@ -120,8 +124,8 @@ public class SpotifyAdvisorTest {
 
         // THEN
         verify(getRequestedFor(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories"))
-                .withQueryParam("offset", equalTo(String.valueOf((pageNumber - 1) * defaultPageSize)))
-                .withQueryParam("limit", equalTo(String.valueOf(defaultPageSize))));
+                .withQueryParam("offset", equalTo(String.valueOf((pageNumber - 1) * DEFAULT_PAGE_SIZE)))
+                .withQueryParam("limit", equalTo(String.valueOf(DEFAULT_PAGE_SIZE))));
     }
 
     @Test
@@ -329,7 +333,7 @@ public class SpotifyAdvisorTest {
         // THEN
         verify(getRequestedFor(urlPathEqualTo(RESOURCE_COMMON_PATH + "new-releases"))
                 .withQueryParam("offset", equalTo(String.valueOf(0)))
-                .withQueryParam("limit", equalTo(String.valueOf(defaultPageSize))));
+                .withQueryParam("limit", equalTo(String.valueOf(DEFAULT_PAGE_SIZE))));
     }
 
     @Test
@@ -347,8 +351,8 @@ public class SpotifyAdvisorTest {
 
         // THEN
         verify(getRequestedFor(urlPathEqualTo(RESOURCE_COMMON_PATH + "new-releases"))
-                .withQueryParam("offset", equalTo(String.valueOf((pageNumber - 1) * defaultPageSize)))
-                .withQueryParam("limit", equalTo(String.valueOf(defaultPageSize))));
+                .withQueryParam("offset", equalTo(String.valueOf((pageNumber - 1) * DEFAULT_PAGE_SIZE)))
+                .withQueryParam("limit", equalTo(String.valueOf(DEFAULT_PAGE_SIZE))));
     }
 
     @Test
@@ -443,7 +447,7 @@ public class SpotifyAdvisorTest {
         // THEN
         verify(getRequestedFor(urlPathEqualTo(RESOURCE_COMMON_PATH + "featured-playlists"))
                 .withQueryParam("offset", equalTo(String.valueOf(0)))
-                .withQueryParam("limit", equalTo(String.valueOf(defaultPageSize))));
+                .withQueryParam("limit", equalTo(String.valueOf(DEFAULT_PAGE_SIZE))));
     }
 
     @Test
@@ -461,8 +465,8 @@ public class SpotifyAdvisorTest {
 
         // THEN
         verify(getRequestedFor(urlPathEqualTo(RESOURCE_COMMON_PATH + "featured-playlists"))
-                .withQueryParam("offset", equalTo(String.valueOf((pageNumber - 1) * defaultPageSize)))
-                .withQueryParam("limit", equalTo(String.valueOf(defaultPageSize))));
+                .withQueryParam("offset", equalTo(String.valueOf((pageNumber - 1) * DEFAULT_PAGE_SIZE)))
+                .withQueryParam("limit", equalTo(String.valueOf(DEFAULT_PAGE_SIZE))));
     }
 
     @Test
@@ -564,7 +568,7 @@ public class SpotifyAdvisorTest {
         // THEN
         verify(getRequestedFor(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories/" + category.getId() + "/playlists"))
                 .withQueryParam("offset", equalTo(String.valueOf(0)))
-                .withQueryParam("limit", equalTo(String.valueOf(defaultPageSize))));
+                .withQueryParam("limit", equalTo(String.valueOf(DEFAULT_PAGE_SIZE))));
     }
 
     @Test
@@ -583,7 +587,7 @@ public class SpotifyAdvisorTest {
 
         // THEN
         verify(getRequestedFor(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories/" + category.getId() + "/playlists"))
-                .withQueryParam("offset", equalTo(String.valueOf((pageNumber - 1) * defaultPageSize)))
-                .withQueryParam("limit", equalTo(String.valueOf(defaultPageSize))));
+                .withQueryParam("offset", equalTo(String.valueOf((pageNumber - 1) * DEFAULT_PAGE_SIZE)))
+                .withQueryParam("limit", equalTo(String.valueOf(DEFAULT_PAGE_SIZE))));
     }
 }

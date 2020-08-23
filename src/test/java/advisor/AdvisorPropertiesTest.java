@@ -175,4 +175,20 @@ public final class AdvisorPropertiesTest {
         // THEN
         assertThat(advisorProperties.getAccessCodeServerTimeoutSeconds()).isEqualTo(serverTimeoutSeconds);
     }
+
+    @Test
+    public void whenInitializingAdvisorProperties_thenLocaleTakesValueFromProperties() throws IOException {
+        // GIVEN
+        String[] args = {};
+        Properties properties = new Properties();
+        properties.load(Objects.requireNonNull(
+                getClass().getClassLoader().getResourceAsStream("application.properties")));
+        String locale = properties.getProperty("locale");
+
+        // WHEN
+        advisorProperties.initializeProperties(args);
+
+        // THEN
+        assertThat(advisorProperties.getLocale()).isEqualTo(locale);
+    }
 }
