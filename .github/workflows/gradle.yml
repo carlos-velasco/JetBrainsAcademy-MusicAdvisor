@@ -32,10 +32,10 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       env:
-        SPOTIFY_USERNAME: ${{ secrets.spotifyUsername }}
-        SPOTIFY_PASSWORD: ${{ secrets.spotifyPassword }}
-        SPOTIFY_CLIENT_ID: ${{ secrets.spotifyClientId }}
-        SPOTIFY_CLIENT_SECRET: ${{ secrets.spotifyClientSecret }}
+        SPOTIFY_USERNAME: ${{ secrets.SPOTIFYUSERNAME }}
+        SPOTIFY_PASSWORD: ${{ secrets.SPOTIFYPASSWORD }}
+        SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFYCLIENTID }}
+        SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFYCLIENTSECRET }}
       run: ./gradlew build -Pspotify.username="$SPOTIFY_USERNAME" -Pspotify.password="$SPOTIFY_PASSWORD" -Pspotify.clientid="$SPOTIFY_CLIENT_ID" -Pspotify.client_secret="$SPOTIFY_CLIENT_SECRET" --info
     - name: Publish Test Report
       if: always()
