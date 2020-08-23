@@ -45,8 +45,10 @@ public class AdvisorProperties {
         Properties properties = new Properties();
         properties.load(Objects.requireNonNull(
                 this.getClass().getClassLoader().getResourceAsStream(propertiesFileName)));
-        spotifyClientId = properties.getProperty("spotify.clientid");
-        spotifyClientSecret = properties.getProperty("spotify.client_secret");
+        spotifyClientId = System.getProperty(
+                "spotify.clientid", properties.getProperty("spotify.clientid"));
+        spotifyClientSecret = System.getProperty(
+                "spotify.client_secret", properties.getProperty("spotify.client_secret"));
         redirectUri = properties.getProperty("redirect_uri");
         accessCodeServerTimeoutSeconds = Integer.parseInt(
                 properties.getProperty("access_code_server_timeout_seconds"));

@@ -116,7 +116,8 @@ public final class AdvisorPropertiesTest {
         Properties properties = new Properties();
         properties.load(Objects.requireNonNull(
                 getClass().getClassLoader().getResourceAsStream("application.properties")));
-        String expectedSpotifyClientId = properties.getProperty("spotify.clientid");
+        String expectedSpotifyClientId = System.getProperty(
+                "spotify.clientid", properties.getProperty("spotify.clientid"));
 
         // WHEN
         advisorProperties.initializeProperties(args);
@@ -133,7 +134,8 @@ public final class AdvisorPropertiesTest {
         Properties properties = new Properties();
         properties.load(Objects.requireNonNull(
                 getClass().getClassLoader().getResourceAsStream("application.properties")));
-        String expectedSpotifyClientSecret = properties.getProperty("spotify.client_secret");
+        String expectedSpotifyClientSecret = System.getProperty(
+                "spotify.client_secret", properties.getProperty("spotify.client_secret"));
 
         // WHEN
         advisorProperties.initializeProperties(args);
