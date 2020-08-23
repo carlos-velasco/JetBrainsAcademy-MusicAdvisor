@@ -223,7 +223,8 @@ public class CommandLineSpotifyAdvisorEndToEndTest {
         executorService.awaitTermination(TEST_TIMEOUT_MINUTES, TimeUnit.MINUTES);
         if (futures.stream().anyMatch(future -> !future.isDone())) {
             throw new IllegalStateException(
-                    String.format("Execution of commands not finished within %d minutes", TEST_TIMEOUT_MINUTES));
+                    String.format("Execution of commands not finished within %d minutes.\n" +
+                            "Output: %s", TEST_TIMEOUT_MINUTES, getOutput()));
         }
     }
 
