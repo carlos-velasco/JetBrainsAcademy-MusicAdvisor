@@ -36,7 +36,7 @@ jobs:
         SPOTIFY_PASSWORD: ${{ secrets.spotifyPassword }}
         SPOTIFY_CLIENT_ID: ${{ secrets.spotifyClientId }}
         SPOTIFY_CLIENT_SECRET: ${{ secrets.spotifyClientSecret }}
-      run: ./gradlew build -Dspotify.username="$SPOTIFY_USER" -Dspotify.password="$SPOTIFY_PASSWORD" -Dspotify.clientid="$SPOTIFY_CLIENT_ID" -Dspotify.client_secret="$SPOTIFY_CLIENT_SECRET" --info
+      run: ./gradlew build -Pspotify.username="$SPOTIFY_USER" -Pspotify.password="$SPOTIFY_PASSWORD" -Pspotify.clientid="$SPOTIFY_CLIENT_ID" -Pspotify.client_secret="$SPOTIFY_CLIENT_SECRET" --info
     - name: Publish Test Report
       if: always()
       uses: actions/upload-artifact@v2-preview
