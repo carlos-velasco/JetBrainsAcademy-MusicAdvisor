@@ -55,7 +55,9 @@ final class CommandLineControllerAndViewTest {
         // THEN
         StringBuilder expectedOutput = new StringBuilder();
         fakeAdvisor.getNewReleases(1).getElements().forEach((release) ->
-                expectedOutput.append(release.commandLineStringRepresentation()).append(System.lineSeparator()));
+                expectedOutput
+                        .append(release.commandLineStringRepresentation())
+                        .append(System.lineSeparator()));
         expectedOutput.append("---PAGE 1 OF 3---").append(System.lineSeparator());
         assertThat(output).hasToString(expectedOutput.toString());
     }
@@ -75,7 +77,8 @@ final class CommandLineControllerAndViewTest {
         StringBuilder expectedOutput = new StringBuilder();
         fakeAdvisor.getFeaturedPlaylists(1).getElements().forEach((playlist) ->
                 expectedOutput
-                        .append(playlist.commandLineStringRepresentation()).append(System.lineSeparator()));
+                        .append(playlist.commandLineStringRepresentation())
+                        .append(System.lineSeparator()));
         expectedOutput.append("---PAGE 1 OF 3---").append(System.lineSeparator());
         assertThat(output).hasToString(expectedOutput.toString());
     }
@@ -94,7 +97,9 @@ final class CommandLineControllerAndViewTest {
         // THEN
         StringBuilder expectedOutput = new StringBuilder();
         fakeAdvisor.getCategories(1).getElements().forEach((category) ->
-                expectedOutput.append(category.commandLineStringRepresentation()).append(System.lineSeparator()));
+                expectedOutput
+                        .append(category.commandLineStringRepresentation())
+                        .append(System.lineSeparator()));
         expectedOutput.append("---PAGE 1 OF 3---").append(System.lineSeparator());
         assertThat(output).hasToString(expectedOutput.toString());
     }
@@ -113,7 +118,9 @@ final class CommandLineControllerAndViewTest {
         // THEN
         StringBuilder expectedOutput = new StringBuilder();
         fakeAdvisor.getCategoryPlaylists(GOOD_MOOD_CATEGORY, 1).getElements().forEach((playlist) ->
-                expectedOutput.append(playlist.commandLineStringRepresentation()).append(System.lineSeparator()));
+                expectedOutput
+                        .append(playlist.commandLineStringRepresentation())
+                        .append(System.lineSeparator()));
         expectedOutput.append("---PAGE 1 OF 3---").append(System.lineSeparator());
         assertThat(output).hasToString(expectedOutput.toString());
     }
@@ -195,7 +202,9 @@ final class CommandLineControllerAndViewTest {
         // THEN
         StringBuilder expectedOutput = new StringBuilder();
         fakeAdvisor.getCategories(2).getElements().forEach((category) ->
-                expectedOutput.append(category.commandLineStringRepresentation()).append(System.lineSeparator()));
+                expectedOutput
+                        .append(category.commandLineStringRepresentation())
+                        .append(System.lineSeparator()));
         expectedOutput.append("---PAGE 2 OF 3---").append(System.lineSeparator());
         assertThat(output).hasToString(expectedOutput.toString());
     }
@@ -217,7 +226,9 @@ final class CommandLineControllerAndViewTest {
         // THEN
         StringBuilder expectedOutput = new StringBuilder();
         fakeAdvisor.getCategories(1).getElements().forEach((category) ->
-                expectedOutput.append(category.commandLineStringRepresentation()).append(System.lineSeparator()));
+                expectedOutput
+                        .append(category.commandLineStringRepresentation())
+                        .append(System.lineSeparator()));
         expectedOutput.append("---PAGE 1 OF 3---").append(System.lineSeparator());
         assertThat(output).hasToString(expectedOutput.toString());
     }
@@ -238,7 +249,9 @@ final class CommandLineControllerAndViewTest {
         // THEN
         StringBuilder expectedOutput = new StringBuilder();
         fakeAdvisor.getNewReleases(2).getElements().forEach((release) ->
-                expectedOutput.append(release.commandLineStringRepresentation()).append(System.lineSeparator()));
+                expectedOutput
+                        .append(release.commandLineStringRepresentation())
+                        .append(System.lineSeparator()));
         expectedOutput.append("---PAGE 2 OF 3---").append(System.lineSeparator());
         assertThat(output).hasToString(expectedOutput.toString());
     }
@@ -260,7 +273,9 @@ final class CommandLineControllerAndViewTest {
         // THEN
         StringBuilder expectedOutput = new StringBuilder();
         fakeAdvisor.getNewReleases(1).getElements().forEach((release) ->
-                expectedOutput.append(release.commandLineStringRepresentation()).append(System.lineSeparator()));
+                expectedOutput
+                        .append(release.commandLineStringRepresentation())
+                        .append(System.lineSeparator()));
         expectedOutput.append("---PAGE 1 OF 3---").append(System.lineSeparator());
         assertThat(output).hasToString(expectedOutput.toString());
     }
@@ -281,7 +296,9 @@ final class CommandLineControllerAndViewTest {
         // THEN
         StringBuilder expectedOutput = new StringBuilder();
         fakeAdvisor.getFeaturedPlaylists(2).getElements().forEach((playlist) ->
-                expectedOutput.append(playlist.commandLineStringRepresentation()).append(System.lineSeparator()));
+                expectedOutput
+                        .append(playlist.commandLineStringRepresentation())
+                        .append(System.lineSeparator()));
         expectedOutput.append("---PAGE 2 OF 3---").append(System.lineSeparator());
         assertThat(output).hasToString(expectedOutput.toString());
     }
@@ -303,7 +320,9 @@ final class CommandLineControllerAndViewTest {
         // THEN
         StringBuilder expectedOutput = new StringBuilder();
         fakeAdvisor.getFeaturedPlaylists(1).getElements().forEach((playlist) ->
-                expectedOutput.append(playlist.commandLineStringRepresentation()).append(System.lineSeparator()));
+                expectedOutput
+                        .append(playlist.commandLineStringRepresentation())
+                        .append(System.lineSeparator()));
         expectedOutput.append("---PAGE 1 OF 3---").append(System.lineSeparator());
         assertThat(output).hasToString(expectedOutput.toString());
     }
@@ -324,7 +343,9 @@ final class CommandLineControllerAndViewTest {
         // THEN
         StringBuilder expectedOutput = new StringBuilder();
         fakeAdvisor.getCategoryPlaylists(GOOD_MOOD_CATEGORY, 2).getElements().forEach((playlist) ->
-                expectedOutput.append(playlist.commandLineStringRepresentation()).append(System.lineSeparator()));
+                expectedOutput
+                        .append(playlist.commandLineStringRepresentation())
+                        .append(System.lineSeparator()));
         expectedOutput.append("---PAGE 2 OF 3---").append(System.lineSeparator());
         assertThat(output).hasToString(expectedOutput.toString());
     }
@@ -346,7 +367,9 @@ final class CommandLineControllerAndViewTest {
         // THEN
         StringBuilder expectedOutput = new StringBuilder();
         fakeAdvisor.getCategoryPlaylists(GOOD_MOOD_CATEGORY, 1).getElements().forEach((playlist) ->
-                expectedOutput.append(playlist.commandLineStringRepresentation()).append(System.lineSeparator()));
+                expectedOutput
+                        .append(playlist.commandLineStringRepresentation())
+                        .append(System.lineSeparator()));
         expectedOutput.append("---PAGE 1 OF 3---").append(System.lineSeparator());
         assertThat(output).hasToString(expectedOutput.toString());
     }
