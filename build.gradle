@@ -23,7 +23,8 @@ dependencies {
     implementation 'io.github.openfeign:feign-gson:10.11'
     implementation 'io.github.openfeign.form:feign-form:3.8.0'
 
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
+    testImplementation 'org.junit.vintage:junit-vintage-engine:5.6.2'
     testImplementation 'com.github.tomakehurst:wiremock:2.26.3'
     testImplementation 'org.mockito:mockito-core:3.3.3'
     testImplementation 'org.assertj:assertj-core:3.16.1'
