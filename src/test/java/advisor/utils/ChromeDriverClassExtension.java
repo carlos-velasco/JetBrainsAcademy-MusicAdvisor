@@ -22,7 +22,9 @@ public class ChromeDriverClassExtension implements BeforeAllCallback, AfterAllCa
 
     @Override
     public void afterAll(ExtensionContext context) {
-        driver.close();
+        if (driver != null) {
+            driver.close();
+        }
     }
 
     private ChromeDriver buildChromeDriver() {
