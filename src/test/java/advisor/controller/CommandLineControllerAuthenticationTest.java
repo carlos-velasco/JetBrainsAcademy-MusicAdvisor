@@ -27,7 +27,7 @@ final class CommandLineControllerAuthenticationTest {
     private CommandLineView commandLineView;
 
     @ParameterizedTest
-    @MethodSource("getUserCommandsText")
+    @MethodSource("getUserCommands")
     void givenUserIsAuthenticated_whenProcessingCommand_thenMessageDoesNotAskForAuthentication(String userCommandText) {
         // GIVEN
         InputStream inputStream = new ByteArrayInputStream(userCommandText.getBytes());
@@ -42,7 +42,7 @@ final class CommandLineControllerAuthenticationTest {
     }
 
     @ParameterizedTest
-    @MethodSource("getUserCommandsThatNeedAuthenticationText")
+    @MethodSource("getUserCommandsWithAuthenticationRequired")
     void givenUserIsNotAuthenticated_whenProcessingCommandRequiringAuthentication_thenMessageAsksForAuthentication(String userCommandText) {
         // GIVEN
         InputStream inputStream = new ByteArrayInputStream(userCommandText.getBytes());
@@ -57,7 +57,7 @@ final class CommandLineControllerAuthenticationTest {
     }
 
     @ParameterizedTest
-    @MethodSource("getUserCommandsThatDoNotNeedAuthenticationText")
+    @MethodSource("getUserCommandsWithAuthenticationNotRequired")
     void givenUserIsNotAuthenticated_whenProcessingCommandNotRequiringAuthentication_thenMessageDoesNotAskForAuthentication(String userCommandText) {
         // GIVEN
         InputStream inputStream = new ByteArrayInputStream(userCommandText.getBytes());
@@ -71,7 +71,7 @@ final class CommandLineControllerAuthenticationTest {
         assertThat(output.toString().toLowerCase()).doesNotContain(PROVIDE_ACCESS_MESSAGE);
     }
 
-    private static Stream<String> getUserCommandsThatNeedAuthenticationText() {
+    private static Stream<String> getUserCommandsWithAuthenticationRequired() {
         return Stream.of(
                 UserCommand.CATEGORIES.getCommandText(),
                 UserCommand.NEW_RELEASES.getCommandText(),
@@ -82,7 +82,7 @@ final class CommandLineControllerAuthenticationTest {
         );
     }
 
-    private static Stream<String> getUserCommandsThatDoNotNeedAuthenticationText() {
+    private static Stream<String> getUserCommandsWithAuthenticationNotRequired() {
         return Stream.of(
                 UserCommand.AUTH.getCommandText(),
                 UserCommand.EXIT.getCommandText(),
@@ -90,10 +90,10 @@ final class CommandLineControllerAuthenticationTest {
         );
     }
 
-    private static Stream<String> getUserCommandsText() {
+    private static Stream<String> getUserCommands() {
         return Stream.concat(
-                getUserCommandsThatNeedAuthenticationText(),
-                getUserCommandsThatDoNotNeedAuthenticationText()
+                getUserCommandsWithAuthenticationRequired(),
+                getUserCommandsWithAuthenticationNotRequired()
         );
     }
 }
