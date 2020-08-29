@@ -11,7 +11,7 @@ Some data of the Spotify application must be specified in [`application.properti
 spotify.client.id=your_spotify_app_client_id
 spotify.client.secret=your_spotify_app_client_secret
 # e.g. redirect-uri=http://localhost:8080
-redirect.uri=your_spotify_app_redirect_uri
+redirect-uri=your_spotify_app_redirect_uri
 ```
 
 For more information on how to configure / obtain that information in your Spotify application, check https://developer.spotify.com/documentation/general/guides/app-settings/.
