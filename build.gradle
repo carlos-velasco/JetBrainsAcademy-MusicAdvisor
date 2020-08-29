@@ -31,6 +31,7 @@ dependencies {
     testImplementation 'org.seleniumhq.selenium:selenium-java:3.141.59'
     testImplementation 'io.github.bonigarcia:webdrivermanager:4.2.0'
     testImplementation 'com.github.stefanbirkner:system-rules:1.19.0'
+    testImplementation 'org.awaitility:awaitility:4.0.3'
 }
 
 compileJava.options.encoding = 'UTF-8'
@@ -42,8 +43,8 @@ test {
     systemProperty "file.encoding", "utf-8"
     systemProperty "spotify.username", findProperty("spotify.username")
     systemProperty "spotify.password", findProperty("spotify.password")
-    systemProperty "spotify.clientid", findProperty("spotify.clientid")
-    systemProperty "spotify.client_secret", findProperty("spotify.client_secret")
+    systemProperty "spotify.client.id", findProperty("spotify.client.id")
+    systemProperty "spotify.client.secret", findProperty("spotify.client.secret")
 }
 
 wrapper {

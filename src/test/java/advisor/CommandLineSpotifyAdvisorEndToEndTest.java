@@ -19,6 +19,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.ByteArrayOutputStream;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 import static org.junit.contrib.java.lang.system.TextFromStandardInputStream.emptyStandardInputStream;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
@@ -237,16 +239,16 @@ public class CommandLineSpotifyAdvisorEndToEndTest {
     }
 
     private void waitForAuthUrlAndAuthenticate() {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        final String authenticationUrl = Stream.of(getOutput().split("\\r?\\n"))
+        String authenticationUrl = await().atMost(Duration.ofSeconds(10))
+                .until(this::getAuthenticationUrlFromOutput, url -> !url.isEmpty());
+        spotifyAppUIAuthenticator.authenticateApp(authenticationUrl);
+    }
+
+    private String getAuthenticationUrlFromOutput() {
+        return Stream.of(getOutput().split("\\r?\\n"))
                 .filter(line -> line.startsWith(spotifyAccessHost))
                 .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Authentication url not found in output"));
-        spotifyAppUIAuthenticator.authenticateApp(authenticationUrl);
+                .orElse("");
     }
 
     private String getOutput() {
