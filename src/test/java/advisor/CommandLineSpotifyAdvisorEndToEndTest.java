@@ -1,22 +1,20 @@
 package advisor;
 
 import advisor.runner.CommandLineAdvisorRunner;
-import advisor.utils.ChromeDriverSetupRule;
+import advisor.utils.ChromeDriverClassExtension;
 import advisor.utils.SpotifyAppUIAuthenticator;
+import advisor.utils.SystemInMockClassExtension;
 import org.assertj.core.api.AutoCloseableSoftAssertions;
 import org.assertj.core.api.Condition;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.junit.contrib.java.lang.system.TextFromStandardInputStream;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.io.ByteArrayOutputStream;
 import java.time.Duration;
@@ -33,16 +31,14 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
-import static org.junit.contrib.java.lang.system.TextFromStandardInputStream.emptyStandardInputStream;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
-@RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {AppConfig.class, TestConfig.class})
+@SpringJUnitConfig(classes = {AppConfig.class, TestConfig.class})
 @PropertySource("application.properties")
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
-public class CommandLineSpotifyAdvisorEndToEndTest {
+final class CommandLineSpotifyAdvisorEndToEndTest {
 
-    private static final int TEST_TIMEOUT_MINUTES = 1;
+    private static final int COMMAND_PROCESSING_TIMEOUT_SECONDS = 20;
     private static final String REDIRECT_URI = "http://localhost:8080";
     private static final String GOODBYE_MESSAGE = "---GOODBYE!---";
     private static final String AUTH_SUCCESS_MESSAGE = "Success!";
@@ -68,19 +64,19 @@ public class CommandLineSpotifyAdvisorEndToEndTest {
     @Autowired
     private CommandLineAdvisorRunner runner;
 
-    @ClassRule
-    public static final TextFromStandardInputStream systemInMock = emptyStandardInputStream();
+    @RegisterExtension
+    static final SystemInMockClassExtension systemInMock = new SystemInMockClassExtension();
 
-    @ClassRule
-    public static final ChromeDriverSetupRule chromeDriverSetupRule = new ChromeDriverSetupRule();
+    @RegisterExtension
+    static final ChromeDriverClassExtension chromeDriverClassExtension = new ChromeDriverClassExtension();
 
-    @BeforeClass
-    public static void initializeAuthenticator() {
-        spotifyAppUIAuthenticator = new SpotifyAppUIAuthenticator(chromeDriverSetupRule.getDriver(), REDIRECT_URI);
+    @BeforeAll
+    static void initializeAuthenticator() {
+        spotifyAppUIAuthenticator = new SpotifyAppUIAuthenticator(chromeDriverClassExtension.getDriver(), REDIRECT_URI);
     }
 
     @Test
-    public void whenEnteringExitCommand_thenOutputEqualsGoodbyeMessage() throws InterruptedException {
+    void whenEnteringExitCommand_thenOutputEqualsGoodbyeMessage() throws InterruptedException {
         // GIVEN
         String[] commands = new String[]{"exit"};
         systemInMock.provideLines(commands);
@@ -93,7 +89,7 @@ public class CommandLineSpotifyAdvisorEndToEndTest {
     }
 
     @Test
-    public void whenEnteringAuthCommand_thenOutputContainsAuthMessages() throws InterruptedException {
+    void whenEnteringAuthCommand_thenOutputContainsAuthMessages() throws InterruptedException {
         // GIVEN
         String[] commands = new String[]{"auth", "exit"};
         systemInMock.provideLines(commands);
@@ -112,7 +108,7 @@ public class CommandLineSpotifyAdvisorEndToEndTest {
     }
 
     @Test
-    public void whenEnteringUnsupportedCommand_thenOutputContainsUnsupportedOperationMessage() throws InterruptedException {
+    void whenEnteringUnsupportedCommand_thenOutputContainsUnsupportedOperationMessage() throws InterruptedException {
         // GIVEN
         String[] commands = new String[]{"random", "exit"};
         systemInMock.provideLines(commands);
@@ -127,7 +123,7 @@ public class CommandLineSpotifyAdvisorEndToEndTest {
     }
 
     @Test
-    public void givenAppAuthenticated_whenEnteringFeaturedCommand_thenOutputContainsSpotifyPlaylists() throws InterruptedException {
+    void givenAppAuthenticated_whenEnteringFeaturedCommand_thenOutputContainsSpotifyPlaylists() throws InterruptedException {
         // GIVEN
         String[] commands = new String[]{"auth", "featured", "exit"};
         systemInMock.provideLines(commands);
@@ -152,7 +148,7 @@ public class CommandLineSpotifyAdvisorEndToEndTest {
     }
 
     @Test
-    public void givenAppAuthenticated_whenEnteringNewCommand_thenOutputContainsSpotifyReleases() throws InterruptedException {
+    void givenAppAuthenticated_whenEnteringNewCommand_thenOutputContainsSpotifyReleases() throws InterruptedException {
         // GIVEN
         String[] commands = new String[]{"auth", "new", "exit"};
         systemInMock.provideLines(commands);
@@ -178,7 +174,7 @@ public class CommandLineSpotifyAdvisorEndToEndTest {
     }
 
     @Test
-    public void givenAppAuthenticated_whenEnteringCategoriesCommand_thenOutputContainsCategories() throws InterruptedException {
+    void givenAppAuthenticated_whenEnteringCategoriesCommand_thenOutputContainsCategories() throws InterruptedException {
         // GIVEN
         String[] commands = new String[]{"auth", "categories", "exit"};
         systemInMock.provideLines(commands);
@@ -198,7 +194,7 @@ public class CommandLineSpotifyAdvisorEndToEndTest {
     }
 
     @Test
-    public void givenAppAuthenticated_whenEnteringCategoryPlaylistsCommand_thenOutputContainsSpotifyPlaylists() throws InterruptedException {
+    void givenAppAuthenticated_whenEnteringCategoryPlaylistsCommand_thenOutputContainsSpotifyPlaylists() throws InterruptedException {
         // GIVEN
         String[] commands = new String[]{"auth", "playlists Pop", "exit"};
         systemInMock.provideLines(commands);
@@ -230,11 +226,11 @@ public class CommandLineSpotifyAdvisorEndToEndTest {
             futures.add(executorService.submit(this::waitForAuthUrlAndAuthenticate));
         }
         executorService.shutdown();
-        executorService.awaitTermination(TEST_TIMEOUT_MINUTES, TimeUnit.MINUTES);
+        executorService.awaitTermination(COMMAND_PROCESSING_TIMEOUT_SECONDS, TimeUnit.SECONDS);
         if (futures.stream().anyMatch(future -> !future.isDone())) {
             throw new IllegalStateException(
-                    String.format("Execution of commands not finished within %d minutes.\n" +
-                            "Output: %s", TEST_TIMEOUT_MINUTES, getOutput()));
+                    String.format("Execution of commands not finished within %d seconds.\n" +
+                            "Output: %s", COMMAND_PROCESSING_TIMEOUT_SECONDS, getOutput()));
         }
     }
 

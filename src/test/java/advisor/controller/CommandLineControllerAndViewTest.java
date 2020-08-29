@@ -3,11 +3,10 @@ package advisor.controller;
 import advisor.authentication.AlwaysAuthenticatedUserCommandAuthentication;
 import advisor.authentication.NeverAuthenticatedUserCommandAuthentication;
 import advisor.authentication.UserCommandAuthentication;
-import advisor.model.dto.Category;
 import advisor.model.service.Advisor;
 import advisor.model.service.FakeAdvisor;
 import advisor.view.CommandLineView;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -15,24 +14,40 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
 
+import static advisor.model.service.FakeAdvisorData.GOOD_MOOD_CATEGORY;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public final class CommandLineControllerAndViewTest {
+final class CommandLineControllerAndViewTest {
 
-    private final int defaultPageSize = 2;
+    private static final int DEFAULT_PAGE_SIZE = 2;
     private final ByteArrayOutputStream output = new ByteArrayOutputStream();
-    private final Advisor fakeAdvisor = new FakeAdvisor(defaultPageSize);
+    private final Advisor fakeAdvisor = new FakeAdvisor(DEFAULT_PAGE_SIZE);
     private final UserCommandAuthentication userCommandAuthentication = new AlwaysAuthenticatedUserCommandAuthentication();
     private CommandLineView commandLineView;
     private CommandLineController target;
 
     @Test
-    public void whenInputNew_thenNewReleasesFirstPageIsPrinted() {
+    void whenProcessingUnsupportedCommand_thenUnsupportedCommandMessageIsPrinted() {
+        // GIVEN
+        String input = "not supported";
+        InputStream inputStream = new ByteArrayInputStream(input.getBytes());
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, userCommandAuthentication, DEFAULT_PAGE_SIZE);
+
+        // WHEN
+        target.processInput();
+
+        // THEN
+        assertThat(output).hasToString("Unsupported operation" + System.lineSeparator());
+    }
+
+    @Test
+    void whenInputNew_thenNewReleasesFirstPageIsPrinted() {
         // GIVEN
         String input = "new";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, userCommandAuthentication, defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, userCommandAuthentication, DEFAULT_PAGE_SIZE);
 
         // WHEN
         target.processInput();
@@ -40,18 +55,20 @@ public final class CommandLineControllerAndViewTest {
         // THEN
         StringBuilder expectedOutput = new StringBuilder();
         fakeAdvisor.getNewReleases(1).getElements().forEach((release) ->
-                expectedOutput.append(release.commandLineStringRepresentation()).append(System.lineSeparator()));
-        expectedOutput.append("---PAGE 1 OF 2---").append(System.lineSeparator());
+                expectedOutput
+                        .append(release.commandLineStringRepresentation())
+                        .append(System.lineSeparator()));
+        expectedOutput.append("---PAGE 1 OF 3---").append(System.lineSeparator());
         assertThat(output).hasToString(expectedOutput.toString());
     }
 
     @Test
-    public void whenInputFeatured_thenFeaturedPlaylistsArePrinted() {
+    void whenInputFeatured_thenFeaturedPlaylistsArePrinted() {
         // GIVEN
         String input = "featured";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, userCommandAuthentication, defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, userCommandAuthentication, DEFAULT_PAGE_SIZE);
 
         // WHEN
         target.processInput();
@@ -59,19 +76,20 @@ public final class CommandLineControllerAndViewTest {
         // THEN
         StringBuilder expectedOutput = new StringBuilder();
         fakeAdvisor.getFeaturedPlaylists(1).getElements().forEach((playlist) ->
-            expectedOutput
-                    .append(playlist.commandLineStringRepresentation()).append(System.lineSeparator()));
-        expectedOutput.append("---PAGE 1 OF 2---").append(System.lineSeparator());
+                expectedOutput
+                        .append(playlist.commandLineStringRepresentation())
+                        .append(System.lineSeparator()));
+        expectedOutput.append("---PAGE 1 OF 3---").append(System.lineSeparator());
         assertThat(output).hasToString(expectedOutput.toString());
     }
 
     @Test
-    public void whenInputCategories_thenCategoriesArePrinted() {
+    void whenInputCategories_thenCategoriesArePrinted() {
         // GIVEN
         String input = "categories";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, userCommandAuthentication, defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, userCommandAuthentication, DEFAULT_PAGE_SIZE);
 
         // WHEN
         target.processInput();
@@ -79,37 +97,41 @@ public final class CommandLineControllerAndViewTest {
         // THEN
         StringBuilder expectedOutput = new StringBuilder();
         fakeAdvisor.getCategories(1).getElements().forEach((category) ->
-                expectedOutput.append(category.commandLineStringRepresentation()).append(System.lineSeparator()));
+                expectedOutput
+                        .append(category.commandLineStringRepresentation())
+                        .append(System.lineSeparator()));
         expectedOutput.append("---PAGE 1 OF 3---").append(System.lineSeparator());
         assertThat(output).hasToString(expectedOutput.toString());
     }
 
     @Test
-    public void whenInputPlaylistsAndExistingCategory_thenCategoryPlaylistsArePrinted() {
+    void whenInputPlaylistsAndExistingCategory_thenCategoryPlaylistsArePrinted() {
         // GIVEN
         String input = "playlists Good mood";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, userCommandAuthentication, defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, userCommandAuthentication, DEFAULT_PAGE_SIZE);
 
         // WHEN
         target.processInput();
 
         // THEN
         StringBuilder expectedOutput = new StringBuilder();
-        fakeAdvisor.getCategoryPlaylists(new Category("Good mood", "goodMood"), 1).getElements().forEach((playlist) ->
-            expectedOutput.append(playlist.commandLineStringRepresentation()).append(System.lineSeparator()));
-        expectedOutput.append("---PAGE 1 OF 2---").append(System.lineSeparator());
+        fakeAdvisor.getCategoryPlaylists(GOOD_MOOD_CATEGORY, 1).getElements().forEach((playlist) ->
+                expectedOutput
+                        .append(playlist.commandLineStringRepresentation())
+                        .append(System.lineSeparator()));
+        expectedOutput.append("---PAGE 1 OF 3---").append(System.lineSeparator());
         assertThat(output).hasToString(expectedOutput.toString());
     }
 
     @Test
-    public void whenInputPlaylistsAndNonExistingCategory_thenErrorIsPrinted() {
+    void whenInputPlaylistsAndNonExistingCategory_thenErrorIsPrinted() {
         // GIVEN
         String input = "playlists NonExistingCategory";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, userCommandAuthentication, defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, userCommandAuthentication, DEFAULT_PAGE_SIZE);
 
         // WHEN
         target.processInput();
@@ -119,12 +141,12 @@ public final class CommandLineControllerAndViewTest {
     }
 
     @Test
-    public void whenInputExit_thenGoodbyeIsPrinted() {
+    void whenInputExit_thenGoodbyeIsPrinted() {
         // GIVEN
         String input = "exit";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, userCommandAuthentication, defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, userCommandAuthentication, DEFAULT_PAGE_SIZE);
 
         // WHEN
         target.processInput();
@@ -134,12 +156,12 @@ public final class CommandLineControllerAndViewTest {
     }
 
     @Test
-    public void whenInputAuthAndAuthenticationIsSuccessful_thenSuccessMessageIsPrinted() {
+    void whenInputAuthAndAuthenticationIsSuccessful_thenSuccessMessageIsPrinted() {
         // GIVEN
         String input = "auth";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), DEFAULT_PAGE_SIZE);
 
         // WHEN
         target.processInput();
@@ -150,12 +172,12 @@ public final class CommandLineControllerAndViewTest {
     }
 
     @Test
-    public void whenInputAuthAndAuthenticationIsSuccessful_thenNoMessageIsPrinted() {
+    void whenInputAuthAndAuthenticationIsSuccessful_thenNoMessageIsPrinted() {
         // GIVEN
         String input = "auth";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, new NeverAuthenticatedUserCommandAuthentication(), defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, new NeverAuthenticatedUserCommandAuthentication(), DEFAULT_PAGE_SIZE);
 
         // WHEN
         target.processInput();
@@ -165,12 +187,12 @@ public final class CommandLineControllerAndViewTest {
     }
 
     @Test
-    public void givenCategoriesFirstPageHasBeenDisplayed_whenUserInputsNext_thenNextCategoriesPageIsDisplayed() {
+    void givenCategoriesFirstPageHasBeenDisplayed_whenUserInputsNext_thenNextCategoriesPageIsDisplayed() {
         // GIVEN
         String input = "categories" + System.lineSeparator() + "next";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), DEFAULT_PAGE_SIZE);
         target.processInput();
         output.reset();
 
@@ -180,18 +202,20 @@ public final class CommandLineControllerAndViewTest {
         // THEN
         StringBuilder expectedOutput = new StringBuilder();
         fakeAdvisor.getCategories(2).getElements().forEach((category) ->
-                expectedOutput.append(category.commandLineStringRepresentation()).append(System.lineSeparator()));
+                expectedOutput
+                        .append(category.commandLineStringRepresentation())
+                        .append(System.lineSeparator()));
         expectedOutput.append("---PAGE 2 OF 3---").append(System.lineSeparator());
         assertThat(output).hasToString(expectedOutput.toString());
     }
 
     @Test
-    public void givenCategoriesFirstTwoPagesHasBeenDisplayed_whenUserInputsPrev_thenPreviousCategoriesPageIsDisplayed() {
+    void givenCategoriesFirstTwoPagesHasBeenDisplayed_whenUserInputsPrev_thenPreviousCategoriesPageIsDisplayed() {
         // GIVEN
         String input = "categories" + System.lineSeparator() + "next" + System.lineSeparator() + "prev";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), DEFAULT_PAGE_SIZE);
         target.processInput();
         target.processInput();
         output.reset();
@@ -202,18 +226,20 @@ public final class CommandLineControllerAndViewTest {
         // THEN
         StringBuilder expectedOutput = new StringBuilder();
         fakeAdvisor.getCategories(1).getElements().forEach((category) ->
-                expectedOutput.append(category.commandLineStringRepresentation()).append(System.lineSeparator()));
+                expectedOutput
+                        .append(category.commandLineStringRepresentation())
+                        .append(System.lineSeparator()));
         expectedOutput.append("---PAGE 1 OF 3---").append(System.lineSeparator());
         assertThat(output).hasToString(expectedOutput.toString());
     }
 
     @Test
-    public void givenNewReleasesFirstPageHasBeenDisplayed_whenUserInputsNext_thenNextNewReleasesPageIsDisplayed() {
+    void givenNewReleasesFirstPageHasBeenDisplayed_whenUserInputsNext_thenNextNewReleasesPageIsDisplayed() {
         // GIVEN
         String input = "new" + System.lineSeparator() + "next";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), DEFAULT_PAGE_SIZE);
         target.processInput();
         output.reset();
 
@@ -223,18 +249,20 @@ public final class CommandLineControllerAndViewTest {
         // THEN
         StringBuilder expectedOutput = new StringBuilder();
         fakeAdvisor.getNewReleases(2).getElements().forEach((release) ->
-                expectedOutput.append(release.commandLineStringRepresentation()).append(System.lineSeparator()));
-        expectedOutput.append("---PAGE 2 OF 2---").append(System.lineSeparator());
+                expectedOutput
+                        .append(release.commandLineStringRepresentation())
+                        .append(System.lineSeparator()));
+        expectedOutput.append("---PAGE 2 OF 3---").append(System.lineSeparator());
         assertThat(output).hasToString(expectedOutput.toString());
     }
 
     @Test
-    public void givenNewReleasesFirstTwoPagesHasBeenDisplayed_whenUserInputsPrev_thenPreviousNewReleasesPageIsDisplayed() {
+    void givenNewReleasesFirstTwoPagesHasBeenDisplayed_whenUserInputsPrev_thenPreviousNewReleasesPageIsDisplayed() {
         // GIVEN
         String input = "new" + System.lineSeparator() + "next" + System.lineSeparator() + "prev";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), DEFAULT_PAGE_SIZE);
         target.processInput();
         target.processInput();
         output.reset();
@@ -245,18 +273,20 @@ public final class CommandLineControllerAndViewTest {
         // THEN
         StringBuilder expectedOutput = new StringBuilder();
         fakeAdvisor.getNewReleases(1).getElements().forEach((release) ->
-                expectedOutput.append(release.commandLineStringRepresentation()).append(System.lineSeparator()));
-        expectedOutput.append("---PAGE 1 OF 2---").append(System.lineSeparator());
+                expectedOutput
+                        .append(release.commandLineStringRepresentation())
+                        .append(System.lineSeparator()));
+        expectedOutput.append("---PAGE 1 OF 3---").append(System.lineSeparator());
         assertThat(output).hasToString(expectedOutput.toString());
     }
 
     @Test
-    public void givenFeaturedPlaylistsFirstPageHasBeenDisplayed_whenUserInputsNext_thenNextFeaturedPlaylistsPageIsDisplayed() {
+    void givenFeaturedPlaylistsFirstPageHasBeenDisplayed_whenUserInputsNext_thenNextFeaturedPlaylistsPageIsDisplayed() {
         // GIVEN
         String input = "featured" + System.lineSeparator() + "next";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), DEFAULT_PAGE_SIZE);
         target.processInput();
         output.reset();
 
@@ -266,18 +296,20 @@ public final class CommandLineControllerAndViewTest {
         // THEN
         StringBuilder expectedOutput = new StringBuilder();
         fakeAdvisor.getFeaturedPlaylists(2).getElements().forEach((playlist) ->
-                expectedOutput.append(playlist.commandLineStringRepresentation()).append(System.lineSeparator()));
-        expectedOutput.append("---PAGE 2 OF 2---").append(System.lineSeparator());
+                expectedOutput
+                        .append(playlist.commandLineStringRepresentation())
+                        .append(System.lineSeparator()));
+        expectedOutput.append("---PAGE 2 OF 3---").append(System.lineSeparator());
         assertThat(output).hasToString(expectedOutput.toString());
     }
 
     @Test
-    public void givenFeaturedPlaylistsFirstTwoPagesHasBeenDisplayed_whenUserInputsPrev_thenPreviousFeaturedPlaylistsPageIsDisplayed() {
+    void givenFeaturedPlaylistsFirstTwoPagesHasBeenDisplayed_whenUserInputsPrev_thenPreviousFeaturedPlaylistsPageIsDisplayed() {
         // GIVEN
         String input = "featured" + System.lineSeparator() + "next" + System.lineSeparator() + "prev";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), DEFAULT_PAGE_SIZE);
         target.processInput();
         target.processInput();
         output.reset();
@@ -288,18 +320,20 @@ public final class CommandLineControllerAndViewTest {
         // THEN
         StringBuilder expectedOutput = new StringBuilder();
         fakeAdvisor.getFeaturedPlaylists(1).getElements().forEach((playlist) ->
-                expectedOutput.append(playlist.commandLineStringRepresentation()).append(System.lineSeparator()));
-        expectedOutput.append("---PAGE 1 OF 2---").append(System.lineSeparator());
+                expectedOutput
+                        .append(playlist.commandLineStringRepresentation())
+                        .append(System.lineSeparator()));
+        expectedOutput.append("---PAGE 1 OF 3---").append(System.lineSeparator());
         assertThat(output).hasToString(expectedOutput.toString());
     }
 
     @Test
-    public void givenPlaylistsByCategoryFirstPageHasBeenDisplayed_whenUserInputsNext_thenNextPlaylistsByCategoryPageIsDisplayed() {
+    void givenPlaylistsByCategoryFirstPageHasBeenDisplayed_whenUserInputsNext_thenNextPlaylistsByCategoryPageIsDisplayed() {
         // GIVEN
         String input = "playlists Good mood" + System.lineSeparator() + "next";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), DEFAULT_PAGE_SIZE);
         target.processInput();
         output.reset();
 
@@ -308,19 +342,21 @@ public final class CommandLineControllerAndViewTest {
 
         // THEN
         StringBuilder expectedOutput = new StringBuilder();
-        fakeAdvisor.getCategoryPlaylists(new Category("Good mood", "goodMood"), 2).getElements().forEach((playlist) ->
-                expectedOutput.append(playlist.commandLineStringRepresentation()).append(System.lineSeparator()));
-        expectedOutput.append("---PAGE 2 OF 2---").append(System.lineSeparator());
+        fakeAdvisor.getCategoryPlaylists(GOOD_MOOD_CATEGORY, 2).getElements().forEach((playlist) ->
+                expectedOutput
+                        .append(playlist.commandLineStringRepresentation())
+                        .append(System.lineSeparator()));
+        expectedOutput.append("---PAGE 2 OF 3---").append(System.lineSeparator());
         assertThat(output).hasToString(expectedOutput.toString());
     }
 
     @Test
-    public void givenPlaylistsByCategoryFirstTwoPagesHasBeenDisplayed_whenUserInputsPrev_thenPreviousPlaylistsByCategoryPageIsDisplayed() {
+    void givenPlaylistsByCategoryFirstTwoPagesHasBeenDisplayed_whenUserInputsPrev_thenPreviousPlaylistsByCategoryPageIsDisplayed() {
         // GIVEN
         String input = "playlists Good mood" + System.lineSeparator() + "next" + System.lineSeparator() + "prev";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), DEFAULT_PAGE_SIZE);
         target.processInput();
         target.processInput();
         output.reset();
@@ -330,19 +366,21 @@ public final class CommandLineControllerAndViewTest {
 
         // THEN
         StringBuilder expectedOutput = new StringBuilder();
-        fakeAdvisor.getCategoryPlaylists(new Category("Good mood", "goodMood"),1).getElements().forEach((playlist) ->
-                expectedOutput.append(playlist.commandLineStringRepresentation()).append(System.lineSeparator()));
-        expectedOutput.append("---PAGE 1 OF 2---").append(System.lineSeparator());
+        fakeAdvisor.getCategoryPlaylists(GOOD_MOOD_CATEGORY, 1).getElements().forEach((playlist) ->
+                expectedOutput
+                        .append(playlist.commandLineStringRepresentation())
+                        .append(System.lineSeparator()));
+        expectedOutput.append("---PAGE 1 OF 3---").append(System.lineSeparator());
         assertThat(output).hasToString(expectedOutput.toString());
     }
 
     @Test
-    public void givenNoContentCommandHasBeenExecuted_whenUserInputsNext_thenAnErrorMessageIsDisplayed() {
+    void givenNoContentCommandHasBeenExecuted_whenUserInputsNext_thenAnErrorMessageIsDisplayed() {
         // GIVEN
         String input = "next";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), DEFAULT_PAGE_SIZE);
 
         // WHEN
         target.processInput();
@@ -354,12 +392,12 @@ public final class CommandLineControllerAndViewTest {
     }
 
     @Test
-    public void givenNoContentCommandHasBeenExecuted_whenUserInputsPrev_thenAnErrorMessageIsDisplayed() {
+    void givenNoContentCommandHasBeenExecuted_whenUserInputsPrev_thenAnErrorMessageIsDisplayed() {
         // GIVEN
         String input = "prev";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), DEFAULT_PAGE_SIZE);
 
         // WHEN
         target.processInput();

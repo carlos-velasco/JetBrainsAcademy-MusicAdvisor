@@ -4,43 +4,49 @@ import advisor.authentication.AlwaysAuthenticatedUserCommandAuthentication;
 import advisor.authentication.UserCommandAuthenticationFacade;
 import advisor.model.AdvisorException;
 import advisor.model.dto.*;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.github.jenspiegsa.wiremockextension.Managed;
+import com.github.jenspiegsa.wiremockextension.WireMockExtension;
+import com.github.tomakehurst.wiremock.WireMockServer;
 import org.apache.http.HttpStatus;
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.List;
 
+import static com.github.jenspiegsa.wiremockextension.ManagedWireMockServer.with;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+import static org.apache.http.HttpHeaders.CONTENT_TYPE;
+import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SpotifyAdvisorTest {
+@ExtendWith(WireMockExtension.class)
+final class SpotifyAdvisorTest {
 
     private static final String RESOURCE_COMMON_PATH = "/v1/browse/";
-    private final UserCommandAuthenticationFacade userCommandAuthenticationFacade =
-            new UserCommandAuthenticationFacade(new AlwaysAuthenticatedUserCommandAuthentication());
     private static final int DEFAULT_PAGE_SIZE = 5;
     private static final String LOCALE = "es-ES";
+    private final UserCommandAuthenticationFacade userCommandAuthenticationFacade =
+            new UserCommandAuthenticationFacade(new AlwaysAuthenticatedUserCommandAuthentication());
     private SpotifyAdvisor target;
 
-    @Rule
-    public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().dynamicPort());
+    @Managed
+    private final WireMockServer wireMockServer = with(wireMockConfig().dynamicPort());
 
-    @Before
-    public void prepareTarget() {
+    @BeforeEach
+    void prepareTarget() {
         String spotifyResourceHost = "http://localhost";
         target = new SpotifyAdvisor(
-                spotifyResourceHost + ":" + wireMockRule.port(),
+                spotifyResourceHost + ":" + wireMockServer.port(),
                 userCommandAuthenticationFacade,
                 DEFAULT_PAGE_SIZE,
                 LOCALE);
     }
 
     @Test
-    public void givenCategoriesReturnedFromSpotify_whenGettingCategories_thenCategoryPageIsReturned() {
+    void givenCategoriesReturnedFromSpotify_whenGettingCategories_thenCategoryPageIsReturned() {
         // GIVEN
         List<Category> expectedCategories = List.of(
                 new Category("Top Lists", "toplists"),
@@ -53,7 +59,7 @@ public class SpotifyAdvisorTest {
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories"))
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.SC_OK)
-                        .withHeader("Content-Type", "application/json")
+                        .withHeader(CONTENT_TYPE, APPLICATION_JSON.getMimeType())
                         .withBodyFile("categories.json")));
 
         // WHEN
@@ -73,12 +79,12 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void whenGettingCategories_ThenCorrectHeadersAreSentInRequest() {
+    void whenGettingCategories_ThenCorrectHeadersAreSentInRequest() {
         // GIVEN
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories"))
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.SC_OK)
-                        .withHeader("Content-Type", "application/json")
+                        .withHeader(CONTENT_TYPE, APPLICATION_JSON.getMimeType())
                         .withBodyFile("categories.json")));
 
         // WHEN
@@ -87,17 +93,17 @@ public class SpotifyAdvisorTest {
         // THEN
         verify(getRequestedFor(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories"))
                 .withHeader("Authorization", equalTo("Bearer " + userCommandAuthenticationFacade.getAccessToken()))
-                .withHeader("Content-Type", equalTo("application/json"))
-                .withHeader("Accept", equalTo("application/json")));
+                .withHeader(CONTENT_TYPE, equalTo(APPLICATION_JSON.getMimeType()))
+                .withHeader("Accept", equalTo(APPLICATION_JSON.getMimeType())));
     }
 
     @Test
-    public void whenGettingCategoriesFirstPage_ThenCorrectQueryParamsAreSentInRequest() {
+    void whenGettingCategoriesFirstPage_ThenCorrectQueryParamsAreSentInRequest() {
         // GIVEN
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories"))
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.SC_OK)
-                        .withHeader("Content-Type", "application/json")
+                        .withHeader(CONTENT_TYPE, APPLICATION_JSON.getMimeType())
                         .withBodyFile("categories.json")));
 
         // WHEN
@@ -110,12 +116,12 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void whenGettingCategoriesNthPage_ThenCorrectQueryParamsAreSentInRequest() {
+    void whenGettingCategoriesNthPage_ThenCorrectQueryParamsAreSentInRequest() {
         // GIVEN
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories"))
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.SC_OK)
-                        .withHeader("Content-Type", "application/json")
+                        .withHeader(CONTENT_TYPE, APPLICATION_JSON.getMimeType())
                         .withBodyFile("categories.json")));
 
         // WHEN
@@ -129,12 +135,12 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void whenGettingCategoriesWithNoPaging_ThenNoPagingQueryParamsAreSentInRequest() {
+    void whenGettingCategoriesWithNoPaging_ThenNoPagingQueryParamsAreSentInRequest() {
         // GIVEN
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories"))
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.SC_OK)
-                        .withHeader("Content-Type", "application/json")
+                        .withHeader(CONTENT_TYPE, APPLICATION_JSON.getMimeType())
                         .withBodyFile("categories.json")));
 
         // WHEN
@@ -147,7 +153,7 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void givenCategoriesReturnedFromSpotify_whenGettingCategoriesWithNoPaging_thenCategoryPageIsReturned() {
+    void givenCategoriesReturnedFromSpotify_whenGettingCategoriesWithNoPaging_thenCategoryPageIsReturned() {
         // GIVEN
         List<Category> expectedCategories = List.of(
                 new Category("Top Lists", "toplists"),
@@ -160,7 +166,7 @@ public class SpotifyAdvisorTest {
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories"))
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.SC_OK)
-                        .withHeader("Content-Type", "application/json")
+                        .withHeader(CONTENT_TYPE, APPLICATION_JSON.getMimeType())
                         .withBodyFile("categories.json")));
 
         // WHEN
@@ -176,12 +182,12 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void whenGettingCategoriesWithNoPaging_ThenCorrectHeadersAreSentInRequest() {
+    void whenGettingCategoriesWithNoPaging_ThenCorrectHeadersAreSentInRequest() {
         // GIVEN
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories"))
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.SC_OK)
-                        .withHeader("Content-Type", "application/json")
+                        .withHeader(CONTENT_TYPE, APPLICATION_JSON.getMimeType())
                         .withBodyFile("categories.json")));
 
         // WHEN
@@ -190,18 +196,18 @@ public class SpotifyAdvisorTest {
         // THEN
         verify(getRequestedFor(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories"))
                 .withHeader("Authorization", equalTo("Bearer " + userCommandAuthenticationFacade.getAccessToken()))
-                .withHeader("Content-Type", equalTo("application/json"))
-                .withHeader("Accept", equalTo("application/json")));
+                .withHeader(CONTENT_TYPE, equalTo(APPLICATION_JSON.getMimeType()))
+                .withHeader("Accept", equalTo(APPLICATION_JSON.getMimeType())));
     }
 
     @Test
-    public void givenErrorResponseReturnedFromSpotify_whenGettingCategories_thenExceptionWithErrorMessageIsThrown() {
+    void givenErrorResponseReturnedFromSpotify_whenGettingCategories_thenExceptionWithErrorMessageIsThrown() {
         // GIVEN
         String errorMessage = "error when getting categories";
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories"))
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.SC_BAD_REQUEST)
-                        .withHeader("Content-Type", "application/json")
+                        .withHeader(CONTENT_TYPE, APPLICATION_JSON.getMimeType())
                         .withBody("{\n  " +
                                 "\"error\": " +
                                 "{\n    \"status\": 400,\n    " +
@@ -218,13 +224,13 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void givenErrorResponseReturnedFromSpotify_whenGettingCategoriesWithNoPaging_thenExceptionWithErrorMessageIsThrown() {
+    void givenErrorResponseReturnedFromSpotify_whenGettingCategoriesWithNoPaging_thenExceptionWithErrorMessageIsThrown() {
         // GIVEN
         String errorMessage = "error when getting categories";
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories"))
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.SC_BAD_REQUEST)
-                        .withHeader("Content-Type", "application/json")
+                        .withHeader(CONTENT_TYPE, APPLICATION_JSON.getMimeType())
                         .withBody("{\n  " +
                                 "\"error\": " +
                                 "{\n    \"status\": 400,\n    " +
@@ -241,7 +247,7 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void givenNewReleasesReturnedFromSpotify_whenGettingNewReleases_thenNewReleasesPageIsReturned() {
+    void givenNewReleasesReturnedFromSpotify_whenGettingNewReleases_thenNewReleasesPageIsReturned() {
         // GIVEN
         List<Release> expectedReleases = List.of(
                 Release.builder().title("Runnin'")
@@ -257,7 +263,7 @@ public class SpotifyAdvisorTest {
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "new-releases"))
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.SC_OK)
-                        .withHeader("Content-Type", "application/json")
+                        .withHeader(CONTENT_TYPE, APPLICATION_JSON.getMimeType())
                         .withBodyFile("new-releases.json")));
 
         // WHEN
@@ -277,13 +283,13 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void givenErrorResponseReturnedFromSpotify_whenGettingNewReleases_thenExceptionWithErrorMessageIsThrown() {
+    void givenErrorResponseReturnedFromSpotify_whenGettingNewReleases_thenExceptionWithErrorMessageIsThrown() {
         // GIVEN
         String errorMessage = "error when getting releases";
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "new-releases"))
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.SC_BAD_REQUEST)
-                        .withHeader("Content-Type", "application/json")
+                        .withHeader(CONTENT_TYPE, APPLICATION_JSON.getMimeType())
                         .withBody("{\n  " +
                                 "\"error\": " +
                                 "{\n    \"status\": 400,\n    " +
@@ -300,12 +306,12 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void whenGettingNewReleases_ThenCorrectHeadersAreSentInRequest() {
+    void whenGettingNewReleases_ThenCorrectHeadersAreSentInRequest() {
         // GIVEN
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "new-releases"))
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.SC_OK)
-                        .withHeader("Content-Type", "application/json")
+                        .withHeader(CONTENT_TYPE, APPLICATION_JSON.getMimeType())
                         .withBodyFile("new-releases.json")));
 
         // WHEN
@@ -314,17 +320,17 @@ public class SpotifyAdvisorTest {
         // THEN
         verify(getRequestedFor(urlPathEqualTo(RESOURCE_COMMON_PATH + "new-releases"))
                 .withHeader("Authorization", equalTo("Bearer " + userCommandAuthenticationFacade.getAccessToken()))
-                .withHeader("Content-Type", equalTo("application/json"))
-                .withHeader("Accept", equalTo("application/json")));
+                .withHeader(CONTENT_TYPE, equalTo(APPLICATION_JSON.getMimeType()))
+                .withHeader("Accept", equalTo(APPLICATION_JSON.getMimeType())));
     }
 
     @Test
-    public void whenGettingNewReleasesFirstPage_ThenCorrectQueryParamsAreSentInRequest() {
+    void whenGettingNewReleasesFirstPage_ThenCorrectQueryParamsAreSentInRequest() {
         // GIVEN
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "new-releases"))
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.SC_OK)
-                        .withHeader("Content-Type", "application/json")
+                        .withHeader(CONTENT_TYPE, APPLICATION_JSON.getMimeType())
                         .withBodyFile("new-releases.json")));
 
         // WHEN
@@ -337,12 +343,12 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void whenGettingNewReleasesNthPage_ThenCorrectQueryParamsAreSentInRequest() {
+    void whenGettingNewReleasesNthPage_ThenCorrectQueryParamsAreSentInRequest() {
         // GIVEN
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "new-releases"))
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.SC_OK)
-                        .withHeader("Content-Type", "application/json")
+                        .withHeader(CONTENT_TYPE, APPLICATION_JSON.getMimeType())
                         .withBodyFile("new-releases.json")));
 
         // WHEN
@@ -356,7 +362,7 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void givenFeaturedPlaylistsReturnedFromSpotify_whenGettingReleases_thenFeaturedPlaylistsPageIsReturned() {
+    void givenFeaturedPlaylistsReturnedFromSpotify_whenGettingReleases_thenFeaturedPlaylistsPageIsReturned() {
         // GIVEN
         List<Playlist> expectedFeaturedPlaylists = List.of(
                 Playlist.builder()
@@ -372,7 +378,7 @@ public class SpotifyAdvisorTest {
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "featured-playlists"))
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.SC_OK)
-                        .withHeader("Content-Type", "application/json")
+                        .withHeader(CONTENT_TYPE, APPLICATION_JSON.getMimeType())
                         .withBodyFile("featured-playlists.json")));
 
         // WHEN
@@ -392,12 +398,12 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void givenErrorResponseReturnedFromSpotify_whenGettingFeaturedPlaylists_thenExceptionWithErrorMessageIsThrown() {
+    void givenErrorResponseReturnedFromSpotify_whenGettingFeaturedPlaylists_thenExceptionWithErrorMessageIsThrown() {
         // GIVEN
         String errorMessage = "error when getting featured playlists";
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "featured-playlists"))
                 .willReturn(aResponse().withStatus(HttpStatus.SC_BAD_REQUEST)
-                        .withHeader("Content-Type", "application/json")
+                        .withHeader(CONTENT_TYPE, APPLICATION_JSON.getMimeType())
                         .withBody("{\n  " +
                                 "\"error\": " +
                                 "{\n    \"status\": 400,\n    " +
@@ -414,12 +420,12 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void whenGettingFeaturedPlaylists_ThenCorrectHeadersAreSentInRequest() {
+    void whenGettingFeaturedPlaylists_ThenCorrectHeadersAreSentInRequest() {
         // GIVEN
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "featured-playlists"))
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.SC_OK)
-                        .withHeader("Content-Type", "application/json")
+                        .withHeader(CONTENT_TYPE, APPLICATION_JSON.getMimeType())
                         .withBodyFile("featured-playlists.json")));
 
         // WHEN
@@ -428,17 +434,17 @@ public class SpotifyAdvisorTest {
         // THEN
         verify(getRequestedFor(urlPathEqualTo(RESOURCE_COMMON_PATH + "featured-playlists"))
                 .withHeader("Authorization", equalTo("Bearer " + userCommandAuthenticationFacade.getAccessToken()))
-                .withHeader("Content-Type", equalTo("application/json"))
-                .withHeader("Accept", equalTo("application/json")));
+                .withHeader(CONTENT_TYPE, equalTo(APPLICATION_JSON.getMimeType()))
+                .withHeader("Accept", equalTo(APPLICATION_JSON.getMimeType())));
     }
 
     @Test
-    public void whenGettingFeaturedPlaylistsFirstPage_ThenCorrectQueryParamsAreSentInRequest() {
+    void whenGettingFeaturedPlaylistsFirstPage_ThenCorrectQueryParamsAreSentInRequest() {
         // GIVEN
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "featured-playlists"))
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.SC_OK)
-                        .withHeader("Content-Type", "application/json")
+                        .withHeader(CONTENT_TYPE, APPLICATION_JSON.getMimeType())
                         .withBodyFile("featured-playlists.json")));
 
         // WHEN
@@ -451,12 +457,12 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void whenGettingFeaturedPlaylistsNthPage_ThenCorrectQueryParamsAreSentInRequest() {
+    void whenGettingFeaturedPlaylistsNthPage_ThenCorrectQueryParamsAreSentInRequest() {
         // GIVEN
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "featured-playlists"))
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.SC_OK)
-                        .withHeader("Content-Type", "application/json")
+                        .withHeader(CONTENT_TYPE, APPLICATION_JSON.getMimeType())
                         .withBodyFile("featured-playlists.json")));
 
         // WHEN
@@ -470,7 +476,7 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void givenExistingCategoryAndCategoryPlaylistsAreReturnedFromSpotify_whenGettingPlaylistsByCategory_thenCategoryPlaylistsPageIsReturned() {
+    void givenExistingCategoryAndCategoryPlaylistsAreReturnedFromSpotify_whenGettingPlaylistsByCategory_thenCategoryPlaylistsPageIsReturned() {
         // GIVEN
         Category category = new Category("Party", "party");
         List<Playlist> expectedCategoryPlaylists = List.of(
@@ -487,7 +493,7 @@ public class SpotifyAdvisorTest {
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories/" + category.getId() + "/playlists"))
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.SC_OK)
-                        .withHeader("Content-Type", "application/json")
+                        .withHeader(CONTENT_TYPE, APPLICATION_JSON.getMimeType())
                         .withBodyFile("category-playlists.json")));
 
         // WHEN
@@ -507,7 +513,7 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void givenErrorResponseReturnedFromSpotifyForCategoryPlaylists_whenGettingPlaylistsByCategory_thenExceptionWithErrorMessageIsThrown() {
+    void givenErrorResponseReturnedFromSpotifyForCategoryPlaylists_whenGettingPlaylistsByCategory_thenExceptionWithErrorMessageIsThrown() {
         // GIVEN
         Category category = new Category("Party", "party");
         String errorMessage = "error message when category not found";
@@ -515,7 +521,7 @@ public class SpotifyAdvisorTest {
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories/" + category.getId() + "/playlists"))
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.SC_NOT_FOUND)
-                        .withHeader("Content-Type", "application/json")
+                        .withHeader(CONTENT_TYPE, APPLICATION_JSON.getMimeType())
                         .withBody("{\n  " +
                                 "\"error\": " +
                                 "{\n    \"status\": 404,\n    " +
@@ -532,13 +538,13 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void whenGettingPlaylistsByCategory_ThenCorrectHeadersAreSentInRequest() {
+    void whenGettingPlaylistsByCategory_ThenCorrectHeadersAreSentInRequest() {
         // GIVEN
         Category category = new Category("Party", "party");
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories/" + category.getId() + "/playlists"))
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.SC_OK)
-                        .withHeader("Content-Type", "application/json")
+                        .withHeader(CONTENT_TYPE, APPLICATION_JSON.getMimeType())
                         .withBodyFile("category-playlists.json")));
 
         // WHEN
@@ -547,19 +553,19 @@ public class SpotifyAdvisorTest {
         // THEN
         verify(getRequestedFor(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories/" + category.getId() + "/playlists"))
                 .withHeader("Authorization", equalTo("Bearer " + userCommandAuthenticationFacade.getAccessToken()))
-                .withHeader("Content-Type", equalTo("application/json"))
-                .withHeader("Accept", equalTo("application/json")));
+                .withHeader(CONTENT_TYPE, equalTo(APPLICATION_JSON.getMimeType()))
+                .withHeader("Accept", equalTo(APPLICATION_JSON.getMimeType())));
     }
 
 
     @Test
-    public void whenGettingPlaylistsByCategoryFirstPage_ThenCorrectQueryParamsAreSentInRequest() {
+    void whenGettingPlaylistsByCategoryFirstPage_ThenCorrectQueryParamsAreSentInRequest() {
         // GIVEN
         Category category = new Category("Party", "party");
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories/" + category.getId() + "/playlists"))
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.SC_OK)
-                        .withHeader("Content-Type", "application/json")
+                        .withHeader(CONTENT_TYPE, APPLICATION_JSON.getMimeType())
                         .withBodyFile("category-playlists.json")));
 
         // WHEN
@@ -572,13 +578,13 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void whenGettingPlaylistsByCategoryNthPage_ThenCorrectQueryParamsAreSentInRequest() {
+    void whenGettingPlaylistsByCategoryNthPage_ThenCorrectQueryParamsAreSentInRequest() {
         // GIVEN
         Category category = new Category("Party", "party");
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories/" + category.getId() + "/playlists"))
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.SC_OK)
-                        .withHeader("Content-Type", "application/json")
+                        .withHeader(CONTENT_TYPE, APPLICATION_JSON.getMimeType())
                         .withBodyFile("category-playlists.json")));
 
         // WHEN

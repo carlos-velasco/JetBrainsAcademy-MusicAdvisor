@@ -2,63 +2,34 @@ package advisor.model;
 
 import advisor.model.dto.Page;
 import advisor.model.dto.Playlist;
-import advisor.model.service.Advisor;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import advisor.model.service.FakeAdvisor;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
+import static advisor.model.service.FakeAdvisorData.FEATURED_PLAYLISTS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
-public class FeaturedPlaylistsTest {
+final class FeaturedPlaylistsTest {
 
-    private static final int pageSize = 2;
+    private static final int PAGE_SIZE = 2;
+    private static final int TOTAL_CATEGORIES = FEATURED_PLAYLISTS.size();
     private static final Page<Playlist> FEATURED_PLAYLISTS_FIRST_PAGE = new Page<>(
-            List.of(
-                    Playlist.builder().title("Page 1 playlist 1 title").link("Page 1 playlist 1 link")
-                            .build(),
-                    Playlist.builder().title("Page 1 playlist 2 title").link("Page 1 playlist 2 link")
-                            .build()),            
-            (pageSize * 2) + 1,
-            1);
-
+            FEATURED_PLAYLISTS.subList(0, PAGE_SIZE), TOTAL_CATEGORIES, 1);
     private static final Page<Playlist> FEATURED_PLAYLISTS_SECOND_PAGE = new Page<>(
-            List.of(
-                    Playlist.builder().title("Page 2 playlist 1 title").link("Page 2 playlist 1 link")
-                            .build(),
-                    Playlist.builder().title("Page 2 playlist 2 title").link("Page 2 playlist 2 link")
-                            .build()),
-            (pageSize * 2) + 1,
-            2);
-
+            FEATURED_PLAYLISTS.subList(PAGE_SIZE, (PAGE_SIZE * 2)), TOTAL_CATEGORIES, 2);
     private static final Page<Playlist> FEATURED_PLAYLISTS_THIRD_PAGE = new Page<>(
-            List.of(
-                    Playlist.builder().title("Page 3 playlist 1 title").link("Page 3 playlist 1 link")
-                            .build()),
-            (pageSize * 2) + 1,
-            3);
-
-    @Mock
-    private Advisor advisor;
+            FEATURED_PLAYLISTS.subList(PAGE_SIZE * 2, (PAGE_SIZE * 3)), TOTAL_CATEGORIES, 3);
 
     private FeaturedPlaylists target;
 
-    @Before
-    public void prepareTarget() {
-        target = new FeaturedPlaylists(advisor, pageSize);
-        when(advisor.getFeaturedPlaylists(1)).thenReturn(FEATURED_PLAYLISTS_FIRST_PAGE);
-        when(advisor.getFeaturedPlaylists(2)).thenReturn(FEATURED_PLAYLISTS_SECOND_PAGE);
-        when(advisor.getFeaturedPlaylists(3)).thenReturn(FEATURED_PLAYLISTS_THIRD_PAGE);
+    @BeforeEach
+    void prepareTarget() {
+        target = new FeaturedPlaylists(new FakeAdvisor(PAGE_SIZE), PAGE_SIZE);
     }
 
     @Test
-    public void whenGettingTheFirstFeaturedPlaylistsPage_thenTheFirstFeaturedPlaylistsPageIsReturned() {
+    void whenGettingTheFirstFeaturedPlaylistsPage_thenTheFirstFeaturedPlaylistsPageIsReturned() {
         // WHEN
         Page<Playlist> featuredPlaylistsPage = target.firstPage();
 
@@ -67,7 +38,7 @@ public class FeaturedPlaylistsTest {
     }
 
     @Test
-    public void givenFirstFeaturedPlaylistsPageHasNotBeenObtained_whenGettingTheNextFeaturedPlaylistsPage_thenAnExceptionIsThrown() {
+    void givenFirstFeaturedPlaylistsPageHasNotBeenObtained_whenGettingTheNextFeaturedPlaylistsPage_thenAnExceptionIsThrown() {
         // WHEN
         Throwable thrown = catchThrowable(() -> target.nextPage());
 
@@ -77,7 +48,7 @@ public class FeaturedPlaylistsTest {
     }
 
     @Test
-    public void givenFirstFeaturedPlaylistsPageHasNotBeenObtained_whenGettingThePreviousFeaturedPlaylistsPage_thenAnExceptionIsThrown() {
+    void givenFirstFeaturedPlaylistsPageHasNotBeenObtained_whenGettingThePreviousFeaturedPlaylistsPage_thenAnExceptionIsThrown() {
         // WHEN
         Throwable thrown = catchThrowable(() -> target.previousPage());
 
@@ -87,7 +58,7 @@ public class FeaturedPlaylistsTest {
     }
 
     @Test
-    public void givenFirstFeaturedPlaylistsPageHasBeenObtained_whenGettingTheNextFeaturedPlaylistsPage_thenTheNextFeaturedPlaylistsPageIsReturned() {
+    void givenFirstFeaturedPlaylistsPageHasBeenObtained_whenGettingTheNextFeaturedPlaylistsPage_thenTheNextFeaturedPlaylistsPageIsReturned() {
         // GIVEN
         target.firstPage();
 
@@ -99,7 +70,7 @@ public class FeaturedPlaylistsTest {
     }
 
     @Test
-    public void givenAllWholeFeaturedPlaylistsPagesHaveBeenObtained_whenGettingTheNextFeaturedPlaylistsPage_thenTheLastFeaturedPlaylistsPageIsReturned() {
+    void givenAllWholeFeaturedPlaylistsPagesHaveBeenObtained_whenGettingTheNextFeaturedPlaylistsPage_thenTheLastFeaturedPlaylistsPageIsReturned() {
         // GIVEN
         target.firstPage();
         target.nextPage();
@@ -112,7 +83,7 @@ public class FeaturedPlaylistsTest {
     }
 
     @Test
-    public void givenAllNextFeaturedPlaylistsPagesHaveBeenObtained_whenGettingTheNextFeaturedPlaylistsPage_thenAnExceptionIsThrown() {
+    void givenAllNextFeaturedPlaylistsPagesHaveBeenObtained_whenGettingTheNextFeaturedPlaylistsPage_thenAnExceptionIsThrown() {
         // GIVEN
         target.firstPage();
         target.nextPage();
@@ -128,7 +99,7 @@ public class FeaturedPlaylistsTest {
     }
 
     @Test
-    public void givenFirstFeaturedPlaylistsPageHasBeenObtained_whenGettingThePreviousFeaturedPlaylistsPage_thenAnExceptionIsThrown() {
+    void givenFirstFeaturedPlaylistsPageHasBeenObtained_whenGettingThePreviousFeaturedPlaylistsPage_thenAnExceptionIsThrown() {
         // GIVEN
         target.firstPage();
 
@@ -141,7 +112,7 @@ public class FeaturedPlaylistsTest {
     }
 
     @Test
-    public void givenFirstTwoFeaturedPlaylistsPagesHaveBeenObtained_whenGettingThePreviousFeaturedPlaylistsPage_thenFirstPageIsObtained() {
+    void givenFirstTwoFeaturedPlaylistsPagesHaveBeenObtained_whenGettingThePreviousFeaturedPlaylistsPage_thenFirstPageIsObtained() {
         // GIVEN
         target.firstPage();
         target.nextPage();
@@ -154,7 +125,7 @@ public class FeaturedPlaylistsTest {
     }
 
     @Test
-    public void givenFirstTwoFeaturedPlaylistsPagesHaveBeenObtainedAndOnePreviousFeaturedPlaylistsPageHasBeenObtained_whenGettingThePreviousFeaturedPlaylistsPage_thenAnExceptionIsThrown() {
+    void givenFirstTwoFeaturedPlaylistsPagesHaveBeenObtainedAndOnePreviousFeaturedPlaylistsPageHasBeenObtained_whenGettingThePreviousFeaturedPlaylistsPage_thenAnExceptionIsThrown() {
         // GIVEN
         target.firstPage();
         target.nextPage();
@@ -169,7 +140,7 @@ public class FeaturedPlaylistsTest {
     }
 
     @Test
-    public void givenAllNextFeaturedPlaylistsPagesHaveBeenObtained_whenGettingFirstFeaturedPlaylistsPage_thenFirstFeaturedPlaylistsPageIsObtained() {
+    void givenAllNextFeaturedPlaylistsPagesHaveBeenObtained_whenGettingFirstFeaturedPlaylistsPage_thenFirstFeaturedPlaylistsPageIsObtained() {
         // GIVEN
         target.firstPage();
         target.nextPage();

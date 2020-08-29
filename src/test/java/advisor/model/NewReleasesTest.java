@@ -1,75 +1,35 @@
 package advisor.model;
 
-import advisor.model.dto.Artist;
 import advisor.model.dto.Page;
 import advisor.model.dto.Release;
-import advisor.model.service.Advisor;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import advisor.model.service.FakeAdvisor;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
+import static advisor.model.service.FakeAdvisorData.RELEASES;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
-public class NewReleasesTest {
+final class NewReleasesTest {
 
-    private static final int pageSize = 2;
+    private static final int PAGE_SIZE = 2;
+    private static final int TOTAL_CATEGORIES = RELEASES.size();
     private static final Page<Release> NEW_RELEASES_FIRST_PAGE = new Page<>(
-            List.of(
-                    Release.builder().title("Page 1 Release 1 title")
-                            .artists(List.of(new Artist("Page 1 Release 1 Artist")))
-                            .link("Page 1 Release 1 link")
-                            .build(),
-                    Release.builder().title("Page 1 Release 2 title")
-                            .artists(List.of(new Artist("Page 1 Release 2 Artist")))
-                            .link("Page 1 Release 2 link")
-                            .build()),
-            (pageSize * 2) + 1,
-            1);
-
+            RELEASES.subList(0, PAGE_SIZE), TOTAL_CATEGORIES, 1);
     private static final Page<Release> NEW_RELEASES_SECOND_PAGE = new Page<>(
-            List.of(
-                    Release.builder().title("Page 2 Release 1 title")
-                            .artists(List.of(new Artist("Page 2 Release 1 Artist")))
-                            .link("Page 2 Release 1 link")
-                            .build(),
-                    Release.builder().title("Page 2 Release 2 title")
-                            .artists(List.of(new Artist("Page 2 Release 2 Artist")))
-                            .link("Page 2 Release 2 link")
-                            .build()),
-            (pageSize * 2) + 1,
-            2);
-
+            RELEASES.subList(PAGE_SIZE, (PAGE_SIZE * 2)), TOTAL_CATEGORIES, 2);
     private static final Page<Release> NEW_RELEASES_THIRD_PAGE = new Page<>(
-            List.of(
-                    Release.builder().title("Page 3 Release 1 title")
-                            .artists(List.of(new Artist("Page 3 Release 1 Artist")))
-                            .link("Page 3 Release 1 link")
-                            .build()),
-                    (pageSize * 2) + 1,
-                    3);
-
-    @Mock
-    private Advisor advisor;
+            RELEASES.subList(PAGE_SIZE * 2, (PAGE_SIZE * 3)), TOTAL_CATEGORIES, 3);
 
     private NewReleases target;
 
-    @Before
-    public void prepareTarget() {
-        target = new NewReleases(advisor, pageSize);
-        when(advisor.getNewReleases(1)).thenReturn(NEW_RELEASES_FIRST_PAGE);
-        when(advisor.getNewReleases(2)).thenReturn(NEW_RELEASES_SECOND_PAGE);
-        when(advisor.getNewReleases(3)).thenReturn(NEW_RELEASES_THIRD_PAGE);
+    @BeforeEach
+    void prepareTarget() {
+        target = new NewReleases(new FakeAdvisor(PAGE_SIZE), PAGE_SIZE);
     }
 
     @Test
-    public void whenGettingTheFirstNewReleasesPage_thenTheFirstNewReleasesPageIsReturned() {
+    void whenGettingTheFirstNewReleasesPage_thenTheFirstNewReleasesPageIsReturned() {
         // WHEN
         Page<Release> newReleasesPage = target.firstPage();
 
@@ -78,7 +38,7 @@ public class NewReleasesTest {
     }
 
     @Test
-    public void givenFirstNewReleasesPageHasNotBeenObtained_whenGettingTheNextNewReleasesPage_thenAnExceptionIsThrown() {
+    void givenFirstNewReleasesPageHasNotBeenObtained_whenGettingTheNextNewReleasesPage_thenAnExceptionIsThrown() {
         // WHEN
         Throwable thrown = catchThrowable(() -> target.nextPage());
 
@@ -88,7 +48,7 @@ public class NewReleasesTest {
     }
 
     @Test
-    public void givenFirstNewReleasesPageHasNotBeenObtained_whenGettingThePreviousNewReleasesPage_thenAnExceptionIsThrown() {
+    void givenFirstNewReleasesPageHasNotBeenObtained_whenGettingThePreviousNewReleasesPage_thenAnExceptionIsThrown() {
         // WHEN
         Throwable thrown = catchThrowable(() -> target.previousPage());
 
@@ -98,7 +58,7 @@ public class NewReleasesTest {
     }
 
     @Test
-    public void givenFirstNewReleasesPageHasBeenObtained_whenGettingTheNextNewReleasesPage_thenTheNextNewReleasesPageIsReturned() {
+    void givenFirstNewReleasesPageHasBeenObtained_whenGettingTheNextNewReleasesPage_thenTheNextNewReleasesPageIsReturned() {
         // GIVEN
         target.firstPage();
 
@@ -110,7 +70,7 @@ public class NewReleasesTest {
     }
 
     @Test
-    public void givenAllWholeNewReleasesPagesHaveBeenObtained_whenGettingTheNextNewReleasesPage_thenTheLastNewReleasesPageIsReturned() {
+    void givenAllWholeNewReleasesPagesHaveBeenObtained_whenGettingTheNextNewReleasesPage_thenTheLastNewReleasesPageIsReturned() {
         // GIVEN
         target.firstPage();
         target.nextPage();
@@ -123,7 +83,7 @@ public class NewReleasesTest {
     }
 
     @Test
-    public void givenAllNextNewReleasePagesHaveBeenObtained_whenGettingTheNextNewReleasesPage_thenAnExceptionIsThrown() {
+    void givenAllNextNewReleasePagesHaveBeenObtained_whenGettingTheNextNewReleasesPage_thenAnExceptionIsThrown() {
         // GIVEN
         target.firstPage();
         target.nextPage();
@@ -138,7 +98,7 @@ public class NewReleasesTest {
     }
 
     @Test
-    public void givenFirstNewReleasesPageHasBeenObtained_whenGettingThePreviousNewReleasesPage_thenAnExceptionIsThrown() {
+    void givenFirstNewReleasesPageHasBeenObtained_whenGettingThePreviousNewReleasesPage_thenAnExceptionIsThrown() {
         // GIVEN
         target.firstPage();
 
@@ -151,7 +111,7 @@ public class NewReleasesTest {
     }
 
     @Test
-    public void givenFirstTwoNewReleasesPagesHaveBeenObtained_whenGettingThePreviousNewReleasesPage_thenFirstPageIsObtained() {
+    void givenFirstTwoNewReleasesPagesHaveBeenObtained_whenGettingThePreviousNewReleasesPage_thenFirstPageIsObtained() {
         // GIVEN
         target.firstPage();
         target.nextPage();
@@ -164,7 +124,7 @@ public class NewReleasesTest {
     }
 
     @Test
-    public void givenFirstTwoNewReleasesPagesHaveBeenObtainedAndOnePreviousNewReleasesPageHasBeenObtained_whenGettingThePreviousNewReleasesPage_thenAnExceptionIsThrown() {
+    void givenFirstTwoNewReleasesPagesHaveBeenObtainedAndOnePreviousNewReleasesPageHasBeenObtained_whenGettingThePreviousNewReleasesPage_thenAnExceptionIsThrown() {
         // GIVEN
         target.firstPage();
         target.nextPage();
@@ -179,7 +139,7 @@ public class NewReleasesTest {
     }
 
     @Test
-    public void givenAllNextNewReleasesPagesHaveBeenObtained_whenGettingFirstNewReleasesPage_thenFirstNewReleasesPageIsObtained() {
+    void givenAllNextNewReleasesPagesHaveBeenObtained_whenGettingFirstNewReleasesPage_thenFirstNewReleasesPageIsObtained() {
         // GIVEN
         target.firstPage();
         target.nextPage();
@@ -190,5 +150,5 @@ public class NewReleasesTest {
 
         // THEN
         assertThat(newReleasesPage).as("First new releases page").isEqualTo(NEW_RELEASES_FIRST_PAGE);
-    }    
+    }
 }

@@ -2,25 +2,29 @@ package advisor.utils;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.Getter;
-import org.junit.rules.ExternalResource;
+import org.junit.jupiter.api.extension.AfterAllCallback;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 @Getter
-public class ChromeDriverSetupRule extends ExternalResource {
+public class ChromeDriverClassExtension implements BeforeAllCallback, AfterAllCallback {
 
     private WebDriver driver;
 
     @Override
-    protected void before() {
+    public void beforeAll(ExtensionContext context) {
         WebDriverManager.chromedriver().setup();
         driver = buildChromeDriver();
     }
 
     @Override
-    protected void after() {
-        driver.close();
+    public void afterAll(ExtensionContext context) {
+        if (driver != null) {
+            driver.close();
+        }
     }
 
     private ChromeDriver buildChromeDriver() {
