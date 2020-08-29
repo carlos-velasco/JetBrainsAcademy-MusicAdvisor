@@ -7,7 +7,7 @@ import advisor.model.dto.Category;
 import advisor.model.service.Advisor;
 import advisor.model.service.FakeAdvisor;
 import advisor.view.CommandLineView;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -25,6 +25,21 @@ public final class CommandLineControllerAndViewTest {
     private final UserCommandAuthentication userCommandAuthentication = new AlwaysAuthenticatedUserCommandAuthentication();
     private CommandLineView commandLineView;
     private CommandLineController target;
+
+    @Test
+    public void whenProcessingUnsupportedCommand_thenUnsupportedCommandMessageIsPrinted() {
+        // GIVEN
+        String input = "not supported";
+        InputStream inputStream = new ByteArrayInputStream(input.getBytes());
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
+        target = new CommandLineController(commandLineView, fakeAdvisor, userCommandAuthentication, defaultPageSize);
+
+        // WHEN
+        target.processInput();
+
+        // THEN
+        assertThat(output).hasToString("Unsupported operation" + System.lineSeparator());
+    }
 
     @Test
     public void whenInputNew_thenNewReleasesFirstPageIsPrinted() {

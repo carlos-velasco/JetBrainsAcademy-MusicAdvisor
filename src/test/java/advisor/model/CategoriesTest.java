@@ -3,40 +3,40 @@ package advisor.model;
 import advisor.model.dto.Category;
 import advisor.model.dto.Page;
 import advisor.model.service.Advisor;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.lenient;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class CategoriesTest {
 
-    private static final int pageSize = 2;
+    private static final int PAGE_SIZE = 2;
     private static final Page<Category> CATEGORIES_FIRST_PAGE = new Page<>(
             List.of(
                     new Category("Page 1 Category 1", "page1Category1"),
                     new Category("Page 1 Category 2", "page1Category2")),
-            (pageSize * 2) + 1,
+            (PAGE_SIZE * 2) + 1,
             1);
 
     private static final Page<Category> CATEGORIES_SECOND_PAGE = new Page<>(
             List.of(
                     new Category("Page 2 Category 1", "page2Category1"),
                     new Category("Page 2 Category 2", "page2Category2")),
-            (pageSize * 2) + 1,
+            (PAGE_SIZE * 2) + 1,
             2);
 
     private static final Page<Category> CATEGORIES_THIRD_PAGE = new Page<>(
             List.of(
                     new Category("Page 3 Category 1", "page3Category1")),
-            (pageSize * 2) + 1,
+            (PAGE_SIZE * 2) + 1,
             3);
 
     @Mock
@@ -44,12 +44,12 @@ public class CategoriesTest {
 
     private Categories target;
 
-    @Before
+    @BeforeEach
     public void prepareTarget() {
-        target = new Categories(advisor, pageSize);
-        when(advisor.getCategories(1)).thenReturn(CATEGORIES_FIRST_PAGE);
-        when(advisor.getCategories(2)).thenReturn(CATEGORIES_SECOND_PAGE);
-        when(advisor.getCategories(3)).thenReturn(CATEGORIES_THIRD_PAGE);
+        target = new Categories(advisor, PAGE_SIZE);
+        lenient().when(advisor.getCategories(1)).thenReturn(CATEGORIES_FIRST_PAGE);
+        lenient().when(advisor.getCategories(2)).thenReturn(CATEGORIES_SECOND_PAGE);
+        lenient().when(advisor.getCategories(3)).thenReturn(CATEGORIES_THIRD_PAGE);
     }
 
     @Test

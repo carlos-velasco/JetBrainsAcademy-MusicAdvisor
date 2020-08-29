@@ -1,17 +1,17 @@
 package advisor.authentication;
 
+import advisor.utils.FreePortExtension;
 import advisor.view.CommandLineView;
 import org.apache.http.client.utils.URIBuilder;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExternalResource;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.net.ServerSocket;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -36,10 +36,10 @@ public final class SpotifyAccessCodeFetcherTest {
     private String redirectUri;
     private SpotifyAccessCodeFetcher target;
 
-    @Rule
-    public FreePort freePort = new FreePort();
+    @RegisterExtension
+    public FreePortExtension freePort = new FreePortExtension();
 
-    @Before
+    @BeforeEach
     public void setUriSchemeHostAndPort() throws URISyntaxException {
         uriBuilder.setScheme("http").setHost("localhost").setPort(freePort.getPort());
         redirectUri = uriBuilder.build().toString();
@@ -48,7 +48,7 @@ public final class SpotifyAccessCodeFetcherTest {
                 spotifyAccessHost, clientId, redirectUri, commandLineView, accessCodeServerTimeoutSeconds);
     }
 
-    @After
+    @AfterEach
     public void shutDownExecutor() {
         executorService.shutdownNow();
     }
@@ -178,7 +178,8 @@ public final class SpotifyAccessCodeFetcherTest {
         assertThat(httpResponse.body()).isEqualTo("Not found authorization code. Try again.");
     }
 
-    @Test(timeout = testExecutionServiceAwaitSeconds * 1000)
+    @Test
+    @Timeout(value = testExecutionServiceAwaitSeconds)
     public void givenNoRequestToAccessCodeServerIsDone_whenFetchingTheAccessCode_thenServerTimesOutAfterSpecifiedTimeout() throws InterruptedException, ExecutionException {
         
         // WHEN
@@ -192,19 +193,3 @@ public final class SpotifyAccessCodeFetcherTest {
     }
 }
 
-class FreePort extends ExternalResource {
-
-    private int port;
-
-    @Override
-    protected void before() throws Throwable {
-        try (ServerSocket socket = new ServerSocket(0)) {
-            socket.setReuseAddress(true);
-            port = socket.getLocalPort();
-        }
-    }
-
-    public int getPort() {
-        return port;
-    }
-}

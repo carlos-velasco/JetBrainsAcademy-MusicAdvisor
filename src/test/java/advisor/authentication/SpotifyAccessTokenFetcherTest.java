@@ -2,13 +2,15 @@ package advisor.authentication;
 
 import advisor.authentication.dto.SpotifyAccessTokenResponse;
 import advisor.view.CommandLineView;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.github.jenspiegsa.wiremockextension.Managed;
+import com.github.jenspiegsa.wiremockextension.WireMockExtension;
+import com.github.tomakehurst.wiremock.WireMockServer;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.apache.http.HttpStatus;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -17,14 +19,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
+import static com.github.jenspiegsa.wiremockextension.ManagedWireMockServer.with;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ExtendWith(WireMockExtension.class)
 public final class SpotifyAccessTokenFetcherTest {
-    private static final String clientId = "myClientId";
-    private static final String clientSecret = "myClientSecret";
-    private static final String redirectUri = "myRedirectUri";
+    private static final String CLIENT_ID = "myClientId";
+    private static final String CLIENT_SECRET = "myClientSecret";
+    private static final String REDIRECT_URI = "myRedirectUri";
     private static final String ACCESS_TOKEN = "BQBSZ0CA3KR0cf0LxmiNK_E87ZqnkJKDD89VOWAZ9f0QXJcsCiHtl5Om-" +
             "EVhkIfwt1AZs5WeXgfEF69e4JxL3YX6IIW9zl9WegTmgLkb4xLXWwhryty488CLoL2SM9VIY6H" +
             "aHgxYxdmRFGWSzrgH3dEqcvPoLpd26D8Y";
@@ -33,15 +37,15 @@ public final class SpotifyAccessTokenFetcherTest {
             new CommandLineView(new Scanner(System.in), new PrintStream(output), 5);
     private SpotifyAccessTokenFetcher target;
 
-    @Rule
-    public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().dynamicPort());
+    @Managed
+    private final WireMockServer wireMockServer = with(wireMockConfig().dynamicPort());
 
-    @Before
+    @BeforeEach
     public void configureTarget() {
         String spotifyAccessHost = "http://localhost";
         target = new SpotifyAccessTokenFetcher(
-                spotifyAccessHost + ":" + wireMockRule.port(),
-                clientId, clientSecret, redirectUri, commandLineView);
+                spotifyAccessHost + ":" + wireMockServer.port(),
+                CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, commandLineView);
     }
 
     @Test
@@ -131,11 +135,11 @@ public final class SpotifyAccessTokenFetcherTest {
 
         // THEN
         String expectedBase64EncodedClientData =
-                Base64.getEncoder().encodeToString(String.join(":", clientId, clientSecret).getBytes());
+                Base64.getEncoder().encodeToString(String.join(":", CLIENT_ID, CLIENT_SECRET).getBytes());
         String expectedRequestBody = String.join("&",
                 List.of("code=" + accessCode,
                         "grant_type=authorization_code",
-                        "redirect_uri=" + redirectUri));
+                        "redirect_uri=" + REDIRECT_URI));
         verify(postRequestedFor(urlEqualTo("/api/token"))
                 .withHeader("Authorization", equalTo("Basic " + expectedBase64EncodedClientData))
                 .withHeader("Content-Type", equalTo("application/x-www-form-urlencoded; charset=UTF-8"))

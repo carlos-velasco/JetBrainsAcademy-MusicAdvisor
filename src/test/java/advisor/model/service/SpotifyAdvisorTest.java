@@ -4,19 +4,23 @@ import advisor.authentication.AlwaysAuthenticatedUserCommandAuthentication;
 import advisor.authentication.UserCommandAuthenticationFacade;
 import advisor.model.AdvisorException;
 import advisor.model.dto.*;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.github.jenspiegsa.wiremockextension.Managed;
+import com.github.jenspiegsa.wiremockextension.WireMockExtension;
+import com.github.tomakehurst.wiremock.WireMockServer;
 import org.apache.http.HttpStatus;
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.List;
 
+import static com.github.jenspiegsa.wiremockextension.ManagedWireMockServer.with;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ExtendWith(WireMockExtension.class)
 public class SpotifyAdvisorTest {
 
     private static final String RESOURCE_COMMON_PATH = "/v1/browse/";
@@ -26,14 +30,14 @@ public class SpotifyAdvisorTest {
     private static final String LOCALE = "es-ES";
     private SpotifyAdvisor target;
 
-    @Rule
-    public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().dynamicPort());
+    @Managed
+    private final WireMockServer wireMockServer = with(wireMockConfig().dynamicPort());
 
-    @Before
+    @BeforeEach
     public void prepareTarget() {
         String spotifyResourceHost = "http://localhost";
         target = new SpotifyAdvisor(
-                spotifyResourceHost + ":" + wireMockRule.port(),
+                spotifyResourceHost + ":" + wireMockServer.port(),
                 userCommandAuthenticationFacade,
                 DEFAULT_PAGE_SIZE,
                 LOCALE);

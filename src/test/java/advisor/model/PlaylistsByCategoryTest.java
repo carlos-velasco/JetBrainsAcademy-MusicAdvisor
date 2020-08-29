@@ -4,29 +4,29 @@ import advisor.model.dto.Category;
 import advisor.model.dto.Page;
 import advisor.model.dto.Playlist;
 import advisor.model.service.Advisor;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.lenient;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class PlaylistsByCategoryTest {
 
-    private static final int pageSize = 2;
+    private static final int PAGE_SIZE = 2;
     private static final Page<Playlist> CATEGORY_PLAYLISTS_FIRST_PAGE = new Page<>(
             List.of(
                     Playlist.builder().title("Page 1 playlist 1 title").link("Page 1 playlist 1 link")
                             .build(),
                     Playlist.builder().title("Page 1 playlist 2 title").link("Page 1 playlist 2 link")
                             .build()),
-            (pageSize * 2) + 1,
+            (PAGE_SIZE * 2) + 1,
             1);
 
     private static final Page<Playlist> CATEGORY_PLAYLISTS_SECOND_PAGE = new Page<>(
@@ -35,14 +35,14 @@ public class PlaylistsByCategoryTest {
                             .build(),
                     Playlist.builder().title("Page 2 playlist 2 title").link("Page 2 playlist 2 link")
                             .build()),
-            (pageSize * 2) + 1,
+            (PAGE_SIZE * 2) + 1,
             2);
 
     private static final Page<Playlist> CATEGORY_PLAYLISTS_THIRD_PAGE = new Page<>(
             List.of(
                     Playlist.builder().title("Page 3 playlist 1 title").link("Page 3 playlist 1 link")
                             .build()),
-            (pageSize * 2) + 1,
+            (PAGE_SIZE * 2) + 1,
             3);
 
     private static final Category EXISTING_CATEGORY = new Category("Existing category", "existingCategory");
@@ -52,7 +52,7 @@ public class PlaylistsByCategoryTest {
             List.of(
                     EXISTING_CATEGORY,
                     new Category("Other existing category", "otherExistingCategory")),
-            (pageSize * 2) + 1,
+            (PAGE_SIZE * 2) + 1,
             1);
     
     @Mock
@@ -60,13 +60,13 @@ public class PlaylistsByCategoryTest {
 
     private PlaylistsByCategory target;
 
-    @Before
+    @BeforeEach
     public void prepareTarget() {
-        target = new PlaylistsByCategory(advisor, pageSize);
-        when(advisor.getCategoryPlaylists(EXISTING_CATEGORY, 1)).thenReturn(CATEGORY_PLAYLISTS_FIRST_PAGE);
-        when(advisor.getCategoryPlaylists(EXISTING_CATEGORY, 2)).thenReturn(CATEGORY_PLAYLISTS_SECOND_PAGE);
-        when(advisor.getCategoryPlaylists(EXISTING_CATEGORY, 3)).thenReturn(CATEGORY_PLAYLISTS_THIRD_PAGE);
-        when(advisor.getCategories()).thenReturn(CATEGORIES_LIST);
+        target = new PlaylistsByCategory(advisor, PAGE_SIZE);
+        lenient().when(advisor.getCategoryPlaylists(EXISTING_CATEGORY, 1)).thenReturn(CATEGORY_PLAYLISTS_FIRST_PAGE);
+        lenient().when(advisor.getCategoryPlaylists(EXISTING_CATEGORY, 2)).thenReturn(CATEGORY_PLAYLISTS_SECOND_PAGE);
+        lenient().when(advisor.getCategoryPlaylists(EXISTING_CATEGORY, 3)).thenReturn(CATEGORY_PLAYLISTS_THIRD_PAGE);
+        lenient().when(advisor.getCategories()).thenReturn(CATEGORIES_LIST);
     }
 
     @Test

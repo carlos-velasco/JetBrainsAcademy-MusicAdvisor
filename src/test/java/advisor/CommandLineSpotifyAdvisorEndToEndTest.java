@@ -1,22 +1,20 @@
 package advisor;
 
 import advisor.runner.CommandLineAdvisorRunner;
-import advisor.utils.ChromeDriverSetupRule;
+import advisor.utils.ChromeDriverClassExtension;
 import advisor.utils.SpotifyAppUIAuthenticator;
+import advisor.utils.SystemInMockClassExtension;
 import org.assertj.core.api.AutoCloseableSoftAssertions;
 import org.assertj.core.api.Condition;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.junit.contrib.java.lang.system.TextFromStandardInputStream;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.io.ByteArrayOutputStream;
 import java.time.Duration;
@@ -33,11 +31,9 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
-import static org.junit.contrib.java.lang.system.TextFromStandardInputStream.emptyStandardInputStream;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
-@RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {AppConfig.class, TestConfig.class})
+@SpringJUnitConfig(classes = {AppConfig.class, TestConfig.class})
 @PropertySource("application.properties")
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 public class CommandLineSpotifyAdvisorEndToEndTest {
@@ -68,15 +64,15 @@ public class CommandLineSpotifyAdvisorEndToEndTest {
     @Autowired
     private CommandLineAdvisorRunner runner;
 
-    @ClassRule
-    public static final TextFromStandardInputStream systemInMock = emptyStandardInputStream();
+    @RegisterExtension
+    public static final SystemInMockClassExtension systemInMock = new SystemInMockClassExtension();
 
-    @ClassRule
-    public static final ChromeDriverSetupRule chromeDriverSetupRule = new ChromeDriverSetupRule();
+    @RegisterExtension
+    public static final ChromeDriverClassExtension chromeDriverClassExtension = new ChromeDriverClassExtension();
 
-    @BeforeClass
+    @BeforeAll
     public static void initializeAuthenticator() {
-        spotifyAppUIAuthenticator = new SpotifyAppUIAuthenticator(chromeDriverSetupRule.getDriver(), REDIRECT_URI);
+        spotifyAppUIAuthenticator = new SpotifyAppUIAuthenticator(chromeDriverClassExtension.getDriver(), REDIRECT_URI);
     }
 
     @Test

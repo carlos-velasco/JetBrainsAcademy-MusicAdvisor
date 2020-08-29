@@ -4,22 +4,22 @@ import advisor.model.dto.Artist;
 import advisor.model.dto.Page;
 import advisor.model.dto.Release;
 import advisor.model.service.Advisor;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.lenient;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class NewReleasesTest {
 
-    private static final int pageSize = 2;
+    private static final int PAGE_SIZE = 2;
     private static final Page<Release> NEW_RELEASES_FIRST_PAGE = new Page<>(
             List.of(
                     Release.builder().title("Page 1 Release 1 title")
@@ -30,7 +30,7 @@ public class NewReleasesTest {
                             .artists(List.of(new Artist("Page 1 Release 2 Artist")))
                             .link("Page 1 Release 2 link")
                             .build()),
-            (pageSize * 2) + 1,
+            (PAGE_SIZE * 2) + 1,
             1);
 
     private static final Page<Release> NEW_RELEASES_SECOND_PAGE = new Page<>(
@@ -43,7 +43,7 @@ public class NewReleasesTest {
                             .artists(List.of(new Artist("Page 2 Release 2 Artist")))
                             .link("Page 2 Release 2 link")
                             .build()),
-            (pageSize * 2) + 1,
+            (PAGE_SIZE * 2) + 1,
             2);
 
     private static final Page<Release> NEW_RELEASES_THIRD_PAGE = new Page<>(
@@ -52,7 +52,7 @@ public class NewReleasesTest {
                             .artists(List.of(new Artist("Page 3 Release 1 Artist")))
                             .link("Page 3 Release 1 link")
                             .build()),
-                    (pageSize * 2) + 1,
+                    (PAGE_SIZE * 2) + 1,
                     3);
 
     @Mock
@@ -60,12 +60,12 @@ public class NewReleasesTest {
 
     private NewReleases target;
 
-    @Before
+    @BeforeEach
     public void prepareTarget() {
-        target = new NewReleases(advisor, pageSize);
-        when(advisor.getNewReleases(1)).thenReturn(NEW_RELEASES_FIRST_PAGE);
-        when(advisor.getNewReleases(2)).thenReturn(NEW_RELEASES_SECOND_PAGE);
-        when(advisor.getNewReleases(3)).thenReturn(NEW_RELEASES_THIRD_PAGE);
+        target = new NewReleases(advisor, PAGE_SIZE);
+        lenient().when(advisor.getNewReleases(1)).thenReturn(NEW_RELEASES_FIRST_PAGE);
+        lenient().when(advisor.getNewReleases(2)).thenReturn(NEW_RELEASES_SECOND_PAGE);
+        lenient().when(advisor.getNewReleases(3)).thenReturn(NEW_RELEASES_THIRD_PAGE);
     }
 
     @Test
