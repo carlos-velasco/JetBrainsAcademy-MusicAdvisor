@@ -18,6 +18,8 @@ public class SpotifyAppUIAuthenticator {
     private static final By AUTHORIZE_BUTTON_LOCATOR = By.cssSelector("#auth-accept");
 
     private final WebDriver driver;
+    private final String redirectUri;
+
     private boolean usernameAndPasswordFilledIn;
 
     public void authenticateApp(String authenticationUrl) {
@@ -40,6 +42,6 @@ public class SpotifyAppUIAuthenticator {
         final WebElement authorizeButton = driver.findElement(AUTHORIZE_BUTTON_LOCATOR);
         authorizeButton.click();
 
-        wait.until(ExpectedConditions.urlContains("localhost:8080"));
+        wait.until(ExpectedConditions.urlContains(redirectUri));
     }
 }

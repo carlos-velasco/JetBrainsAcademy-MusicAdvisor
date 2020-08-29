@@ -11,7 +11,9 @@ import org.junit.Test;
 import org.junit.contrib.java.lang.system.TextFromStandardInputStream;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -34,10 +36,12 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {AppConfig.class, TestConfig.class})
+@PropertySource("application.properties")
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 public class CommandLineSpotifyAdvisorEndToEndTest {
 
     private static final int TEST_TIMEOUT_MINUTES = 1;
+    private static final String REDIRECT_URI = "http://localhost:8080";
     private static final String GOODBYE_MESSAGE = "---GOODBYE!---";
     private static final String AUTH_SUCCESS_MESSAGE = "Success!";
     private static final String FIRST_PAGE_MESSAGE = "---PAGE 1 OF";
@@ -47,7 +51,20 @@ public class CommandLineSpotifyAdvisorEndToEndTest {
             new Condition<>(string -> string.startsWith("https://open.spotify.com/album/"), "Album");
     private static final Condition<String> ARTIST =
             new Condition<>(string -> string.matches("\\[.+]"), "Artist"); // [ArtistName]
+
     private static SpotifyAppUIAuthenticator spotifyAppUIAuthenticator;
+
+    @Value("${spotify.host.access}")
+    private String spotifyAccessHost;
+
+    @Value("${page-size}")
+    private Integer pageSize;
+
+    @Autowired
+    private ApplicationContext applicationContext;
+
+    @Autowired
+    private CommandLineAdvisorRunner runner;
 
     @ClassRule
     public static final TextFromStandardInputStream systemInMock = emptyStandardInputStream();
@@ -57,20 +74,11 @@ public class CommandLineSpotifyAdvisorEndToEndTest {
 
     @BeforeClass
     public static void initializeAuthenticator() {
-        spotifyAppUIAuthenticator = new SpotifyAppUIAuthenticator(chromeDriverSetupRule.getDriver());
+        spotifyAppUIAuthenticator = new SpotifyAppUIAuthenticator(chromeDriverSetupRule.getDriver(), REDIRECT_URI);
     }
 
-    @Autowired
-    private ConfigurableApplicationContext applicationContext;
-
-    @Autowired
-    private CommandLineAdvisorRunner runner;
-
-    @Autowired
-    private AdvisorProperties advisorProperties;
-
     @Test
-    public void whenEnteringExitCommand_thenOutputEqualsGoodbyeMessage() throws Exception {
+    public void whenEnteringExitCommand_thenOutputEqualsGoodbyeMessage() throws InterruptedException {
         // GIVEN
         String[] commands = new String[]{"exit"};
         systemInMock.provideLines(commands);
@@ -102,7 +110,7 @@ public class CommandLineSpotifyAdvisorEndToEndTest {
     }
 
     @Test
-    public void whenEnteringUnsupportedCommand_thenOutputContainsUnsupportedOperationMessage() throws Exception {
+    public void whenEnteringUnsupportedCommand_thenOutputContainsUnsupportedOperationMessage() throws InterruptedException {
         // GIVEN
         String[] commands = new String[]{"random", "exit"};
         systemInMock.provideLines(commands);
@@ -117,7 +125,7 @@ public class CommandLineSpotifyAdvisorEndToEndTest {
     }
 
     @Test
-    public void givenAppAuthenticated_whenEnteringFeaturedCommand_thenOutputContainsSpotifyPlaylists() throws Exception {
+    public void givenAppAuthenticated_whenEnteringFeaturedCommand_thenOutputContainsSpotifyPlaylists() throws InterruptedException {
         // GIVEN
         String[] commands = new String[]{"auth", "featured", "exit"};
         systemInMock.provideLines(commands);
@@ -128,10 +136,10 @@ public class CommandLineSpotifyAdvisorEndToEndTest {
         // THEN
         String output = getOutput();
         assertOutputContainsAuthFirstPageAndGoodbye(output);
-
+        
         List<String> featuredPlaylistsLines = getResourceCommandFirstPageOutputLines(output);
         assertThat(featuredPlaylistsLines)
-                .hasSize(advisorProperties.getPageSize() * 2)
+                .hasSize(pageSize * 2)
                 .doesNotHaveDuplicates();
         try (AutoCloseableSoftAssertions softAssertions = new AutoCloseableSoftAssertions()) {
             for (int index = 0; index < featuredPlaylistsLines.size(); ) {
@@ -142,7 +150,7 @@ public class CommandLineSpotifyAdvisorEndToEndTest {
     }
 
     @Test
-    public void givenAppAuthenticated_whenEnteringNewCommand_thenOutputContainsSpotifyReleases() throws Exception {
+    public void givenAppAuthenticated_whenEnteringNewCommand_thenOutputContainsSpotifyReleases() throws InterruptedException {
         // GIVEN
         String[] commands = new String[]{"auth", "new", "exit"};
         systemInMock.provideLines(commands);
@@ -156,7 +164,7 @@ public class CommandLineSpotifyAdvisorEndToEndTest {
 
         List<String> newReleasesLines = getResourceCommandFirstPageOutputLines(output);
         assertThat(newReleasesLines)
-                .hasSize(advisorProperties.getPageSize() * 3)
+                .hasSize(pageSize * 3)
                 .doesNotHaveDuplicates();
         try (AutoCloseableSoftAssertions softAssertions = new AutoCloseableSoftAssertions()) {
             for (int index = 0; index < newReleasesLines.size(); ) {
@@ -168,7 +176,7 @@ public class CommandLineSpotifyAdvisorEndToEndTest {
     }
 
     @Test
-    public void givenAppAuthenticated_whenEnteringCategoriesCommand_thenOutputContainsCategories() throws Exception {
+    public void givenAppAuthenticated_whenEnteringCategoriesCommand_thenOutputContainsCategories() throws InterruptedException {
         // GIVEN
         String[] commands = new String[]{"auth", "categories", "exit"};
         systemInMock.provideLines(commands);
@@ -182,13 +190,13 @@ public class CommandLineSpotifyAdvisorEndToEndTest {
 
         List<String> categoryLines = getResourceCommandFirstPageOutputLines(output);
         assertThat(categoryLines)
-                .hasSize(advisorProperties.getPageSize())
+                .hasSize(pageSize)
                 .allMatch(line -> !line.isEmpty())
                 .doesNotHaveDuplicates();
     }
 
     @Test
-    public void givenAppAuthenticated_whenEnteringCategoryPlaylistsCommand_thenOutputContainsSpotifyPlaylists() throws Exception {
+    public void givenAppAuthenticated_whenEnteringCategoryPlaylistsCommand_thenOutputContainsSpotifyPlaylists() throws InterruptedException {
         // GIVEN
         String[] commands = new String[]{"auth", "playlists Pop", "exit"};
         systemInMock.provideLines(commands);
@@ -202,7 +210,7 @@ public class CommandLineSpotifyAdvisorEndToEndTest {
 
         List<String> categoryPlaylistsLines = getResourceCommandFirstPageOutputLines(output);
         assertThat(categoryPlaylistsLines)
-                .hasSize(advisorProperties.getPageSize() * 2)
+                .hasSize(pageSize * 2)
                 .doesNotHaveDuplicates();
         try (AutoCloseableSoftAssertions softAssertions = new AutoCloseableSoftAssertions()) {
             for (int index = 0; index < categoryPlaylistsLines.size(); ) {
@@ -235,7 +243,7 @@ public class CommandLineSpotifyAdvisorEndToEndTest {
             e.printStackTrace();
         }
         final String authenticationUrl = Stream.of(getOutput().split("\\r?\\n"))
-                .filter(line -> line.startsWith("https://accounts.spotify.com"))
+                .filter(line -> line.startsWith(spotifyAccessHost))
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("Authentication url not found in output"));
         spotifyAppUIAuthenticator.authenticateApp(authenticationUrl);

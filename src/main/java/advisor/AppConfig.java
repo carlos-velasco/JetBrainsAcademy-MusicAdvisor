@@ -8,17 +8,42 @@ import advisor.runner.AdvisorRunner;
 import advisor.runner.CommandLineAdvisorRunner;
 import advisor.view.CommandLineView;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
 import java.io.PrintStream;
 import java.util.Scanner;
 
 @Configuration
+@PropertySource("application.properties")
 @RequiredArgsConstructor
 public class AppConfig {
 
-    private final AdvisorProperties advisorProperties;
+    @Value("${spotify.client.id}")
+    private String spotifyClientId;
+
+    @Value("${spotify.client.secret}")
+    private String spotifyClientSecret;
+
+    @Value("${redirect-uri}")
+    private String redirectUri;
+
+    @Value("${spotify.host.access}")
+    private String spotifyAccessHost;
+
+    @Value("${spotify.host.resource}")
+    private String spotifyResourceHost;
+
+    @Value("${access-code-server.timeout-seconds}")
+    private Integer accessCodeServerTimeoutSeconds;
+
+    @Value("${locale}")
+    private String locale;
+
+    @Value("${page-size}")
+    private Integer pageSize;
 
     @Bean
     Scanner scanner() {
@@ -32,26 +57,26 @@ public class AppConfig {
 
     @Bean
     CommandLineView commandLineView() {
-        return new CommandLineView(scanner(), printStream(), advisorProperties.getPageSize());
+        return new CommandLineView(scanner(), printStream(), pageSize);
     }
 
     @Bean
     SpotifyAccessCodeFetcher spotifyAccessCodeFetcher() {
         return new SpotifyAccessCodeFetcher(
-                advisorProperties.getSpotifyAccessHost(),
-                advisorProperties.getSpotifyClientId(),
-                advisorProperties.getRedirectUri(),
+                spotifyAccessHost,
+                spotifyClientId,
+                redirectUri,
                 commandLineView(),
-                advisorProperties.getAccessCodeServerTimeoutSeconds());
+                accessCodeServerTimeoutSeconds);
     }
 
     @Bean
     SpotifyAccessTokenFetcher spotifyAccessTokenFetcher() {
         return new SpotifyAccessTokenFetcher(
-                advisorProperties.getSpotifyAccessHost(),
-                advisorProperties.getSpotifyClientId(),
-                advisorProperties.getSpotifyClientSecret(),
-                advisorProperties.getRedirectUri(),
+                spotifyAccessHost,
+                spotifyClientId,
+                spotifyClientSecret,
+                redirectUri,
                 commandLineView());
     }
 
@@ -69,15 +94,16 @@ public class AppConfig {
                 commandLineView(),
                 advisor(),
                 userCommandAuthentication(),
-                advisorProperties.getPageSize());
+                pageSize);
     }
 
     @Bean
     Advisor advisor() {
         return new SpotifyAdvisor(
-                advisorProperties.getSpotifyResourceHost(),
+                spotifyResourceHost,
                 new UserCommandAuthenticationFacade(userCommandAuthentication()),
-                advisorProperties.getPageSize(), advisorProperties.getLocale());
+                pageSize,
+                locale);
     }
 
     @Bean
