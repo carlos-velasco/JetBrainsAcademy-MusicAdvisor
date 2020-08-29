@@ -2,59 +2,30 @@ package advisor.model;
 
 import advisor.model.dto.Page;
 import advisor.model.dto.Playlist;
-import advisor.model.service.Advisor;
+import advisor.model.service.FakeAdvisor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
-
+import static advisor.model.service.FakeAdvisorData.FEATURED_PLAYLISTS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.mockito.Mockito.lenient;
 
-@ExtendWith(MockitoExtension.class)
 final class FeaturedPlaylistsTest {
 
     private static final int PAGE_SIZE = 2;
+    private static final int TOTAL_CATEGORIES = FEATURED_PLAYLISTS.size();
     private static final Page<Playlist> FEATURED_PLAYLISTS_FIRST_PAGE = new Page<>(
-            List.of(
-                    Playlist.builder().title("Page 1 playlist 1 title").link("Page 1 playlist 1 link")
-                            .build(),
-                    Playlist.builder().title("Page 1 playlist 2 title").link("Page 1 playlist 2 link")
-                            .build()),            
-            (PAGE_SIZE * 2) + 1,
-            1);
-
+            FEATURED_PLAYLISTS.subList(0, PAGE_SIZE), TOTAL_CATEGORIES, 1);
     private static final Page<Playlist> FEATURED_PLAYLISTS_SECOND_PAGE = new Page<>(
-            List.of(
-                    Playlist.builder().title("Page 2 playlist 1 title").link("Page 2 playlist 1 link")
-                            .build(),
-                    Playlist.builder().title("Page 2 playlist 2 title").link("Page 2 playlist 2 link")
-                            .build()),
-            (PAGE_SIZE * 2) + 1,
-            2);
-
+            FEATURED_PLAYLISTS.subList(PAGE_SIZE, (PAGE_SIZE * 2)), TOTAL_CATEGORIES, 2);
     private static final Page<Playlist> FEATURED_PLAYLISTS_THIRD_PAGE = new Page<>(
-            List.of(
-                    Playlist.builder().title("Page 3 playlist 1 title").link("Page 3 playlist 1 link")
-                            .build()),
-            (PAGE_SIZE * 2) + 1,
-            3);
-
-    @Mock
-    private Advisor advisor;
+            FEATURED_PLAYLISTS.subList(PAGE_SIZE * 2, (PAGE_SIZE * 3)), TOTAL_CATEGORIES, 3);
 
     private FeaturedPlaylists target;
 
     @BeforeEach
     void prepareTarget() {
-        target = new FeaturedPlaylists(advisor, PAGE_SIZE);
-        lenient().when(advisor.getFeaturedPlaylists(1)).thenReturn(FEATURED_PLAYLISTS_FIRST_PAGE);
-        lenient().when(advisor.getFeaturedPlaylists(2)).thenReturn(FEATURED_PLAYLISTS_SECOND_PAGE);
-        lenient().when(advisor.getFeaturedPlaylists(3)).thenReturn(FEATURED_PLAYLISTS_THIRD_PAGE);
+        target = new FeaturedPlaylists(new FakeAdvisor(PAGE_SIZE), PAGE_SIZE);
     }
 
     @Test

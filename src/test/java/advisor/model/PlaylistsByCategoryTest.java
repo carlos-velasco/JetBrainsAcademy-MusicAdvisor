@@ -1,78 +1,38 @@
 package advisor.model;
 
-import advisor.model.dto.Category;
 import advisor.model.dto.Page;
 import advisor.model.dto.Playlist;
-import advisor.model.service.Advisor;
+import advisor.model.service.FakeAdvisor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
-
+import static advisor.model.service.FakeAdvisorData.GOOD_MOOD_CATEGORY;
+import static advisor.model.service.FakeAdvisorData.GOOD_MOOD_CATEGORY_PLAYLISTS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.mockito.Mockito.lenient;
 
-@ExtendWith(MockitoExtension.class)
 final class PlaylistsByCategoryTest {
 
     private static final int PAGE_SIZE = 2;
+    private static final int TOTAL_CATEGORIES = GOOD_MOOD_CATEGORY_PLAYLISTS.size();
     private static final Page<Playlist> CATEGORY_PLAYLISTS_FIRST_PAGE = new Page<>(
-            List.of(
-                    Playlist.builder().title("Page 1 playlist 1 title").link("Page 1 playlist 1 link")
-                            .build(),
-                    Playlist.builder().title("Page 1 playlist 2 title").link("Page 1 playlist 2 link")
-                            .build()),
-            (PAGE_SIZE * 2) + 1,
-            1);
-
+            GOOD_MOOD_CATEGORY_PLAYLISTS.subList(0, PAGE_SIZE), TOTAL_CATEGORIES, 1);
     private static final Page<Playlist> CATEGORY_PLAYLISTS_SECOND_PAGE = new Page<>(
-            List.of(
-                    Playlist.builder().title("Page 2 playlist 1 title").link("Page 2 playlist 1 link")
-                            .build(),
-                    Playlist.builder().title("Page 2 playlist 2 title").link("Page 2 playlist 2 link")
-                            .build()),
-            (PAGE_SIZE * 2) + 1,
-            2);
-
+            GOOD_MOOD_CATEGORY_PLAYLISTS.subList(PAGE_SIZE, (PAGE_SIZE * 2)), TOTAL_CATEGORIES, 2);
     private static final Page<Playlist> CATEGORY_PLAYLISTS_THIRD_PAGE = new Page<>(
-            List.of(
-                    Playlist.builder().title("Page 3 playlist 1 title").link("Page 3 playlist 1 link")
-                            .build()),
-            (PAGE_SIZE * 2) + 1,
-            3);
-
-    private static final Category EXISTING_CATEGORY = new Category("Existing category", "existingCategory");
-    private static final Category NON_EXISTING_CATEGORY = new Category("Non existing category", "nonExistingCategory");
-    
-    private static final Page<Category> CATEGORIES_LIST = new Page<>(
-            List.of(
-                    EXISTING_CATEGORY,
-                    new Category("Other existing category", "otherExistingCategory")),
-            (PAGE_SIZE * 2) + 1,
-            1);
-    
-    @Mock
-    private Advisor advisor;
+            GOOD_MOOD_CATEGORY_PLAYLISTS.subList(PAGE_SIZE * 2, (PAGE_SIZE * 3)), TOTAL_CATEGORIES, 3);
 
     private PlaylistsByCategory target;
 
     @BeforeEach
     void prepareTarget() {
-        target = new PlaylistsByCategory(advisor, PAGE_SIZE);
-        lenient().when(advisor.getCategoryPlaylists(EXISTING_CATEGORY, 1)).thenReturn(CATEGORY_PLAYLISTS_FIRST_PAGE);
-        lenient().when(advisor.getCategoryPlaylists(EXISTING_CATEGORY, 2)).thenReturn(CATEGORY_PLAYLISTS_SECOND_PAGE);
-        lenient().when(advisor.getCategoryPlaylists(EXISTING_CATEGORY, 3)).thenReturn(CATEGORY_PLAYLISTS_THIRD_PAGE);
-        lenient().when(advisor.getCategories()).thenReturn(CATEGORIES_LIST);
+        target = new PlaylistsByCategory(new FakeAdvisor(PAGE_SIZE), PAGE_SIZE);
     }
 
     @Test
     void whenGettingTheFirstPlaylistsByCategoryPage_thenTheFirstPlaylistsByCategoryPageIsReturned() {
         // WHEN
-        Page<Playlist> newReleasesPage = target.firstPage(EXISTING_CATEGORY.getName());
+        Page<Playlist> newReleasesPage = target.firstPage(GOOD_MOOD_CATEGORY.getName());
 
         // THEN
         assertThat(newReleasesPage).as("First playlists by category page").isEqualTo(CATEGORY_PLAYLISTS_FIRST_PAGE);
@@ -101,7 +61,7 @@ final class PlaylistsByCategoryTest {
     @Test
     void givenFirstPlaylistsByCategoryPageHasBeenObtained_whenGettingTheNextPlaylistsByCategoryPage_thenTheNextPlaylistsByCategoryPageIsReturned() {
         // GIVEN
-        target.firstPage(EXISTING_CATEGORY.getName());
+        target.firstPage(GOOD_MOOD_CATEGORY.getName());
 
         // WHEN
         Page<Playlist> newReleasesPage = target.nextPage();
@@ -113,7 +73,7 @@ final class PlaylistsByCategoryTest {
     @Test
     void givenAllWholePlaylistsByCategoryPagesHaveBeenObtained_whenGettingTheNextPlaylistsByCategoryPage_thenTheLastPlaylistsByCategoryPageIsReturned() {
         // GIVEN
-        target.firstPage(EXISTING_CATEGORY.getName());
+        target.firstPage(GOOD_MOOD_CATEGORY.getName());
         target.nextPage();
 
         // WHEN
@@ -126,7 +86,7 @@ final class PlaylistsByCategoryTest {
     @Test
     void givenAllNextNewReleasePagesHaveBeenObtained_whenGettingTheNextPlaylistsByCategoryPage_thenAnExceptionIsThrown() {
         // GIVEN
-        target.firstPage(EXISTING_CATEGORY.getName());
+        target.firstPage(GOOD_MOOD_CATEGORY.getName());
         target.nextPage();
         target.nextPage();
 
@@ -142,7 +102,7 @@ final class PlaylistsByCategoryTest {
     @Test
     void givenFirstPlaylistsByCategoryPageHasBeenObtained_whenGettingThePreviousPlaylistsByCategoryPage_thenAnExceptionIsThrown() {
         // GIVEN
-        target.firstPage(EXISTING_CATEGORY.getName());
+        target.firstPage(GOOD_MOOD_CATEGORY.getName());
 
         // WHEN
         Throwable thrown = catchThrowable(() -> target.previousPage());
@@ -155,7 +115,7 @@ final class PlaylistsByCategoryTest {
     @Test
     void givenFirstTwoPlaylistsByCategoryPagesHaveBeenObtained_whenGettingThePreviousPlaylistsByCategoryPage_thenFirstPageIsObtained() {
         // GIVEN
-        target.firstPage(EXISTING_CATEGORY.getName());
+        target.firstPage(GOOD_MOOD_CATEGORY.getName());
         target.nextPage();
 
         // WHEN
@@ -168,7 +128,7 @@ final class PlaylistsByCategoryTest {
     @Test
     void givenFirstTwoPlaylistsByCategoryPagesHaveBeenObtainedAndOnePreviousPlaylistsByCategoryPageHasBeenObtained_whenGettingThePreviousPlaylistsByCategoryPage_thenAnExceptionIsThrown() {
         // GIVEN
-        target.firstPage(EXISTING_CATEGORY.getName());
+        target.firstPage(GOOD_MOOD_CATEGORY.getName());
         target.nextPage();
         target.previousPage();
 
@@ -183,12 +143,12 @@ final class PlaylistsByCategoryTest {
     @Test
     void givenAllNextPlaylistsByCategoryPagesHaveBeenObtained_whenGettingFirstPlaylistsByCategoryPage_thenFirstPlaylistsByCategoryPageIsObtained() {
         // GIVEN
-        target.firstPage(EXISTING_CATEGORY.getName());
+        target.firstPage(GOOD_MOOD_CATEGORY.getName());
         target.nextPage();
         target.nextPage();
 
         // WHEN
-        Page<Playlist> newReleasesPage = target.firstPage(EXISTING_CATEGORY.getName());
+        Page<Playlist> newReleasesPage = target.firstPage(GOOD_MOOD_CATEGORY.getName());
 
         // THEN
         assertThat(newReleasesPage).as("First playlists by category page").isEqualTo(CATEGORY_PLAYLISTS_FIRST_PAGE);
@@ -197,7 +157,7 @@ final class PlaylistsByCategoryTest {
     @Test
     void givenCategoryDoesNotExist_whenGettingFirstPlaylistByCategoryPage_thenAnExceptionIsThrown() {
         // WHEN
-        Throwable thrown = catchThrowable(() -> target.firstPage(NON_EXISTING_CATEGORY.getName()));
+        Throwable thrown = catchThrowable(() -> target.firstPage("non existing category"));
 
         // THEN
         assertThat(thrown).isInstanceOf(AdvisorException.class)

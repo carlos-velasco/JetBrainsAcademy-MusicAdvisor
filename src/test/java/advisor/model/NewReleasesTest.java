@@ -1,71 +1,31 @@
 package advisor.model;
 
-import advisor.model.dto.Artist;
 import advisor.model.dto.Page;
 import advisor.model.dto.Release;
-import advisor.model.service.Advisor;
+import advisor.model.service.FakeAdvisor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
-
+import static advisor.model.service.FakeAdvisorData.RELEASES;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.mockito.Mockito.lenient;
 
-@ExtendWith(MockitoExtension.class)
 final class NewReleasesTest {
 
     private static final int PAGE_SIZE = 2;
+    private static final int TOTAL_CATEGORIES = RELEASES.size();
     private static final Page<Release> NEW_RELEASES_FIRST_PAGE = new Page<>(
-            List.of(
-                    Release.builder().title("Page 1 Release 1 title")
-                            .artists(List.of(new Artist("Page 1 Release 1 Artist")))
-                            .link("Page 1 Release 1 link")
-                            .build(),
-                    Release.builder().title("Page 1 Release 2 title")
-                            .artists(List.of(new Artist("Page 1 Release 2 Artist")))
-                            .link("Page 1 Release 2 link")
-                            .build()),
-            (PAGE_SIZE * 2) + 1,
-            1);
-
+            RELEASES.subList(0, PAGE_SIZE), TOTAL_CATEGORIES, 1);
     private static final Page<Release> NEW_RELEASES_SECOND_PAGE = new Page<>(
-            List.of(
-                    Release.builder().title("Page 2 Release 1 title")
-                            .artists(List.of(new Artist("Page 2 Release 1 Artist")))
-                            .link("Page 2 Release 1 link")
-                            .build(),
-                    Release.builder().title("Page 2 Release 2 title")
-                            .artists(List.of(new Artist("Page 2 Release 2 Artist")))
-                            .link("Page 2 Release 2 link")
-                            .build()),
-            (PAGE_SIZE * 2) + 1,
-            2);
-
+            RELEASES.subList(PAGE_SIZE, (PAGE_SIZE * 2)), TOTAL_CATEGORIES, 2);
     private static final Page<Release> NEW_RELEASES_THIRD_PAGE = new Page<>(
-            List.of(
-                    Release.builder().title("Page 3 Release 1 title")
-                            .artists(List.of(new Artist("Page 3 Release 1 Artist")))
-                            .link("Page 3 Release 1 link")
-                            .build()),
-                    (PAGE_SIZE * 2) + 1,
-                    3);
-
-    @Mock
-    private Advisor advisor;
+            RELEASES.subList(PAGE_SIZE * 2, (PAGE_SIZE * 3)), TOTAL_CATEGORIES, 3);
 
     private NewReleases target;
 
     @BeforeEach
     void prepareTarget() {
-        target = new NewReleases(advisor, PAGE_SIZE);
-        lenient().when(advisor.getNewReleases(1)).thenReturn(NEW_RELEASES_FIRST_PAGE);
-        lenient().when(advisor.getNewReleases(2)).thenReturn(NEW_RELEASES_SECOND_PAGE);
-        lenient().when(advisor.getNewReleases(3)).thenReturn(NEW_RELEASES_THIRD_PAGE);
+        target = new NewReleases(new FakeAdvisor(PAGE_SIZE), PAGE_SIZE);
     }
 
     @Test
@@ -190,5 +150,5 @@ final class NewReleasesTest {
 
         // THEN
         assertThat(newReleasesPage).as("First new releases page").isEqualTo(NEW_RELEASES_FIRST_PAGE);
-    }    
+    }
 }
