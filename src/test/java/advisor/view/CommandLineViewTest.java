@@ -11,14 +11,14 @@ import java.util.Scanner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CommandLineViewTest {
+final class CommandLineViewTest {
 
+    private static final int PAGE_SIZE = 10;
     private final ByteArrayOutputStream output = new ByteArrayOutputStream();
     private CommandLineView target;
-    private static final int PAGE_SIZE = 10;
 
     @Test
-    public void givenPageTotalIsOneUnitLessThanPageSize_whenPrintingAPage_thenTotalOfPagesIsOne() {
+    void givenPageTotalIsOneUnitLessThanPageSize_whenPrintingAPage_thenTotalOfPagesIsOne() {
         // GIVEN
         target = new CommandLineView(new Scanner(System.in), new PrintStream(output), PAGE_SIZE);
         Page<Category> page = new Page<>(List.of(), PAGE_SIZE - 1, 1);
@@ -31,7 +31,7 @@ public class CommandLineViewTest {
     }
 
     @Test
-    public void givenPageTotalIsEqualToPageSize_whenPrintingAPage_thenTotalOfPagesIsOne() {
+    void givenPageTotalIsEqualToPageSize_whenPrintingAPage_thenTotalOfPagesIsOne() {
         // GIVEN
         target = new CommandLineView(new Scanner(System.in), new PrintStream(output), PAGE_SIZE);
         Page<Category> page = new Page<>(List.of(), PAGE_SIZE, 1);
@@ -44,7 +44,7 @@ public class CommandLineViewTest {
     }
 
     @Test
-    public void givenPageTotalIsOneUnitGreaterThanPageSize_whenPrintingAPage_thenTotalOfPagesIsTwo() {
+    void givenPageTotalIsOneUnitGreaterThanPageSize_whenPrintingAPage_thenTotalOfPagesIsTwo() {
         // GIVEN
         target = new CommandLineView(new Scanner(System.in), new PrintStream(output), PAGE_SIZE);
         Page<Category> page = new Page<>(List.of(), PAGE_SIZE + 1, 1);

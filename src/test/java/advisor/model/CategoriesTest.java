@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Mockito.lenient;
 
 @ExtendWith(MockitoExtension.class)
-public class CategoriesTest {
+final class CategoriesTest {
 
     private static final int PAGE_SIZE = 2;
     private static final Page<Category> CATEGORIES_FIRST_PAGE = new Page<>(
@@ -45,7 +45,7 @@ public class CategoriesTest {
     private Categories target;
 
     @BeforeEach
-    public void prepareTarget() {
+    void prepareTarget() {
         target = new Categories(advisor, PAGE_SIZE);
         lenient().when(advisor.getCategories(1)).thenReturn(CATEGORIES_FIRST_PAGE);
         lenient().when(advisor.getCategories(2)).thenReturn(CATEGORIES_SECOND_PAGE);
@@ -53,7 +53,7 @@ public class CategoriesTest {
     }
 
     @Test
-    public void whenGettingTheFirstCategoriesPage_thenTheFirstCategoriesPageIsReturned() {
+    void whenGettingTheFirstCategoriesPage_thenTheFirstCategoriesPageIsReturned() {
         // WHEN
         Page<Category> categoryPage = target.firstPage();
 
@@ -62,7 +62,7 @@ public class CategoriesTest {
     }
 
     @Test
-    public void givenFirstCategoriesPageHasNotBeenObtained_whenGettingTheNextCategoriesPage_thenAnExceptionIsThrown() {
+    void givenFirstCategoriesPageHasNotBeenObtained_whenGettingTheNextCategoriesPage_thenAnExceptionIsThrown() {
         // WHEN
         Throwable thrown = catchThrowable(() -> target.nextPage());
 
@@ -72,7 +72,7 @@ public class CategoriesTest {
     }
 
     @Test
-    public void givenFirstCategoriesPageHasNotBeenObtained_whenGettingThePreviousCategoriesPage_thenAnExceptionIsThrown() {
+    void givenFirstCategoriesPageHasNotBeenObtained_whenGettingThePreviousCategoriesPage_thenAnExceptionIsThrown() {
         // WHEN
         Throwable thrown = catchThrowable(() -> target.previousPage());
 
@@ -82,7 +82,7 @@ public class CategoriesTest {
     }
 
     @Test
-    public void givenFirstCategoriesPageHasBeenObtained_whenGettingTheNextCategoriesPage_thenTheNextCategoryPageIsReturned() {
+    void givenFirstCategoriesPageHasBeenObtained_whenGettingTheNextCategoriesPage_thenTheNextCategoryPageIsReturned() {
         // GIVEN
         target.firstPage();
 
@@ -94,7 +94,7 @@ public class CategoriesTest {
     }
 
     @Test
-    public void givenAllWholeCategoriesPagesHaveBeenObtained_whenGettingTheNextCategoriesPage_thenTheLastCategoryPageIsReturned() {
+    void givenAllWholeCategoriesPagesHaveBeenObtained_whenGettingTheNextCategoriesPage_thenTheLastCategoryPageIsReturned() {
         // GIVEN
         target.firstPage();
         target.nextPage();
@@ -107,7 +107,7 @@ public class CategoriesTest {
     }
 
     @Test
-    public void givenAllNextCategoryPagesHaveBeenObtained_whenGettingTheNextCategoriesPage_thenAnExceptionIsThrown() {
+    void givenAllNextCategoryPagesHaveBeenObtained_whenGettingTheNextCategoriesPage_thenAnExceptionIsThrown() {
         // GIVEN
         target.firstPage();
         target.nextPage();
@@ -123,7 +123,7 @@ public class CategoriesTest {
     }
 
     @Test
-    public void givenFirstCategoriesPageHasBeenObtained_whenGettingThePreviousCategoriesPage_thenAnExceptionIsThrown() {
+    void givenFirstCategoriesPageHasBeenObtained_whenGettingThePreviousCategoriesPage_thenAnExceptionIsThrown() {
         // GIVEN
         target.firstPage();
 
@@ -136,7 +136,7 @@ public class CategoriesTest {
     }
 
     @Test
-    public void givenFirstTwoCategoriesPagesHaveBeenObtained_whenGettingThePreviousCategoriesPage_thenFirstPageIsObtained() {
+    void givenFirstTwoCategoriesPagesHaveBeenObtained_whenGettingThePreviousCategoriesPage_thenFirstPageIsObtained() {
         // GIVEN
         target.firstPage();
         target.nextPage();
@@ -149,7 +149,7 @@ public class CategoriesTest {
     }
 
     @Test
-    public void givenFirstTwoCategoriesPagesHaveBeenObtainedAndOnePreviousCategoryPageHasBeenObtained_whenGettingThePreviousCategoriesPage_thenAnExceptionIsThrown() {
+    void givenFirstTwoCategoriesPagesHaveBeenObtainedAndOnePreviousCategoryPageHasBeenObtained_whenGettingThePreviousCategoriesPage_thenAnExceptionIsThrown() {
         // GIVEN
         target.firstPage();
         target.nextPage();
@@ -164,7 +164,7 @@ public class CategoriesTest {
     }
 
     @Test
-    public void givenAllNextCategoriesPagesHaveBeenObtained_whenGettingFirstCategoriesPage_thenFirstCategoriesPageIsObtained() {
+    void givenAllNextCategoriesPagesHaveBeenObtained_whenGettingFirstCategoriesPage_thenFirstCategoriesPageIsObtained() {
         // GIVEN
         target.firstPage();
         target.nextPage();

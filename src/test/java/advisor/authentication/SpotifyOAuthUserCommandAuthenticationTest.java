@@ -16,13 +16,13 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public final class SpotifyOAuthUserCommandAuthenticationTest {
+final class SpotifyOAuthUserCommandAuthenticationTest {
 
     private final ByteArrayOutputStream output = new ByteArrayOutputStream();
     private final CommandLineView commandLineView = new CommandLineView(new Scanner(System.in), new PrintStream(output), 5);
 
     @Test
-    public void givenAccessTokenAndAuthTokenAreObtained_whenAuthenticating_thenAccessTokenIsPopulated() throws IOException, InterruptedException {
+    void givenAccessTokenAndAuthTokenAreObtained_whenAuthenticating_thenAccessTokenIsPopulated() throws IOException, InterruptedException {
         // GIVEN
         String accessCode = "myAccessCode";
         String accessToken = "myAccessToken";
@@ -45,7 +45,7 @@ public final class SpotifyOAuthUserCommandAuthenticationTest {
     }
 
     @Test
-    public void givenAccessTokenAndAuthTokenAreObtained_whenAuthenticating_thenSuccessMessagesAreWritten() throws IOException, InterruptedException {
+    void givenAccessTokenAndAuthTokenAreObtained_whenAuthenticating_thenSuccessMessagesAreWritten() throws IOException, InterruptedException {
         // GIVEN
         String accessCode = "myAccessCode";
         String accessToken = "myAccessToken";
@@ -68,7 +68,7 @@ public final class SpotifyOAuthUserCommandAuthenticationTest {
     }
 
     @Test
-    public void givenAccessCodeObtainedAndAccessTokenNotObtained_whenAuthenticating_thenAccessTokenIsPopulated() throws IOException, InterruptedException {
+    void givenAccessCodeObtainedAndAccessTokenNotObtained_whenAuthenticating_thenAccessTokenIsPopulated() throws IOException, InterruptedException {
         // GIVEN
         String accessCode = "myAccessCode";
         SpotifyAccessCodeFetcher spotifyAccessCodeFetcher = mock(SpotifyAccessCodeFetcher.class);
@@ -89,7 +89,7 @@ public final class SpotifyOAuthUserCommandAuthenticationTest {
     }
 
     @Test
-    public void givenAccessCodeObtainedAndAccessTokenNotObtained_whenAuthenticating_thenMessagesAreWritten() throws IOException, InterruptedException {
+    void givenAccessCodeObtainedAndAccessTokenNotObtained_whenAuthenticating_thenMessagesAreWritten() throws IOException, InterruptedException {
         // GIVEN
         String accessCode = "myAccessCode";
 
@@ -111,7 +111,7 @@ public final class SpotifyOAuthUserCommandAuthenticationTest {
     }
 
     @Test
-    public void givenAccessCodeAndAccessTokenNotObtained_whenAuthenticating_thenAccessTokenIsPopulated() throws IOException, InterruptedException {
+    void givenAccessCodeAndAccessTokenNotObtained_whenAuthenticating_thenAccessTokenIsPopulated() throws IOException, InterruptedException {
         // GIVEN
         SpotifyAccessCodeFetcher spotifyAccessCodeFetcher = mock(SpotifyAccessCodeFetcher.class);
         when(spotifyAccessCodeFetcher.fetchAccessCode()).thenReturn(Optional.empty());
@@ -129,7 +129,7 @@ public final class SpotifyOAuthUserCommandAuthenticationTest {
     }
 
     @Test
-    public void givenAccessCodeAndAccessTokenNotObtained_whenAuthenticating_thenErrorMessagesAreWritten() throws IOException, InterruptedException {
+    void givenAccessCodeAndAccessTokenNotObtained_whenAuthenticating_thenErrorMessagesAreWritten() throws IOException, InterruptedException {
         // GIVEN
         SpotifyAccessCodeFetcher spotifyAccessCodeFetcher = mock(SpotifyAccessCodeFetcher.class);
         when(spotifyAccessCodeFetcher.fetchAccessCode()).thenReturn(Optional.empty());

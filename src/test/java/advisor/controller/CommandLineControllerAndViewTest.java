@@ -17,22 +17,22 @@ import java.util.Scanner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public final class CommandLineControllerAndViewTest {
+final class CommandLineControllerAndViewTest {
 
-    private final int defaultPageSize = 2;
+    private static final int DEFAULT_PAGE_SIZE = 2;
     private final ByteArrayOutputStream output = new ByteArrayOutputStream();
-    private final Advisor fakeAdvisor = new FakeAdvisor(defaultPageSize);
+    private final Advisor fakeAdvisor = new FakeAdvisor(DEFAULT_PAGE_SIZE);
     private final UserCommandAuthentication userCommandAuthentication = new AlwaysAuthenticatedUserCommandAuthentication();
     private CommandLineView commandLineView;
     private CommandLineController target;
 
     @Test
-    public void whenProcessingUnsupportedCommand_thenUnsupportedCommandMessageIsPrinted() {
+    void whenProcessingUnsupportedCommand_thenUnsupportedCommandMessageIsPrinted() {
         // GIVEN
         String input = "not supported";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, userCommandAuthentication, defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, userCommandAuthentication, DEFAULT_PAGE_SIZE);
 
         // WHEN
         target.processInput();
@@ -42,12 +42,12 @@ public final class CommandLineControllerAndViewTest {
     }
 
     @Test
-    public void whenInputNew_thenNewReleasesFirstPageIsPrinted() {
+    void whenInputNew_thenNewReleasesFirstPageIsPrinted() {
         // GIVEN
         String input = "new";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, userCommandAuthentication, defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, userCommandAuthentication, DEFAULT_PAGE_SIZE);
 
         // WHEN
         target.processInput();
@@ -61,12 +61,12 @@ public final class CommandLineControllerAndViewTest {
     }
 
     @Test
-    public void whenInputFeatured_thenFeaturedPlaylistsArePrinted() {
+    void whenInputFeatured_thenFeaturedPlaylistsArePrinted() {
         // GIVEN
         String input = "featured";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, userCommandAuthentication, defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, userCommandAuthentication, DEFAULT_PAGE_SIZE);
 
         // WHEN
         target.processInput();
@@ -81,12 +81,12 @@ public final class CommandLineControllerAndViewTest {
     }
 
     @Test
-    public void whenInputCategories_thenCategoriesArePrinted() {
+    void whenInputCategories_thenCategoriesArePrinted() {
         // GIVEN
         String input = "categories";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, userCommandAuthentication, defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, userCommandAuthentication, DEFAULT_PAGE_SIZE);
 
         // WHEN
         target.processInput();
@@ -100,12 +100,12 @@ public final class CommandLineControllerAndViewTest {
     }
 
     @Test
-    public void whenInputPlaylistsAndExistingCategory_thenCategoryPlaylistsArePrinted() {
+    void whenInputPlaylistsAndExistingCategory_thenCategoryPlaylistsArePrinted() {
         // GIVEN
         String input = "playlists Good mood";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, userCommandAuthentication, defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, userCommandAuthentication, DEFAULT_PAGE_SIZE);
 
         // WHEN
         target.processInput();
@@ -119,12 +119,12 @@ public final class CommandLineControllerAndViewTest {
     }
 
     @Test
-    public void whenInputPlaylistsAndNonExistingCategory_thenErrorIsPrinted() {
+    void whenInputPlaylistsAndNonExistingCategory_thenErrorIsPrinted() {
         // GIVEN
         String input = "playlists NonExistingCategory";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, userCommandAuthentication, defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, userCommandAuthentication, DEFAULT_PAGE_SIZE);
 
         // WHEN
         target.processInput();
@@ -134,12 +134,12 @@ public final class CommandLineControllerAndViewTest {
     }
 
     @Test
-    public void whenInputExit_thenGoodbyeIsPrinted() {
+    void whenInputExit_thenGoodbyeIsPrinted() {
         // GIVEN
         String input = "exit";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, userCommandAuthentication, defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, userCommandAuthentication, DEFAULT_PAGE_SIZE);
 
         // WHEN
         target.processInput();
@@ -149,12 +149,12 @@ public final class CommandLineControllerAndViewTest {
     }
 
     @Test
-    public void whenInputAuthAndAuthenticationIsSuccessful_thenSuccessMessageIsPrinted() {
+    void whenInputAuthAndAuthenticationIsSuccessful_thenSuccessMessageIsPrinted() {
         // GIVEN
         String input = "auth";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), DEFAULT_PAGE_SIZE);
 
         // WHEN
         target.processInput();
@@ -165,12 +165,12 @@ public final class CommandLineControllerAndViewTest {
     }
 
     @Test
-    public void whenInputAuthAndAuthenticationIsSuccessful_thenNoMessageIsPrinted() {
+    void whenInputAuthAndAuthenticationIsSuccessful_thenNoMessageIsPrinted() {
         // GIVEN
         String input = "auth";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, new NeverAuthenticatedUserCommandAuthentication(), defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, new NeverAuthenticatedUserCommandAuthentication(), DEFAULT_PAGE_SIZE);
 
         // WHEN
         target.processInput();
@@ -180,12 +180,12 @@ public final class CommandLineControllerAndViewTest {
     }
 
     @Test
-    public void givenCategoriesFirstPageHasBeenDisplayed_whenUserInputsNext_thenNextCategoriesPageIsDisplayed() {
+    void givenCategoriesFirstPageHasBeenDisplayed_whenUserInputsNext_thenNextCategoriesPageIsDisplayed() {
         // GIVEN
         String input = "categories" + System.lineSeparator() + "next";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), DEFAULT_PAGE_SIZE);
         target.processInput();
         output.reset();
 
@@ -201,12 +201,12 @@ public final class CommandLineControllerAndViewTest {
     }
 
     @Test
-    public void givenCategoriesFirstTwoPagesHasBeenDisplayed_whenUserInputsPrev_thenPreviousCategoriesPageIsDisplayed() {
+    void givenCategoriesFirstTwoPagesHasBeenDisplayed_whenUserInputsPrev_thenPreviousCategoriesPageIsDisplayed() {
         // GIVEN
         String input = "categories" + System.lineSeparator() + "next" + System.lineSeparator() + "prev";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), DEFAULT_PAGE_SIZE);
         target.processInput();
         target.processInput();
         output.reset();
@@ -223,12 +223,12 @@ public final class CommandLineControllerAndViewTest {
     }
 
     @Test
-    public void givenNewReleasesFirstPageHasBeenDisplayed_whenUserInputsNext_thenNextNewReleasesPageIsDisplayed() {
+    void givenNewReleasesFirstPageHasBeenDisplayed_whenUserInputsNext_thenNextNewReleasesPageIsDisplayed() {
         // GIVEN
         String input = "new" + System.lineSeparator() + "next";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), DEFAULT_PAGE_SIZE);
         target.processInput();
         output.reset();
 
@@ -244,12 +244,12 @@ public final class CommandLineControllerAndViewTest {
     }
 
     @Test
-    public void givenNewReleasesFirstTwoPagesHasBeenDisplayed_whenUserInputsPrev_thenPreviousNewReleasesPageIsDisplayed() {
+    void givenNewReleasesFirstTwoPagesHasBeenDisplayed_whenUserInputsPrev_thenPreviousNewReleasesPageIsDisplayed() {
         // GIVEN
         String input = "new" + System.lineSeparator() + "next" + System.lineSeparator() + "prev";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), DEFAULT_PAGE_SIZE);
         target.processInput();
         target.processInput();
         output.reset();
@@ -266,12 +266,12 @@ public final class CommandLineControllerAndViewTest {
     }
 
     @Test
-    public void givenFeaturedPlaylistsFirstPageHasBeenDisplayed_whenUserInputsNext_thenNextFeaturedPlaylistsPageIsDisplayed() {
+    void givenFeaturedPlaylistsFirstPageHasBeenDisplayed_whenUserInputsNext_thenNextFeaturedPlaylistsPageIsDisplayed() {
         // GIVEN
         String input = "featured" + System.lineSeparator() + "next";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), DEFAULT_PAGE_SIZE);
         target.processInput();
         output.reset();
 
@@ -287,12 +287,12 @@ public final class CommandLineControllerAndViewTest {
     }
 
     @Test
-    public void givenFeaturedPlaylistsFirstTwoPagesHasBeenDisplayed_whenUserInputsPrev_thenPreviousFeaturedPlaylistsPageIsDisplayed() {
+    void givenFeaturedPlaylistsFirstTwoPagesHasBeenDisplayed_whenUserInputsPrev_thenPreviousFeaturedPlaylistsPageIsDisplayed() {
         // GIVEN
         String input = "featured" + System.lineSeparator() + "next" + System.lineSeparator() + "prev";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), DEFAULT_PAGE_SIZE);
         target.processInput();
         target.processInput();
         output.reset();
@@ -309,12 +309,12 @@ public final class CommandLineControllerAndViewTest {
     }
 
     @Test
-    public void givenPlaylistsByCategoryFirstPageHasBeenDisplayed_whenUserInputsNext_thenNextPlaylistsByCategoryPageIsDisplayed() {
+    void givenPlaylistsByCategoryFirstPageHasBeenDisplayed_whenUserInputsNext_thenNextPlaylistsByCategoryPageIsDisplayed() {
         // GIVEN
         String input = "playlists Good mood" + System.lineSeparator() + "next";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), DEFAULT_PAGE_SIZE);
         target.processInput();
         output.reset();
 
@@ -330,12 +330,12 @@ public final class CommandLineControllerAndViewTest {
     }
 
     @Test
-    public void givenPlaylistsByCategoryFirstTwoPagesHasBeenDisplayed_whenUserInputsPrev_thenPreviousPlaylistsByCategoryPageIsDisplayed() {
+    void givenPlaylistsByCategoryFirstTwoPagesHasBeenDisplayed_whenUserInputsPrev_thenPreviousPlaylistsByCategoryPageIsDisplayed() {
         // GIVEN
         String input = "playlists Good mood" + System.lineSeparator() + "next" + System.lineSeparator() + "prev";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), DEFAULT_PAGE_SIZE);
         target.processInput();
         target.processInput();
         output.reset();
@@ -352,12 +352,12 @@ public final class CommandLineControllerAndViewTest {
     }
 
     @Test
-    public void givenNoContentCommandHasBeenExecuted_whenUserInputsNext_thenAnErrorMessageIsDisplayed() {
+    void givenNoContentCommandHasBeenExecuted_whenUserInputsNext_thenAnErrorMessageIsDisplayed() {
         // GIVEN
         String input = "next";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), DEFAULT_PAGE_SIZE);
 
         // WHEN
         target.processInput();
@@ -369,12 +369,12 @@ public final class CommandLineControllerAndViewTest {
     }
 
     @Test
-    public void givenNoContentCommandHasBeenExecuted_whenUserInputsPrev_thenAnErrorMessageIsDisplayed() {
+    void givenNoContentCommandHasBeenExecuted_whenUserInputsPrev_thenAnErrorMessageIsDisplayed() {
         // GIVEN
         String input = "prev";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, fakeAdvisor, new AlwaysAuthenticatedUserCommandAuthentication(), DEFAULT_PAGE_SIZE);
 
         // WHEN
         target.processInput();

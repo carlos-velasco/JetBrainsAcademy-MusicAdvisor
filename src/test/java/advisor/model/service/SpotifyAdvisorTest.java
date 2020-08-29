@@ -21,20 +21,20 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMoc
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(WireMockExtension.class)
-public class SpotifyAdvisorTest {
+final class SpotifyAdvisorTest {
 
     private static final String RESOURCE_COMMON_PATH = "/v1/browse/";
-    private final UserCommandAuthenticationFacade userCommandAuthenticationFacade =
-            new UserCommandAuthenticationFacade(new AlwaysAuthenticatedUserCommandAuthentication());
     private static final int DEFAULT_PAGE_SIZE = 5;
     private static final String LOCALE = "es-ES";
+    private final UserCommandAuthenticationFacade userCommandAuthenticationFacade =
+            new UserCommandAuthenticationFacade(new AlwaysAuthenticatedUserCommandAuthentication());
     private SpotifyAdvisor target;
 
     @Managed
     private final WireMockServer wireMockServer = with(wireMockConfig().dynamicPort());
 
     @BeforeEach
-    public void prepareTarget() {
+    void prepareTarget() {
         String spotifyResourceHost = "http://localhost";
         target = new SpotifyAdvisor(
                 spotifyResourceHost + ":" + wireMockServer.port(),
@@ -44,7 +44,7 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void givenCategoriesReturnedFromSpotify_whenGettingCategories_thenCategoryPageIsReturned() {
+    void givenCategoriesReturnedFromSpotify_whenGettingCategories_thenCategoryPageIsReturned() {
         // GIVEN
         List<Category> expectedCategories = List.of(
                 new Category("Top Lists", "toplists"),
@@ -77,7 +77,7 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void whenGettingCategories_ThenCorrectHeadersAreSentInRequest() {
+    void whenGettingCategories_ThenCorrectHeadersAreSentInRequest() {
         // GIVEN
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories"))
                 .willReturn(aResponse()
@@ -96,7 +96,7 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void whenGettingCategoriesFirstPage_ThenCorrectQueryParamsAreSentInRequest() {
+    void whenGettingCategoriesFirstPage_ThenCorrectQueryParamsAreSentInRequest() {
         // GIVEN
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories"))
                 .willReturn(aResponse()
@@ -114,7 +114,7 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void whenGettingCategoriesNthPage_ThenCorrectQueryParamsAreSentInRequest() {
+    void whenGettingCategoriesNthPage_ThenCorrectQueryParamsAreSentInRequest() {
         // GIVEN
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories"))
                 .willReturn(aResponse()
@@ -133,7 +133,7 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void whenGettingCategoriesWithNoPaging_ThenNoPagingQueryParamsAreSentInRequest() {
+    void whenGettingCategoriesWithNoPaging_ThenNoPagingQueryParamsAreSentInRequest() {
         // GIVEN
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories"))
                 .willReturn(aResponse()
@@ -151,7 +151,7 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void givenCategoriesReturnedFromSpotify_whenGettingCategoriesWithNoPaging_thenCategoryPageIsReturned() {
+    void givenCategoriesReturnedFromSpotify_whenGettingCategoriesWithNoPaging_thenCategoryPageIsReturned() {
         // GIVEN
         List<Category> expectedCategories = List.of(
                 new Category("Top Lists", "toplists"),
@@ -180,7 +180,7 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void whenGettingCategoriesWithNoPaging_ThenCorrectHeadersAreSentInRequest() {
+    void whenGettingCategoriesWithNoPaging_ThenCorrectHeadersAreSentInRequest() {
         // GIVEN
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories"))
                 .willReturn(aResponse()
@@ -199,7 +199,7 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void givenErrorResponseReturnedFromSpotify_whenGettingCategories_thenExceptionWithErrorMessageIsThrown() {
+    void givenErrorResponseReturnedFromSpotify_whenGettingCategories_thenExceptionWithErrorMessageIsThrown() {
         // GIVEN
         String errorMessage = "error when getting categories";
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories"))
@@ -222,7 +222,7 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void givenErrorResponseReturnedFromSpotify_whenGettingCategoriesWithNoPaging_thenExceptionWithErrorMessageIsThrown() {
+    void givenErrorResponseReturnedFromSpotify_whenGettingCategoriesWithNoPaging_thenExceptionWithErrorMessageIsThrown() {
         // GIVEN
         String errorMessage = "error when getting categories";
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories"))
@@ -245,7 +245,7 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void givenNewReleasesReturnedFromSpotify_whenGettingNewReleases_thenNewReleasesPageIsReturned() {
+    void givenNewReleasesReturnedFromSpotify_whenGettingNewReleases_thenNewReleasesPageIsReturned() {
         // GIVEN
         List<Release> expectedReleases = List.of(
                 Release.builder().title("Runnin'")
@@ -281,7 +281,7 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void givenErrorResponseReturnedFromSpotify_whenGettingNewReleases_thenExceptionWithErrorMessageIsThrown() {
+    void givenErrorResponseReturnedFromSpotify_whenGettingNewReleases_thenExceptionWithErrorMessageIsThrown() {
         // GIVEN
         String errorMessage = "error when getting releases";
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "new-releases"))
@@ -304,7 +304,7 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void whenGettingNewReleases_ThenCorrectHeadersAreSentInRequest() {
+    void whenGettingNewReleases_ThenCorrectHeadersAreSentInRequest() {
         // GIVEN
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "new-releases"))
                 .willReturn(aResponse()
@@ -323,7 +323,7 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void whenGettingNewReleasesFirstPage_ThenCorrectQueryParamsAreSentInRequest() {
+    void whenGettingNewReleasesFirstPage_ThenCorrectQueryParamsAreSentInRequest() {
         // GIVEN
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "new-releases"))
                 .willReturn(aResponse()
@@ -341,7 +341,7 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void whenGettingNewReleasesNthPage_ThenCorrectQueryParamsAreSentInRequest() {
+    void whenGettingNewReleasesNthPage_ThenCorrectQueryParamsAreSentInRequest() {
         // GIVEN
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "new-releases"))
                 .willReturn(aResponse()
@@ -360,7 +360,7 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void givenFeaturedPlaylistsReturnedFromSpotify_whenGettingReleases_thenFeaturedPlaylistsPageIsReturned() {
+    void givenFeaturedPlaylistsReturnedFromSpotify_whenGettingReleases_thenFeaturedPlaylistsPageIsReturned() {
         // GIVEN
         List<Playlist> expectedFeaturedPlaylists = List.of(
                 Playlist.builder()
@@ -396,7 +396,7 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void givenErrorResponseReturnedFromSpotify_whenGettingFeaturedPlaylists_thenExceptionWithErrorMessageIsThrown() {
+    void givenErrorResponseReturnedFromSpotify_whenGettingFeaturedPlaylists_thenExceptionWithErrorMessageIsThrown() {
         // GIVEN
         String errorMessage = "error when getting featured playlists";
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "featured-playlists"))
@@ -418,7 +418,7 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void whenGettingFeaturedPlaylists_ThenCorrectHeadersAreSentInRequest() {
+    void whenGettingFeaturedPlaylists_ThenCorrectHeadersAreSentInRequest() {
         // GIVEN
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "featured-playlists"))
                 .willReturn(aResponse()
@@ -437,7 +437,7 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void whenGettingFeaturedPlaylistsFirstPage_ThenCorrectQueryParamsAreSentInRequest() {
+    void whenGettingFeaturedPlaylistsFirstPage_ThenCorrectQueryParamsAreSentInRequest() {
         // GIVEN
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "featured-playlists"))
                 .willReturn(aResponse()
@@ -455,7 +455,7 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void whenGettingFeaturedPlaylistsNthPage_ThenCorrectQueryParamsAreSentInRequest() {
+    void whenGettingFeaturedPlaylistsNthPage_ThenCorrectQueryParamsAreSentInRequest() {
         // GIVEN
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "featured-playlists"))
                 .willReturn(aResponse()
@@ -474,7 +474,7 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void givenExistingCategoryAndCategoryPlaylistsAreReturnedFromSpotify_whenGettingPlaylistsByCategory_thenCategoryPlaylistsPageIsReturned() {
+    void givenExistingCategoryAndCategoryPlaylistsAreReturnedFromSpotify_whenGettingPlaylistsByCategory_thenCategoryPlaylistsPageIsReturned() {
         // GIVEN
         Category category = new Category("Party", "party");
         List<Playlist> expectedCategoryPlaylists = List.of(
@@ -511,7 +511,7 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void givenErrorResponseReturnedFromSpotifyForCategoryPlaylists_whenGettingPlaylistsByCategory_thenExceptionWithErrorMessageIsThrown() {
+    void givenErrorResponseReturnedFromSpotifyForCategoryPlaylists_whenGettingPlaylistsByCategory_thenExceptionWithErrorMessageIsThrown() {
         // GIVEN
         Category category = new Category("Party", "party");
         String errorMessage = "error message when category not found";
@@ -536,7 +536,7 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void whenGettingPlaylistsByCategory_ThenCorrectHeadersAreSentInRequest() {
+    void whenGettingPlaylistsByCategory_ThenCorrectHeadersAreSentInRequest() {
         // GIVEN
         Category category = new Category("Party", "party");
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories/" + category.getId() + "/playlists"))
@@ -557,7 +557,7 @@ public class SpotifyAdvisorTest {
 
 
     @Test
-    public void whenGettingPlaylistsByCategoryFirstPage_ThenCorrectQueryParamsAreSentInRequest() {
+    void whenGettingPlaylistsByCategoryFirstPage_ThenCorrectQueryParamsAreSentInRequest() {
         // GIVEN
         Category category = new Category("Party", "party");
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories/" + category.getId() + "/playlists"))
@@ -576,7 +576,7 @@ public class SpotifyAdvisorTest {
     }
 
     @Test
-    public void whenGettingPlaylistsByCategoryNthPage_ThenCorrectQueryParamsAreSentInRequest() {
+    void whenGettingPlaylistsByCategoryNthPage_ThenCorrectQueryParamsAreSentInRequest() {
         // GIVEN
         Category category = new Category("Party", "party");
         stubFor(get(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories/" + category.getId() + "/playlists"))

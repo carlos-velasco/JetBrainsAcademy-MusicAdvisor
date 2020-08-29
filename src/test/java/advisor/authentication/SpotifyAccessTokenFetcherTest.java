@@ -25,7 +25,7 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMoc
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(WireMockExtension.class)
-public final class SpotifyAccessTokenFetcherTest {
+final class SpotifyAccessTokenFetcherTest {
     private static final String CLIENT_ID = "myClientId";
     private static final String CLIENT_SECRET = "myClientSecret";
     private static final String REDIRECT_URI = "myRedirectUri";
@@ -41,7 +41,7 @@ public final class SpotifyAccessTokenFetcherTest {
     private final WireMockServer wireMockServer = with(wireMockConfig().dynamicPort());
 
     @BeforeEach
-    public void configureTarget() {
+    void configureTarget() {
         String spotifyAccessHost = "http://localhost";
         target = new SpotifyAccessTokenFetcher(
                 spotifyAccessHost + ":" + wireMockServer.port(),
@@ -49,7 +49,7 @@ public final class SpotifyAccessTokenFetcherTest {
     }
 
     @Test
-    public void givenValidResponse_whenRequestingAccessToken_thenAccessTokenIsReturned() {
+    void givenValidResponse_whenRequestingAccessToken_thenAccessTokenIsReturned() {
         // GIVEN
         stubFor(post("/api/token")
                 .willReturn(aResponse()
@@ -65,7 +65,7 @@ public final class SpotifyAccessTokenFetcherTest {
     }
 
     @Test
-    public void givenValidResponse_whenRequestingAccessToken_thenSuccessfulMessagesAndAccessTokenArePrinted() {
+    void givenValidResponse_whenRequestingAccessToken_thenSuccessfulMessagesAndAccessTokenArePrinted() {
         // GIVEN
         final String requestBody = new Gson().toJson(buildValidResponseBody(ACCESS_TOKEN));
         stubFor(post("/api/token")
@@ -85,7 +85,7 @@ public final class SpotifyAccessTokenFetcherTest {
     }
 
     @Test
-    public void givenInvalidResponse_whenRequestingAccessToken_thenNoAcessTokenIsReturned() {
+    void givenInvalidResponse_whenRequestingAccessToken_thenNoAcessTokenIsReturned() {
         // GIVEN
         stubFor(post("/api/token")
                 .willReturn(aResponse()
@@ -101,7 +101,7 @@ public final class SpotifyAccessTokenFetcherTest {
     }
 
     @Test
-    public void givenInvalidResponse_whenRequestingAccessToken_thenErrorMessagesArePrinted() {
+    void givenInvalidResponse_whenRequestingAccessToken_thenErrorMessagesArePrinted() {
         // GIVEN
         stubFor(post("/api/token")
                 .willReturn(aResponse()
@@ -121,7 +121,7 @@ public final class SpotifyAccessTokenFetcherTest {
     }
 
     @Test
-    public void givenValidResponse_whenRequestingAccessToken_thenCallDoneWithCorrectHeaderAndBody() {
+    void givenValidResponse_whenRequestingAccessToken_thenCallDoneWithCorrectHeaderAndBody() {
         // GIVEN
         stubFor(post("/api/token")
                 .willReturn(aResponse()

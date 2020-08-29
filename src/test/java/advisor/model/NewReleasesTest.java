@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Mockito.lenient;
 
 @ExtendWith(MockitoExtension.class)
-public class NewReleasesTest {
+final class NewReleasesTest {
 
     private static final int PAGE_SIZE = 2;
     private static final Page<Release> NEW_RELEASES_FIRST_PAGE = new Page<>(
@@ -61,7 +61,7 @@ public class NewReleasesTest {
     private NewReleases target;
 
     @BeforeEach
-    public void prepareTarget() {
+    void prepareTarget() {
         target = new NewReleases(advisor, PAGE_SIZE);
         lenient().when(advisor.getNewReleases(1)).thenReturn(NEW_RELEASES_FIRST_PAGE);
         lenient().when(advisor.getNewReleases(2)).thenReturn(NEW_RELEASES_SECOND_PAGE);
@@ -69,7 +69,7 @@ public class NewReleasesTest {
     }
 
     @Test
-    public void whenGettingTheFirstNewReleasesPage_thenTheFirstNewReleasesPageIsReturned() {
+    void whenGettingTheFirstNewReleasesPage_thenTheFirstNewReleasesPageIsReturned() {
         // WHEN
         Page<Release> newReleasesPage = target.firstPage();
 
@@ -78,7 +78,7 @@ public class NewReleasesTest {
     }
 
     @Test
-    public void givenFirstNewReleasesPageHasNotBeenObtained_whenGettingTheNextNewReleasesPage_thenAnExceptionIsThrown() {
+    void givenFirstNewReleasesPageHasNotBeenObtained_whenGettingTheNextNewReleasesPage_thenAnExceptionIsThrown() {
         // WHEN
         Throwable thrown = catchThrowable(() -> target.nextPage());
 
@@ -88,7 +88,7 @@ public class NewReleasesTest {
     }
 
     @Test
-    public void givenFirstNewReleasesPageHasNotBeenObtained_whenGettingThePreviousNewReleasesPage_thenAnExceptionIsThrown() {
+    void givenFirstNewReleasesPageHasNotBeenObtained_whenGettingThePreviousNewReleasesPage_thenAnExceptionIsThrown() {
         // WHEN
         Throwable thrown = catchThrowable(() -> target.previousPage());
 
@@ -98,7 +98,7 @@ public class NewReleasesTest {
     }
 
     @Test
-    public void givenFirstNewReleasesPageHasBeenObtained_whenGettingTheNextNewReleasesPage_thenTheNextNewReleasesPageIsReturned() {
+    void givenFirstNewReleasesPageHasBeenObtained_whenGettingTheNextNewReleasesPage_thenTheNextNewReleasesPageIsReturned() {
         // GIVEN
         target.firstPage();
 
@@ -110,7 +110,7 @@ public class NewReleasesTest {
     }
 
     @Test
-    public void givenAllWholeNewReleasesPagesHaveBeenObtained_whenGettingTheNextNewReleasesPage_thenTheLastNewReleasesPageIsReturned() {
+    void givenAllWholeNewReleasesPagesHaveBeenObtained_whenGettingTheNextNewReleasesPage_thenTheLastNewReleasesPageIsReturned() {
         // GIVEN
         target.firstPage();
         target.nextPage();
@@ -123,7 +123,7 @@ public class NewReleasesTest {
     }
 
     @Test
-    public void givenAllNextNewReleasePagesHaveBeenObtained_whenGettingTheNextNewReleasesPage_thenAnExceptionIsThrown() {
+    void givenAllNextNewReleasePagesHaveBeenObtained_whenGettingTheNextNewReleasesPage_thenAnExceptionIsThrown() {
         // GIVEN
         target.firstPage();
         target.nextPage();
@@ -138,7 +138,7 @@ public class NewReleasesTest {
     }
 
     @Test
-    public void givenFirstNewReleasesPageHasBeenObtained_whenGettingThePreviousNewReleasesPage_thenAnExceptionIsThrown() {
+    void givenFirstNewReleasesPageHasBeenObtained_whenGettingThePreviousNewReleasesPage_thenAnExceptionIsThrown() {
         // GIVEN
         target.firstPage();
 
@@ -151,7 +151,7 @@ public class NewReleasesTest {
     }
 
     @Test
-    public void givenFirstTwoNewReleasesPagesHaveBeenObtained_whenGettingThePreviousNewReleasesPage_thenFirstPageIsObtained() {
+    void givenFirstTwoNewReleasesPagesHaveBeenObtained_whenGettingThePreviousNewReleasesPage_thenFirstPageIsObtained() {
         // GIVEN
         target.firstPage();
         target.nextPage();
@@ -164,7 +164,7 @@ public class NewReleasesTest {
     }
 
     @Test
-    public void givenFirstTwoNewReleasesPagesHaveBeenObtainedAndOnePreviousNewReleasesPageHasBeenObtained_whenGettingThePreviousNewReleasesPage_thenAnExceptionIsThrown() {
+    void givenFirstTwoNewReleasesPagesHaveBeenObtainedAndOnePreviousNewReleasesPageHasBeenObtained_whenGettingThePreviousNewReleasesPage_thenAnExceptionIsThrown() {
         // GIVEN
         target.firstPage();
         target.nextPage();
@@ -179,7 +179,7 @@ public class NewReleasesTest {
     }
 
     @Test
-    public void givenAllNextNewReleasesPagesHaveBeenObtained_whenGettingFirstNewReleasesPage_thenFirstNewReleasesPageIsObtained() {
+    void givenAllNextNewReleasesPagesHaveBeenObtained_whenGettingFirstNewReleasesPage_thenFirstNewReleasesPageIsObtained() {
         // GIVEN
         target.firstPage();
         target.nextPage();

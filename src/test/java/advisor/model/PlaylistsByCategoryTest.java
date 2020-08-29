@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Mockito.lenient;
 
 @ExtendWith(MockitoExtension.class)
-public class PlaylistsByCategoryTest {
+final class PlaylistsByCategoryTest {
 
     private static final int PAGE_SIZE = 2;
     private static final Page<Playlist> CATEGORY_PLAYLISTS_FIRST_PAGE = new Page<>(
@@ -61,7 +61,7 @@ public class PlaylistsByCategoryTest {
     private PlaylistsByCategory target;
 
     @BeforeEach
-    public void prepareTarget() {
+    void prepareTarget() {
         target = new PlaylistsByCategory(advisor, PAGE_SIZE);
         lenient().when(advisor.getCategoryPlaylists(EXISTING_CATEGORY, 1)).thenReturn(CATEGORY_PLAYLISTS_FIRST_PAGE);
         lenient().when(advisor.getCategoryPlaylists(EXISTING_CATEGORY, 2)).thenReturn(CATEGORY_PLAYLISTS_SECOND_PAGE);
@@ -70,7 +70,7 @@ public class PlaylistsByCategoryTest {
     }
 
     @Test
-    public void whenGettingTheFirstPlaylistsByCategoryPage_thenTheFirstPlaylistsByCategoryPageIsReturned() {
+    void whenGettingTheFirstPlaylistsByCategoryPage_thenTheFirstPlaylistsByCategoryPageIsReturned() {
         // WHEN
         Page<Playlist> newReleasesPage = target.firstPage(EXISTING_CATEGORY.getName());
 
@@ -79,7 +79,7 @@ public class PlaylistsByCategoryTest {
     }
 
     @Test
-    public void givenFirstPlaylistsByCategoryPageHasNotBeenObtained_whenGettingTheNextPlaylistsByCategoryPage_thenAnExceptionIsThrown() {
+    void givenFirstPlaylistsByCategoryPageHasNotBeenObtained_whenGettingTheNextPlaylistsByCategoryPage_thenAnExceptionIsThrown() {
         // WHEN
         Throwable thrown = catchThrowable(() -> target.nextPage());
 
@@ -89,7 +89,7 @@ public class PlaylistsByCategoryTest {
     }
 
     @Test
-    public void givenFirstPlaylistsByCategoryPageHasNotBeenObtained_whenGettingThePreviousPlaylistsByCategoryPage_thenAnExceptionIsThrown() {
+    void givenFirstPlaylistsByCategoryPageHasNotBeenObtained_whenGettingThePreviousPlaylistsByCategoryPage_thenAnExceptionIsThrown() {
         // WHEN
         Throwable thrown = catchThrowable(() -> target.previousPage());
 
@@ -99,7 +99,7 @@ public class PlaylistsByCategoryTest {
     }
 
     @Test
-    public void givenFirstPlaylistsByCategoryPageHasBeenObtained_whenGettingTheNextPlaylistsByCategoryPage_thenTheNextPlaylistsByCategoryPageIsReturned() {
+    void givenFirstPlaylistsByCategoryPageHasBeenObtained_whenGettingTheNextPlaylistsByCategoryPage_thenTheNextPlaylistsByCategoryPageIsReturned() {
         // GIVEN
         target.firstPage(EXISTING_CATEGORY.getName());
 
@@ -111,7 +111,7 @@ public class PlaylistsByCategoryTest {
     }
 
     @Test
-    public void givenAllWholePlaylistsByCategoryPagesHaveBeenObtained_whenGettingTheNextPlaylistsByCategoryPage_thenTheLastPlaylistsByCategoryPageIsReturned() {
+    void givenAllWholePlaylistsByCategoryPagesHaveBeenObtained_whenGettingTheNextPlaylistsByCategoryPage_thenTheLastPlaylistsByCategoryPageIsReturned() {
         // GIVEN
         target.firstPage(EXISTING_CATEGORY.getName());
         target.nextPage();
@@ -124,7 +124,7 @@ public class PlaylistsByCategoryTest {
     }
 
     @Test
-    public void givenAllNextNewReleasePagesHaveBeenObtained_whenGettingTheNextPlaylistsByCategoryPage_thenAnExceptionIsThrown() {
+    void givenAllNextNewReleasePagesHaveBeenObtained_whenGettingTheNextPlaylistsByCategoryPage_thenAnExceptionIsThrown() {
         // GIVEN
         target.firstPage(EXISTING_CATEGORY.getName());
         target.nextPage();
@@ -140,7 +140,7 @@ public class PlaylistsByCategoryTest {
     }
 
     @Test
-    public void givenFirstPlaylistsByCategoryPageHasBeenObtained_whenGettingThePreviousPlaylistsByCategoryPage_thenAnExceptionIsThrown() {
+    void givenFirstPlaylistsByCategoryPageHasBeenObtained_whenGettingThePreviousPlaylistsByCategoryPage_thenAnExceptionIsThrown() {
         // GIVEN
         target.firstPage(EXISTING_CATEGORY.getName());
 
@@ -153,7 +153,7 @@ public class PlaylistsByCategoryTest {
     }
 
     @Test
-    public void givenFirstTwoPlaylistsByCategoryPagesHaveBeenObtained_whenGettingThePreviousPlaylistsByCategoryPage_thenFirstPageIsObtained() {
+    void givenFirstTwoPlaylistsByCategoryPagesHaveBeenObtained_whenGettingThePreviousPlaylistsByCategoryPage_thenFirstPageIsObtained() {
         // GIVEN
         target.firstPage(EXISTING_CATEGORY.getName());
         target.nextPage();
@@ -166,7 +166,7 @@ public class PlaylistsByCategoryTest {
     }
 
     @Test
-    public void givenFirstTwoPlaylistsByCategoryPagesHaveBeenObtainedAndOnePreviousPlaylistsByCategoryPageHasBeenObtained_whenGettingThePreviousPlaylistsByCategoryPage_thenAnExceptionIsThrown() {
+    void givenFirstTwoPlaylistsByCategoryPagesHaveBeenObtainedAndOnePreviousPlaylistsByCategoryPageHasBeenObtained_whenGettingThePreviousPlaylistsByCategoryPage_thenAnExceptionIsThrown() {
         // GIVEN
         target.firstPage(EXISTING_CATEGORY.getName());
         target.nextPage();
@@ -181,7 +181,7 @@ public class PlaylistsByCategoryTest {
     }
 
     @Test
-    public void givenAllNextPlaylistsByCategoryPagesHaveBeenObtained_whenGettingFirstPlaylistsByCategoryPage_thenFirstPlaylistsByCategoryPageIsObtained() {
+    void givenAllNextPlaylistsByCategoryPagesHaveBeenObtained_whenGettingFirstPlaylistsByCategoryPage_thenFirstPlaylistsByCategoryPageIsObtained() {
         // GIVEN
         target.firstPage(EXISTING_CATEGORY.getName());
         target.nextPage();
@@ -195,7 +195,7 @@ public class PlaylistsByCategoryTest {
     }
 
     @Test
-    public void givenCategoryDoesNotExist_whenGettingFirstPlaylistByCategoryPage_thenAnExceptionIsThrown() {
+    void givenCategoryDoesNotExist_whenGettingFirstPlaylistByCategoryPage_thenAnExceptionIsThrown() {
         // WHEN
         Throwable thrown = catchThrowable(() -> target.firstPage(NON_EXISTING_CATEGORY.getName()));
 

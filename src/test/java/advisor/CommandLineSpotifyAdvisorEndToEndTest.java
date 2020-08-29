@@ -36,9 +36,9 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 @SpringJUnitConfig(classes = {AppConfig.class, TestConfig.class})
 @PropertySource("application.properties")
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
-public class CommandLineSpotifyAdvisorEndToEndTest {
+final class CommandLineSpotifyAdvisorEndToEndTest {
 
-    private static final int TEST_TIMEOUT_MINUTES = 1;
+    private static final int TEST_TIMEOUT_SECONDS = 20;
     private static final String REDIRECT_URI = "http://localhost:8080";
     private static final String GOODBYE_MESSAGE = "---GOODBYE!---";
     private static final String AUTH_SUCCESS_MESSAGE = "Success!";
@@ -65,18 +65,18 @@ public class CommandLineSpotifyAdvisorEndToEndTest {
     private CommandLineAdvisorRunner runner;
 
     @RegisterExtension
-    public static final SystemInMockClassExtension systemInMock = new SystemInMockClassExtension();
+    static final SystemInMockClassExtension systemInMock = new SystemInMockClassExtension();
 
     @RegisterExtension
-    public static final ChromeDriverClassExtension chromeDriverClassExtension = new ChromeDriverClassExtension();
+    static final ChromeDriverClassExtension chromeDriverClassExtension = new ChromeDriverClassExtension();
 
     @BeforeAll
-    public static void initializeAuthenticator() {
+    static void initializeAuthenticator() {
         spotifyAppUIAuthenticator = new SpotifyAppUIAuthenticator(chromeDriverClassExtension.getDriver(), REDIRECT_URI);
     }
 
     @Test
-    public void whenEnteringExitCommand_thenOutputEqualsGoodbyeMessage() throws InterruptedException {
+    void whenEnteringExitCommand_thenOutputEqualsGoodbyeMessage() throws InterruptedException {
         // GIVEN
         String[] commands = new String[]{"exit"};
         systemInMock.provideLines(commands);
@@ -89,7 +89,7 @@ public class CommandLineSpotifyAdvisorEndToEndTest {
     }
 
     @Test
-    public void whenEnteringAuthCommand_thenOutputContainsAuthMessages() throws InterruptedException {
+    void whenEnteringAuthCommand_thenOutputContainsAuthMessages() throws InterruptedException {
         // GIVEN
         String[] commands = new String[]{"auth", "exit"};
         systemInMock.provideLines(commands);
@@ -108,7 +108,7 @@ public class CommandLineSpotifyAdvisorEndToEndTest {
     }
 
     @Test
-    public void whenEnteringUnsupportedCommand_thenOutputContainsUnsupportedOperationMessage() throws InterruptedException {
+    void whenEnteringUnsupportedCommand_thenOutputContainsUnsupportedOperationMessage() throws InterruptedException {
         // GIVEN
         String[] commands = new String[]{"random", "exit"};
         systemInMock.provideLines(commands);
@@ -123,7 +123,7 @@ public class CommandLineSpotifyAdvisorEndToEndTest {
     }
 
     @Test
-    public void givenAppAuthenticated_whenEnteringFeaturedCommand_thenOutputContainsSpotifyPlaylists() throws InterruptedException {
+    void givenAppAuthenticated_whenEnteringFeaturedCommand_thenOutputContainsSpotifyPlaylists() throws InterruptedException {
         // GIVEN
         String[] commands = new String[]{"auth", "featured", "exit"};
         systemInMock.provideLines(commands);
@@ -148,7 +148,7 @@ public class CommandLineSpotifyAdvisorEndToEndTest {
     }
 
     @Test
-    public void givenAppAuthenticated_whenEnteringNewCommand_thenOutputContainsSpotifyReleases() throws InterruptedException {
+    void givenAppAuthenticated_whenEnteringNewCommand_thenOutputContainsSpotifyReleases() throws InterruptedException {
         // GIVEN
         String[] commands = new String[]{"auth", "new", "exit"};
         systemInMock.provideLines(commands);
@@ -174,7 +174,7 @@ public class CommandLineSpotifyAdvisorEndToEndTest {
     }
 
     @Test
-    public void givenAppAuthenticated_whenEnteringCategoriesCommand_thenOutputContainsCategories() throws InterruptedException {
+    void givenAppAuthenticated_whenEnteringCategoriesCommand_thenOutputContainsCategories() throws InterruptedException {
         // GIVEN
         String[] commands = new String[]{"auth", "categories", "exit"};
         systemInMock.provideLines(commands);
@@ -194,7 +194,7 @@ public class CommandLineSpotifyAdvisorEndToEndTest {
     }
 
     @Test
-    public void givenAppAuthenticated_whenEnteringCategoryPlaylistsCommand_thenOutputContainsSpotifyPlaylists() throws InterruptedException {
+    void givenAppAuthenticated_whenEnteringCategoryPlaylistsCommand_thenOutputContainsSpotifyPlaylists() throws InterruptedException {
         // GIVEN
         String[] commands = new String[]{"auth", "playlists Pop", "exit"};
         systemInMock.provideLines(commands);
@@ -226,11 +226,11 @@ public class CommandLineSpotifyAdvisorEndToEndTest {
             futures.add(executorService.submit(this::waitForAuthUrlAndAuthenticate));
         }
         executorService.shutdown();
-        executorService.awaitTermination(TEST_TIMEOUT_MINUTES, TimeUnit.MINUTES);
+        executorService.awaitTermination(TEST_TIMEOUT_SECONDS, TimeUnit.SECONDS);
         if (futures.stream().anyMatch(future -> !future.isDone())) {
             throw new IllegalStateException(
-                    String.format("Execution of commands not finished within %d minutes.\n" +
-                            "Output: %s", TEST_TIMEOUT_MINUTES, getOutput()));
+                    String.format("Execution of commands not finished within %d seconds.\n" +
+                            "Output: %s", TEST_TIMEOUT_SECONDS, getOutput()));
         }
     }
 

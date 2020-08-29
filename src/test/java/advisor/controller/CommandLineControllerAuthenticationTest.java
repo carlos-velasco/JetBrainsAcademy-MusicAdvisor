@@ -17,22 +17,22 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public final class CommandLineControllerAuthenticationTest {
+final class CommandLineControllerAuthenticationTest {
     
     private static final String PROVIDE_ACCESS_MESSAGE = "Please, provide access for application.".toLowerCase();
-    private final int defaultPageSize = 5;
+    private static final int DEFAULT_PAGE_SIZE = 5;
     private final ByteArrayOutputStream output = new ByteArrayOutputStream();
-    private final Advisor advisor = new FakeAdvisor(defaultPageSize);
+    private final Advisor advisor = new FakeAdvisor(DEFAULT_PAGE_SIZE);
     private CommandLineController target;
     private CommandLineView commandLineView;
 
     @ParameterizedTest
     @MethodSource("getUserCommandsText")
-    public void givenUserIsAuthenticated_whenProcessingCommand_thenMessageDoesNotAskForAuthentication(String userCommandText) {
+    void givenUserIsAuthenticated_whenProcessingCommand_thenMessageDoesNotAskForAuthentication(String userCommandText) {
         // GIVEN
         InputStream inputStream = new ByteArrayInputStream(userCommandText.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, advisor, new AlwaysAuthenticatedUserCommandAuthentication(), defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, advisor, new AlwaysAuthenticatedUserCommandAuthentication(), DEFAULT_PAGE_SIZE);
         
         // WHEN
         target.processInput();
@@ -43,11 +43,11 @@ public final class CommandLineControllerAuthenticationTest {
 
     @ParameterizedTest
     @MethodSource("getUserCommandsThatNeedAuthenticationText")
-    public void givenUserIsNotAuthenticated_whenProcessingCommandRequiringAuthentication_thenMessageAsksForAuthentication(String userCommandText) {
+    void givenUserIsNotAuthenticated_whenProcessingCommandRequiringAuthentication_thenMessageAsksForAuthentication(String userCommandText) {
         // GIVEN
         InputStream inputStream = new ByteArrayInputStream(userCommandText.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, advisor, new NeverAuthenticatedUserCommandAuthentication(), defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, advisor, new NeverAuthenticatedUserCommandAuthentication(), DEFAULT_PAGE_SIZE);
 
         // WHEN
         target.processInput();
@@ -58,11 +58,11 @@ public final class CommandLineControllerAuthenticationTest {
 
     @ParameterizedTest
     @MethodSource("getUserCommandsThatDoNotNeedAuthenticationText")
-    public void givenUserIsNotAuthenticated_whenProcessingCommandNotRequiringAuthentication_thenMessageDoesNotAskForAuthentication(String userCommandText) {
+    void givenUserIsNotAuthenticated_whenProcessingCommandNotRequiringAuthentication_thenMessageDoesNotAskForAuthentication(String userCommandText) {
         // GIVEN
         InputStream inputStream = new ByteArrayInputStream(userCommandText.getBytes());
-        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), defaultPageSize);
-        target = new CommandLineController(commandLineView, advisor, new NeverAuthenticatedUserCommandAuthentication(), defaultPageSize);
+        commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
+        target = new CommandLineController(commandLineView, advisor, new NeverAuthenticatedUserCommandAuthentication(), DEFAULT_PAGE_SIZE);
 
         // WHEN
         target.processInput();
