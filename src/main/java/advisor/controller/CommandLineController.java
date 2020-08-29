@@ -5,12 +5,9 @@ import advisor.model.*;
 import advisor.model.dto.CommandLinePrintable;
 import advisor.model.service.Advisor;
 import advisor.view.CommandLineView;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
 public final class CommandLineController {
 
     private static final String COMMA_SEPARATED_CONTENT_COMMAND_NAMES = String.join(", ", List.of(
@@ -28,7 +25,6 @@ public final class CommandLineController {
     private final NewReleases newReleases;
     private final PlaylistsByCategory playlistsByCategory;
 
-    @Autowired
     public CommandLineController(
             CommandLineView view,
             Advisor advisor,

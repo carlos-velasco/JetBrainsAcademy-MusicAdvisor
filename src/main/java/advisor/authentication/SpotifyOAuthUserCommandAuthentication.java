@@ -3,13 +3,10 @@ package advisor.authentication;
 import advisor.model.service.SpotifyAdvisorException;
 import advisor.view.CommandLineView;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
-@Service("userCommandAuthentication")
+@RequiredArgsConstructor
 public class SpotifyOAuthUserCommandAuthentication implements UserCommandAuthentication {
 
     private boolean isAuthenticated;

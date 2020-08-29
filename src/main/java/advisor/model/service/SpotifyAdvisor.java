@@ -21,6 +21,7 @@ public class SpotifyAdvisor implements Advisor {
     private final String spotifyResourceHost;
     private final UserCommandAuthenticationFacade userCommandAuthenticationFacade;
     private final int pageSize;
+    private final String locale;
 
     @Override
     public Page<Category> getCategories(int pageNumber) {
@@ -73,8 +74,7 @@ public class SpotifyAdvisor implements Advisor {
                 .errorDecoder(new ResourceErrorDecoder())
                 .target(SpotifyAdvisorClient.class, spotifyResourceHost);
 
-        final String country = Locale.getDefault().getCountry();
-        final String locale = Locale.getDefault().toString();
+        final String country = Locale.forLanguageTag(locale).getCountry();
 
         if (pageNumber == null) {
             return spotifyAdvisorClient.resourcePage(

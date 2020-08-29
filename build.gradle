@@ -15,8 +15,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework:spring-core:5.2.6.RELEASE'
-    implementation 'org.springframework:spring-context:5.2.6.RELEASE'
+    implementation 'org.springframework:spring-context:5.2.8.RELEASE'
     implementation 'com.google.code.gson:gson:+'
     implementation 'org.apache.httpcomponents:httpcore:4.4.13'
     implementation 'org.apache.httpcomponents:httpclient:4.5.12'
@@ -28,6 +27,11 @@ dependencies {
     testImplementation 'com.github.tomakehurst:wiremock:2.26.3'
     testImplementation 'org.mockito:mockito-core:3.3.3'
     testImplementation 'org.assertj:assertj-core:3.16.1'
+    testImplementation 'org.springframework:spring-test:5.2.8.RELEASE'
+    testImplementation 'org.seleniumhq.selenium:selenium-java:3.141.59'
+    testImplementation 'io.github.bonigarcia:webdrivermanager:4.2.0'
+    testImplementation 'com.github.stefanbirkner:system-rules:1.19.0'
+    testImplementation 'org.awaitility:awaitility:4.0.3'
 }
 
 compileJava.options.encoding = 'UTF-8'
@@ -37,6 +41,10 @@ tasks.withType(JavaCompile) {
 
 test {
     systemProperty "file.encoding", "utf-8"
+    systemProperty "spotify.username", findProperty("spotify.username")
+    systemProperty "spotify.password", findProperty("spotify.password")
+    systemProperty "spotify.client.id", findProperty("spotify.client.id")
+    systemProperty "spotify.client.secret", findProperty("spotify.client.secret")
 }
 
 wrapper {

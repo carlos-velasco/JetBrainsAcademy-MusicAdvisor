@@ -20,6 +20,8 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 11
+    - name: Install Chrome
+      run: sudo apt install google-chrome-stable
     - name: Cache Gradle packages
       uses: actions/cache@v1
       with:
@@ -29,7 +31,12 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew build
+      env:
+        SPOTIFY_USERNAME: ${{ secrets.SPOTIFYUSERNAME }}
+        SPOTIFY_PASSWORD: ${{ secrets.SPOTIFYPASSWORD }}
+        SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFYCLIENTID }}
+        SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFYCLIENTSECRET }}
+      run: ./gradlew build -Pspotify.username="$SPOTIFY_USERNAME" -Pspotify.password="$SPOTIFY_PASSWORD" -Pspotify.client.id="$SPOTIFY_CLIENT_ID" -Pspotify.client.secret="$SPOTIFY_CLIENT_SECRET" --info
     - name: Publish Test Report
       if: always()
       uses: actions/upload-artifact@v2-preview
