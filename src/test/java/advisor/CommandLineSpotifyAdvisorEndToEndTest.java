@@ -38,7 +38,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 final class CommandLineSpotifyAdvisorEndToEndTest {
 
-    private static final int TEST_TIMEOUT_SECONDS = 20;
+    private static final int COMMAND_PROCESSING_TIMEOUT_SECONDS = 20;
     private static final String REDIRECT_URI = "http://localhost:8080";
     private static final String GOODBYE_MESSAGE = "---GOODBYE!---";
     private static final String AUTH_SUCCESS_MESSAGE = "Success!";
@@ -226,11 +226,11 @@ final class CommandLineSpotifyAdvisorEndToEndTest {
             futures.add(executorService.submit(this::waitForAuthUrlAndAuthenticate));
         }
         executorService.shutdown();
-        executorService.awaitTermination(TEST_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+        executorService.awaitTermination(COMMAND_PROCESSING_TIMEOUT_SECONDS, TimeUnit.SECONDS);
         if (futures.stream().anyMatch(future -> !future.isDone())) {
             throw new IllegalStateException(
                     String.format("Execution of commands not finished within %d seconds.\n" +
-                            "Output: %s", TEST_TIMEOUT_SECONDS, getOutput()));
+                            "Output: %s", COMMAND_PROCESSING_TIMEOUT_SECONDS, getOutput()));
         }
     }
 
