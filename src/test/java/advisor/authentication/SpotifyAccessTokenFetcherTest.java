@@ -22,6 +22,8 @@ import java.util.Scanner;
 import static com.github.jenspiegsa.wiremockextension.ManagedWireMockServer.with;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+import static org.apache.http.HttpHeaders.CONTENT_TYPE;
+import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(WireMockExtension.class)
@@ -32,6 +34,7 @@ final class SpotifyAccessTokenFetcherTest {
     private static final String ACCESS_TOKEN = "BQBSZ0CA3KR0cf0LxmiNK_E87ZqnkJKDD89VOWAZ9f0QXJcsCiHtl5Om-" +
             "EVhkIfwt1AZs5WeXgfEF69e4JxL3YX6IIW9zl9WegTmgLkb4xLXWwhryty488CLoL2SM9VIY6H" +
             "aHgxYxdmRFGWSzrgH3dEqcvPoLpd26D8Y";
+    private static final String API_TOKEN_URL_PATH = "/api/token";
     private final ByteArrayOutputStream output = new ByteArrayOutputStream();
     private final CommandLineView commandLineView =
             new CommandLineView(new Scanner(System.in), new PrintStream(output), 5);
@@ -51,11 +54,11 @@ final class SpotifyAccessTokenFetcherTest {
     @Test
     void givenValidResponse_whenRequestingAccessToken_thenAccessTokenIsReturned() {
         // GIVEN
-        stubFor(post("/api/token")
+        stubFor(post(API_TOKEN_URL_PATH)
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.SC_OK)
-                        .withHeader("Content-Type", "application/json")
-                        .withBody(new Gson().toJson(buildValidResponseBody(ACCESS_TOKEN)))));
+                        .withHeader(CONTENT_TYPE, APPLICATION_JSON.getMimeType())
+                        .withBody(new Gson().toJson(buildValidResponseBody()))));
 
         // WHEN
         Optional<String> accessToken = target.fetchAccessToken("myAccessCode");
@@ -67,11 +70,11 @@ final class SpotifyAccessTokenFetcherTest {
     @Test
     void givenValidResponse_whenRequestingAccessToken_thenSuccessfulMessagesAndAccessTokenArePrinted() {
         // GIVEN
-        final String requestBody = new Gson().toJson(buildValidResponseBody(ACCESS_TOKEN));
-        stubFor(post("/api/token")
+        final String requestBody = new Gson().toJson(buildValidResponseBody());
+        stubFor(post(API_TOKEN_URL_PATH)
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.SC_OK)
-                        .withHeader("Content-Type", "application/json")
+                        .withHeader(CONTENT_TYPE, APPLICATION_JSON.getMimeType())
                         .withBody(requestBody)));
 
         // WHEN
@@ -87,10 +90,10 @@ final class SpotifyAccessTokenFetcherTest {
     @Test
     void givenInvalidResponse_whenRequestingAccessToken_thenNoAcessTokenIsReturned() {
         // GIVEN
-        stubFor(post("/api/token")
+        stubFor(post(API_TOKEN_URL_PATH)
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.SC_BAD_REQUEST)
-                        .withHeader("Content-Type", "application/json")
+                        .withHeader(CONTENT_TYPE, APPLICATION_JSON.getMimeType())
                         .withBody(buildInvalidResponseBody())));
 
         // WHEN
@@ -103,10 +106,10 @@ final class SpotifyAccessTokenFetcherTest {
     @Test
     void givenInvalidResponse_whenRequestingAccessToken_thenErrorMessagesArePrinted() {
         // GIVEN
-        stubFor(post("/api/token")
+        stubFor(post(API_TOKEN_URL_PATH)
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.SC_BAD_REQUEST)
-                        .withHeader("Content-Type", "application/json")
+                        .withHeader(CONTENT_TYPE, APPLICATION_JSON.getMimeType())
                         .withBody(buildInvalidResponseBody())));
 
         // WHEN
@@ -123,11 +126,11 @@ final class SpotifyAccessTokenFetcherTest {
     @Test
     void givenValidResponse_whenRequestingAccessToken_thenCallDoneWithCorrectHeaderAndBody() {
         // GIVEN
-        stubFor(post("/api/token")
+        stubFor(post(API_TOKEN_URL_PATH)
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.SC_OK)
-                        .withHeader("Content-Type", "application/json")
-                        .withBody(new Gson().toJson(buildValidResponseBody(ACCESS_TOKEN)))));
+                        .withHeader(CONTENT_TYPE, APPLICATION_JSON.getMimeType())
+                        .withBody(new Gson().toJson(buildValidResponseBody()))));
 
         // WHEN
         String accessCode = "myAccessCode";
@@ -140,14 +143,14 @@ final class SpotifyAccessTokenFetcherTest {
                 List.of("code=" + accessCode,
                         "grant_type=authorization_code",
                         "redirect_uri=" + REDIRECT_URI));
-        verify(postRequestedFor(urlEqualTo("/api/token"))
+        verify(postRequestedFor(urlEqualTo(API_TOKEN_URL_PATH))
                 .withHeader("Authorization", equalTo("Basic " + expectedBase64EncodedClientData))
-                .withHeader("Content-Type", equalTo("application/x-www-form-urlencoded; charset=UTF-8"))
+                .withHeader(CONTENT_TYPE, equalTo("application/x-www-form-urlencoded; charset=UTF-8"))
                 .withRequestBody(equalTo(expectedRequestBody)));
     }
 
-    private SpotifyAccessTokenResponse buildValidResponseBody(String accessToken) {
-        return new SpotifyAccessTokenResponse(accessToken, 3600, "Bearer",
+    private SpotifyAccessTokenResponse buildValidResponseBody() {
+        return new SpotifyAccessTokenResponse(SpotifyAccessTokenFetcherTest.ACCESS_TOKEN, 3600, "Bearer",
                 "AQCSmdQsvsvpneadsdq1brfKlbEWleTE3nprDwPbZgNSge5dVe_svYBG-RG-_" +
                         "PxIGxVvA7gSnehFJjDRAczLDbbdWPjW1yUq2gtKbbNrCQVAH5ZB" +
                         "tY8wAYskmOIW7zn3IEiBzg", "");
