@@ -57,18 +57,12 @@ final class SpotifyAccessCodeFetcherTest {
     void givenQueryToRedirectUriContainsAccessCode_whenFetchingTheAccessCode_thenItIsReturned() throws IOException, InterruptedException, ExecutionException, URISyntaxException {
         String accessCode = "ds7894564_fda0";
         uriBuilder.addParameter("code", accessCode);
-        
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(uriBuilder.build())
-                .GET()
-                .build();
-        
+
+        HttpRequest request = buildHttpRequest(uriBuilder);
+
         // WHEN
-        Future<Optional<String>> result = executorService.submit(target::fetchAccessCode);
-        executorService.shutdown();
-        client.send(request, BodyHandlers.ofString());
-        executorService.awaitTermination(TEST_EXECUTION_SERVICE_AWAIT_SECONDS, TimeUnit.SECONDS);
-        
+        Future<Optional<String>> result = fetchAccessCodeAndGetOptionalAccessCode(request);
+
         // THEN
         assertThat(result.isDone()).isTrue();
         assertThat((result.get())).isNotEmpty().contains(accessCode);
@@ -78,17 +72,11 @@ final class SpotifyAccessCodeFetcherTest {
     void givenQueryToRedirectUriDoesNotContainAccessCode_whenFetchingTheAccessCode_thenItIsNotReturned() throws ExecutionException, InterruptedException, IOException, URISyntaxException {
         // GIVEN
         uriBuilder.addParameter("randomParam", "123456");
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(uriBuilder.build())
-                .GET()
-                .build();
+        HttpRequest request = buildHttpRequest(uriBuilder);
 
         // WHEN
-        Future<Optional<String>> result = executorService.submit(target::fetchAccessCode);
-        executorService.shutdown();
-        client.send(request, BodyHandlers.ofString());
-        executorService.awaitTermination(TEST_EXECUTION_SERVICE_AWAIT_SECONDS, TimeUnit.SECONDS);
-        
+        Future<Optional<String>> result = fetchAccessCodeAndGetOptionalAccessCode(request);
+
         // THEN
         assertThat(result.isDone()).isTrue();
         assertThat((result.get())).isEmpty();
@@ -97,17 +85,11 @@ final class SpotifyAccessCodeFetcherTest {
     @Test
     void givenQueryToRedirectUriIsEmpty_whenFetchingTheAccessCode_thenItIsNotReturned() throws ExecutionException, InterruptedException, IOException, URISyntaxException {
         // GIVEN
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(uriBuilder.build())
-                .GET()
-                .build();
-        
+        HttpRequest request = buildHttpRequest(uriBuilder);
+
         // WHEN
-        Future<Optional<String>> result = executorService.submit(target::fetchAccessCode);
-        executorService.shutdown();
-        client.send(request, BodyHandlers.ofString());
-        executorService.awaitTermination(TEST_EXECUTION_SERVICE_AWAIT_SECONDS, TimeUnit.SECONDS);
-        
+        Future<Optional<String>> result = fetchAccessCodeAndGetOptionalAccessCode(request);
+
         // THEN
         assertThat(result.isDone()).isTrue();
         assertThat((result.get())).isEmpty();
@@ -117,17 +99,11 @@ final class SpotifyAccessCodeFetcherTest {
     void whenFetchingTheAccessCode_thenCommandLineMessagesArePrinted() throws InterruptedException, IOException, URISyntaxException {
         // GIVEN
         uriBuilder.addParameter("randomParam", "123456");
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(uriBuilder.build())
-                .GET()
-                .build();
-        
+        HttpRequest request = buildHttpRequest(uriBuilder);
+
         // WHEN
-        executorService.submit(target::fetchAccessCode);
-        executorService.shutdown();
-        client.send(request, BodyHandlers.ofString());
-        executorService.awaitTermination(TEST_EXECUTION_SERVICE_AWAIT_SECONDS, TimeUnit.SECONDS);
-        
+        fetchAccessCodeAndGetRedirectUriResponse(request);
+
         // THEN
         String accessCodeUrl = String.format("%s?client_id=%s&redirect_uri=%s&response_type=code",
                 SPOTIFY_ACCESS_HOST + "/authorize", CLIENT_ID, redirectUri);
@@ -142,16 +118,10 @@ final class SpotifyAccessCodeFetcherTest {
         // GIVEN
         String accessCode = "ds7894564_fda0";
         uriBuilder.addParameter("code", accessCode);
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(uriBuilder.build())
-                .GET()
-                .build();
-        
+        HttpRequest request = buildHttpRequest(uriBuilder);
+
         // WHEN
-        executorService.submit(target::fetchAccessCode);
-        executorService.shutdown();
-        HttpResponse<String> httpResponse = client.send(request, BodyHandlers.ofString());
-        executorService.awaitTermination(TEST_EXECUTION_SERVICE_AWAIT_SECONDS, TimeUnit.SECONDS);
+        HttpResponse<String> httpResponse = fetchAccessCodeAndGetRedirectUriResponse(request);
 
         // THEN
         assertThat(httpResponse.statusCode()).isEqualTo(SC_OK);
@@ -162,16 +132,10 @@ final class SpotifyAccessCodeFetcherTest {
     void givenQueryToRedirectUriDoesNotContainAccessCode_whenFetchingTheAccessCode_thenResponseContainsCorrectMessage() throws InterruptedException, IOException, URISyntaxException {
         // GIVEN
         uriBuilder.addParameter("randomParam", "123456");
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(uriBuilder.build())
-                .GET()
-                .build();
-        
+        HttpRequest request = buildHttpRequest(uriBuilder);
+
         // WHEN
-        executorService.submit(target::fetchAccessCode);
-        executorService.shutdown();
-        HttpResponse<String> httpResponse = client.send(request, BodyHandlers.ofString());
-        executorService.awaitTermination(TEST_EXECUTION_SERVICE_AWAIT_SECONDS, TimeUnit.SECONDS);
+        HttpResponse<String> httpResponse = fetchAccessCodeAndGetRedirectUriResponse(request);
 
         // THEN
         assertThat(httpResponse.statusCode()).isEqualTo(SC_OK);
@@ -181,15 +145,39 @@ final class SpotifyAccessCodeFetcherTest {
     @Test
     @Timeout(value = TEST_EXECUTION_SERVICE_AWAIT_SECONDS)
     void givenNoRequestToAccessCodeServerIsDone_whenFetchingTheAccessCode_thenServerTimesOutAfterSpecifiedTimeout() throws InterruptedException, ExecutionException {
-        
         // WHEN
         Future<Optional<String>> result = executorService.submit(target::fetchAccessCode);
         executorService.shutdown();
         executorService.awaitTermination(TEST_EXECUTION_SERVICE_AWAIT_SECONDS, TimeUnit.SECONDS);
-        
+
         // THEN
         assertThat(result.isDone()).isTrue();
         assertThat((result.get())).isEmpty();
+    }
+
+    private HttpRequest buildHttpRequest(URIBuilder uriBuilder) throws URISyntaxException {
+        return HttpRequest.newBuilder()
+                .uri(uriBuilder.build())
+                .GET()
+                .build();
+    }
+
+    private Future<Optional<String>> fetchAccessCodeAndGetOptionalAccessCode(HttpRequest request) throws IOException, InterruptedException {
+        Future<Optional<String>> result = executorService.submit(target::fetchAccessCode);
+        startAccessCodeServerAndGetRedirectUriResponse(request);
+        return result;
+    }
+
+    private HttpResponse<String> fetchAccessCodeAndGetRedirectUriResponse(HttpRequest request) throws IOException, InterruptedException {
+        executorService.submit(target::fetchAccessCode);
+        return startAccessCodeServerAndGetRedirectUriResponse(request);
+    }
+
+    private HttpResponse<String> startAccessCodeServerAndGetRedirectUriResponse(HttpRequest request) throws IOException, InterruptedException {
+        executorService.shutdown();
+        HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+        executorService.awaitTermination(TEST_EXECUTION_SERVICE_AWAIT_SECONDS, TimeUnit.SECONDS);
+        return response;
     }
 }
 
