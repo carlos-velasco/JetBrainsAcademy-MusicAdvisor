@@ -1,10 +1,12 @@
 package advisor.utils;
 
+import lombok.Getter;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
 import java.net.ServerSocket;
 
+@Getter
 public class FreePortExtension implements BeforeEachCallback {
 
     private int port;
@@ -15,9 +17,5 @@ public class FreePortExtension implements BeforeEachCallback {
             socket.setReuseAddress(true);
             port = socket.getLocalPort();
         }
-    }
-
-    public int getPort() {
-        return port;
     }
 }
