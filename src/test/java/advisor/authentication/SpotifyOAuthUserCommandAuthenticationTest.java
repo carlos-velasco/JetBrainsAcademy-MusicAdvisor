@@ -3,6 +3,9 @@ package advisor.authentication;
 import advisor.view.CommandLineView;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.ByteArrayOutputStream;
@@ -12,29 +15,32 @@ import java.util.Optional;
 import java.util.Scanner;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 final class SpotifyOAuthUserCommandAuthenticationTest {
 
     private final ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+    @Spy
     private final CommandLineView commandLineView = new CommandLineView(new Scanner(System.in), new PrintStream(output), 5);
+
+    @Mock
+    private SpotifyAccessCodeFetcher spotifyAccessCodeFetcher;
+
+    @Mock
+    private SpotifyAccessTokenFetcher spotifyAccessTokenFetcher;
+
+    @InjectMocks
+    private SpotifyOAuthUserCommandAuthentication target;
 
     @Test
     void givenAccessTokenAndAuthTokenAreObtained_whenAuthenticating_thenAccessTokenIsPopulated() throws IOException, InterruptedException {
         // GIVEN
         String accessCode = "myAccessCode";
         String accessToken = "myAccessToken";
-
-        SpotifyAccessCodeFetcher spotifyAccessCodeFetcher = mock(SpotifyAccessCodeFetcher.class);
         when(spotifyAccessCodeFetcher.fetchAccessCode()).thenReturn(Optional.of(accessCode));
-
-        SpotifyAccessTokenFetcher spotifyAccessTokenFetcher = mock(SpotifyAccessTokenFetcher.class);
         when(spotifyAccessTokenFetcher.fetchAccessToken(accessCode)).thenReturn(Optional.of(accessToken));
-
-        SpotifyOAuthUserCommandAuthentication target =
-                new SpotifyOAuthUserCommandAuthentication(spotifyAccessCodeFetcher, spotifyAccessTokenFetcher, commandLineView);
 
         // WHEN
         target.authenticate();
@@ -49,15 +55,8 @@ final class SpotifyOAuthUserCommandAuthenticationTest {
         // GIVEN
         String accessCode = "myAccessCode";
         String accessToken = "myAccessToken";
-
-        SpotifyAccessCodeFetcher spotifyAccessCodeFetcher = mock(SpotifyAccessCodeFetcher.class);
         when(spotifyAccessCodeFetcher.fetchAccessCode()).thenReturn(Optional.of(accessCode));
-
-        SpotifyAccessTokenFetcher spotifyAccessTokenFetcher = mock(SpotifyAccessTokenFetcher.class);
         when(spotifyAccessTokenFetcher.fetchAccessToken(accessCode)).thenReturn(Optional.of(accessToken));
-
-        SpotifyOAuthUserCommandAuthentication target =
-                new SpotifyOAuthUserCommandAuthentication(spotifyAccessCodeFetcher, spotifyAccessTokenFetcher, commandLineView);
 
         // WHEN
         target.authenticate();
@@ -71,14 +70,8 @@ final class SpotifyOAuthUserCommandAuthenticationTest {
     void givenAccessCodeObtainedAndAccessTokenNotObtained_whenAuthenticating_thenAccessTokenIsPopulated() throws IOException, InterruptedException {
         // GIVEN
         String accessCode = "myAccessCode";
-        SpotifyAccessCodeFetcher spotifyAccessCodeFetcher = mock(SpotifyAccessCodeFetcher.class);
         when(spotifyAccessCodeFetcher.fetchAccessCode()).thenReturn(Optional.of(accessCode));
-
-        SpotifyAccessTokenFetcher spotifyAccessTokenFetcher = mock(SpotifyAccessTokenFetcher.class);
         when(spotifyAccessTokenFetcher.fetchAccessToken(accessCode)).thenReturn(Optional.empty());
-
-        SpotifyOAuthUserCommandAuthentication target =
-                new SpotifyOAuthUserCommandAuthentication(spotifyAccessCodeFetcher, spotifyAccessTokenFetcher, commandLineView);
 
         // WHEN
         target.authenticate();
@@ -92,14 +85,8 @@ final class SpotifyOAuthUserCommandAuthenticationTest {
     void givenAccessCodeObtainedAndAccessTokenNotObtained_whenAuthenticating_thenMessagesAreWritten() throws IOException, InterruptedException {
         // GIVEN
         String accessCode = "myAccessCode";
-
-        SpotifyAccessCodeFetcher spotifyAccessCodeFetcher = mock(SpotifyAccessCodeFetcher.class);
         when(spotifyAccessCodeFetcher.fetchAccessCode()).thenReturn(Optional.of(accessCode));
-
-        SpotifyAccessTokenFetcher spotifyAccessTokenFetcher = mock(SpotifyAccessTokenFetcher.class);
         when(spotifyAccessTokenFetcher.fetchAccessToken(accessCode)).thenReturn(Optional.empty());
-
-        SpotifyOAuthUserCommandAuthentication target = new SpotifyOAuthUserCommandAuthentication(spotifyAccessCodeFetcher, spotifyAccessTokenFetcher, commandLineView);
 
         // WHEN
         target.authenticate();
@@ -113,12 +100,7 @@ final class SpotifyOAuthUserCommandAuthenticationTest {
     @Test
     void givenAccessCodeAndAccessTokenNotObtained_whenAuthenticating_thenAccessTokenIsPopulated() throws IOException, InterruptedException {
         // GIVEN
-        SpotifyAccessCodeFetcher spotifyAccessCodeFetcher = mock(SpotifyAccessCodeFetcher.class);
         when(spotifyAccessCodeFetcher.fetchAccessCode()).thenReturn(Optional.empty());
-
-        SpotifyAccessTokenFetcher spotifyAccessTokenFetcher = mock(SpotifyAccessTokenFetcher.class);
-
-        SpotifyOAuthUserCommandAuthentication target = new SpotifyOAuthUserCommandAuthentication(spotifyAccessCodeFetcher, spotifyAccessTokenFetcher, commandLineView);
 
         // WHEN
         target.authenticate();
@@ -131,12 +113,7 @@ final class SpotifyOAuthUserCommandAuthenticationTest {
     @Test
     void givenAccessCodeAndAccessTokenNotObtained_whenAuthenticating_thenErrorMessagesAreWritten() throws IOException, InterruptedException {
         // GIVEN
-        SpotifyAccessCodeFetcher spotifyAccessCodeFetcher = mock(SpotifyAccessCodeFetcher.class);
         when(spotifyAccessCodeFetcher.fetchAccessCode()).thenReturn(Optional.empty());
-
-        SpotifyAccessTokenFetcher spotifyAccessTokenFetcher = mock(SpotifyAccessTokenFetcher.class);
-
-        SpotifyOAuthUserCommandAuthentication target = new SpotifyOAuthUserCommandAuthentication(spotifyAccessCodeFetcher, spotifyAccessTokenFetcher, commandLineView);
 
         // WHEN
         target.authenticate();
