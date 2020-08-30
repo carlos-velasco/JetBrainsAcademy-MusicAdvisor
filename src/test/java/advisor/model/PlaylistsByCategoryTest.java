@@ -32,10 +32,10 @@ final class PlaylistsByCategoryTest {
     @Test
     void whenGettingTheFirstPlaylistsByCategoryPage_thenTheFirstPlaylistsByCategoryPageIsReturned() {
         // WHEN
-        Page<Playlist> newReleasesPage = target.firstPage(GOOD_MOOD_CATEGORY.getName());
+        Page<Playlist> categoryPlaylistsPage = target.firstPage(GOOD_MOOD_CATEGORY.getName());
 
         // THEN
-        assertThat(newReleasesPage).as("First playlists by category page").isEqualTo(CATEGORY_PLAYLISTS_FIRST_PAGE);
+        assertThat(categoryPlaylistsPage).as("Playlists by category first page").isEqualTo(CATEGORY_PLAYLISTS_FIRST_PAGE);
     }
 
     @Test
@@ -64,10 +64,10 @@ final class PlaylistsByCategoryTest {
         target.firstPage(GOOD_MOOD_CATEGORY.getName());
 
         // WHEN
-        Page<Playlist> newReleasesPage = target.nextPage();
+        Page<Playlist> categoryPlaylistsPage = target.nextPage();
 
         // THEN
-        assertThat(newReleasesPage).as("Second playlists by category page").isEqualTo(CATEGORY_PLAYLISTS_SECOND_PAGE);
+        assertThat(categoryPlaylistsPage).as("Playlists by category second page").isEqualTo(CATEGORY_PLAYLISTS_SECOND_PAGE);
     }
 
     @Test
@@ -77,10 +77,10 @@ final class PlaylistsByCategoryTest {
         target.nextPage();
 
         // WHEN
-        Page<Playlist> newReleasesPage = target.nextPage();
+        Page<Playlist> categoryPlaylistsPage = target.nextPage();
 
         // THEN
-        assertThat(newReleasesPage).as("Third playlists by category page").isEqualTo(CATEGORY_PLAYLISTS_THIRD_PAGE);
+        assertThat(categoryPlaylistsPage).as("Playlists by category third page").isEqualTo(CATEGORY_PLAYLISTS_THIRD_PAGE);
     }
 
     @Test
@@ -119,10 +119,10 @@ final class PlaylistsByCategoryTest {
         target.nextPage();
 
         // WHEN
-        Page<Playlist> newReleasesPage = target.previousPage();
+        Page<Playlist> categoryPlaylistsPage = target.previousPage();
 
         // THEN
-        assertThat(newReleasesPage).as("First playlists by category page").isEqualTo(CATEGORY_PLAYLISTS_FIRST_PAGE);
+        assertThat(categoryPlaylistsPage).as("Playlists by category first page").isEqualTo(CATEGORY_PLAYLISTS_FIRST_PAGE);
     }
 
     @Test
@@ -148,10 +148,10 @@ final class PlaylistsByCategoryTest {
         target.nextPage();
 
         // WHEN
-        Page<Playlist> newReleasesPage = target.firstPage(GOOD_MOOD_CATEGORY.getName());
+        Page<Playlist> categoryPlaylistsPage = target.firstPage(GOOD_MOOD_CATEGORY.getName());
 
         // THEN
-        assertThat(newReleasesPage).as("First playlists by category page").isEqualTo(CATEGORY_PLAYLISTS_FIRST_PAGE);
+        assertThat(categoryPlaylistsPage).as("Playlists by category first page").isEqualTo(CATEGORY_PLAYLISTS_FIRST_PAGE);
     }
 
     @Test
