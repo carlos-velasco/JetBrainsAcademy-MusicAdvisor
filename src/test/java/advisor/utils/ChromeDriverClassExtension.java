@@ -1,39 +1,33 @@
 package advisor.utils;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import lombok.Getter;
 import org.junit.jupiter.api.extension.AfterAllCallback;
-import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
-@Getter
-public class ChromeDriverClassExtension implements BeforeAllCallback, AfterAllCallback {
+public class ChromeDriverClassExtension extends ChromeDriver implements AfterAllCallback {
 
-    private WebDriver driver;
-
-    @Override
-    public void beforeAll(ExtensionContext context) {
+    static {
         WebDriverManager.chromedriver().setup();
-        driver = buildChromeDriver();
+    }
+
+    public ChromeDriverClassExtension () {
+        super(getDefaultChromeOptions());
     }
 
     @Override
     public void afterAll(ExtensionContext context) {
-        if (driver != null) {
-            driver.close();
-        }
+        quit();
     }
 
-    private ChromeDriver buildChromeDriver() {
+    private static ChromeOptions getDefaultChromeOptions() {
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.addArguments(
                 "--headless",
                 "--disable-gpu",
                 "--window-size=1920,1200",
                 "--ignore-certificate-errors");
-        return new ChromeDriver(chromeOptions);
+        return chromeOptions;
     }
 }

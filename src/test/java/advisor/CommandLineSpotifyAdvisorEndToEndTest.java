@@ -9,6 +9,7 @@ import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -68,11 +69,11 @@ final class CommandLineSpotifyAdvisorEndToEndTest {
     static final SystemInMockClassExtension systemInMock = new SystemInMockClassExtension();
 
     @RegisterExtension
-    static final ChromeDriverClassExtension chromeDriverClassExtension = new ChromeDriverClassExtension();
+    static final ChromeDriver chromeDriver = new ChromeDriverClassExtension();
 
     @BeforeAll
     static void initializeAuthenticator() {
-        spotifyAppUIAuthenticator = new SpotifyAppUIAuthenticator(chromeDriverClassExtension.getDriver(), REDIRECT_URI);
+        spotifyAppUIAuthenticator = new SpotifyAppUIAuthenticator(chromeDriver, REDIRECT_URI);
     }
 
     @Test
