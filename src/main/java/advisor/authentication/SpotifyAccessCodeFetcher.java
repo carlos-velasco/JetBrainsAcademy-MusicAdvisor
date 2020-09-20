@@ -18,8 +18,6 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class SpotifyAccessCodeFetcher {
 
-    public static final int ACCESS_CODE_SERVER_TIMEOUT_SECONDS = 3 * 60;
-
     private final String spotifyAccessHost;
     private final String clientId;
     private final String redirectUri;
