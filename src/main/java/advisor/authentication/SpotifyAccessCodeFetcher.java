@@ -1,7 +1,7 @@
 package advisor.authentication;
 
 import advisor.view.CommandLineView;
-import com.sun.net.httpserver.HttpServer;
+import com.sun.net.httpserver.HttpServer; // NOSONAR
 import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpStatus;
 

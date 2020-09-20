@@ -51,6 +51,7 @@ public class AppConfig {
     }
 
     @Bean
+    @SuppressWarnings("squid:S106")
     PrintStream printStream() {
         return new PrintStream(System.out);
     }
