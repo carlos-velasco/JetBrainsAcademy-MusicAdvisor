@@ -56,7 +56,7 @@ public class SpotifyAccessCodeFetcher {
         }
 
         return Optional.ofNullable(accessCode);
-}
+    }
 
     private Optional<String> getAccessCode(String query) {
         if (query == null) {

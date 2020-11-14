@@ -30,6 +30,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.function.Predicate.not;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
@@ -190,7 +191,7 @@ final class CommandLineSpotifyAdvisorEndToEndTest {
         List<String> categoryLines = getResourceCommandFirstPageOutputLines(output);
         assertThat(categoryLines)
                 .hasSize(pageSize)
-                .allMatch(line -> !line.isEmpty())
+                .allMatch(not(String::isEmpty))
                 .doesNotHaveDuplicates();
     }
 
@@ -237,7 +238,7 @@ final class CommandLineSpotifyAdvisorEndToEndTest {
 
     private void waitForAuthUrlAndAuthenticate() {
         String authenticationUrl = await().atMost(Duration.ofSeconds(10))
-                .until(this::getAuthenticationUrlFromOutput, url -> !url.isEmpty());
+                .until(this::getAuthenticationUrlFromOutput, not(String::isEmpty));
         spotifyAppUIAuthenticator.authenticateApp(authenticationUrl);
     }
 
