@@ -33,7 +33,10 @@ dependencies {
     testImplementation 'org.springframework:spring-test:5.2.8.RELEASE'
     testImplementation 'org.seleniumhq.selenium:selenium-java:3.141.59'
     testImplementation 'io.github.bonigarcia:webdrivermanager:4.2.0'
-    testImplementation 'com.github.stefanbirkner:system-rules:1.19.0'
+    testImplementation('com.github.stefanbirkner:system-rules:1.19.0') {
+        exclude group: 'junit', module: 'junit-dep'
+    }
+    testImplementation('junit:junit:4.13')
     testImplementation 'org.awaitility:awaitility:4.0.3'
 }
 
