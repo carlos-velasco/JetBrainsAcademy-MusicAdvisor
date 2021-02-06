@@ -43,3 +43,9 @@ jobs:
       with:
         name: 'test-report'
         path: build/reports/tests/test/*
+    - name: Publish Unit Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v1.7
+      if: always()
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        files: test-results/**/*.xml
