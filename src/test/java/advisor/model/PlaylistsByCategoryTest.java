@@ -22,17 +22,17 @@ final class PlaylistsByCategoryTest {
     private static final Page<Playlist> CATEGORY_PLAYLISTS_THIRD_PAGE = new Page<>(
             GOOD_MOOD_CATEGORY_PLAYLISTS.subList(PAGE_SIZE * 2, (PAGE_SIZE * 3)), TOTAL_CATEGORIES, 3);
 
-    private PlaylistsByCategory target;
+    private PlaylistsByCategory playlistsByCategory;
 
     @BeforeEach
     void prepareTarget() {
-        target = new PlaylistsByCategory(new FakeAdvisor(PAGE_SIZE), PAGE_SIZE);
+        playlistsByCategory = new PlaylistsByCategory(new FakeAdvisor(PAGE_SIZE), PAGE_SIZE);
     }
 
     @Test
     void whenGettingTheFirstPlaylistsByCategoryPage_thenTheFirstPlaylistsByCategoryPageIsReturned() {
         // WHEN
-        Page<Playlist> categoryPlaylistsPage = target.firstPage(GOOD_MOOD_CATEGORY.getName());
+        Page<Playlist> categoryPlaylistsPage = playlistsByCategory.firstPage(GOOD_MOOD_CATEGORY.getName());
 
         // THEN
         assertThat(categoryPlaylistsPage).as("Playlists by category first page").isEqualTo(CATEGORY_PLAYLISTS_FIRST_PAGE);
@@ -41,7 +41,7 @@ final class PlaylistsByCategoryTest {
     @Test
     void givenFirstPlaylistsByCategoryPageHasNotBeenObtained_whenGettingTheNextPlaylistsByCategoryPage_thenAnExceptionIsThrown() {
         // WHEN
-        Throwable thrown = catchThrowable(() -> target.nextPage());
+        Throwable thrown = catchThrowable(() -> playlistsByCategory.nextPage());
 
         // THEN
         assertThat(thrown).isInstanceOf(AdvisorException.class)
@@ -51,7 +51,7 @@ final class PlaylistsByCategoryTest {
     @Test
     void givenFirstPlaylistsByCategoryPageHasNotBeenObtained_whenGettingThePreviousPlaylistsByCategoryPage_thenAnExceptionIsThrown() {
         // WHEN
-        Throwable thrown = catchThrowable(() -> target.previousPage());
+        Throwable thrown = catchThrowable(() -> playlistsByCategory.previousPage());
 
         // THEN
         assertThat(thrown).isInstanceOf(AdvisorException.class)
@@ -61,10 +61,10 @@ final class PlaylistsByCategoryTest {
     @Test
     void givenFirstPlaylistsByCategoryPageHasBeenObtained_whenGettingTheNextPlaylistsByCategoryPage_thenTheNextPlaylistsByCategoryPageIsReturned() {
         // GIVEN
-        target.firstPage(GOOD_MOOD_CATEGORY.getName());
+        playlistsByCategory.firstPage(GOOD_MOOD_CATEGORY.getName());
 
         // WHEN
-        Page<Playlist> categoryPlaylistsPage = target.nextPage();
+        Page<Playlist> categoryPlaylistsPage = playlistsByCategory.nextPage();
 
         // THEN
         assertThat(categoryPlaylistsPage).as("Playlists by category second page").isEqualTo(CATEGORY_PLAYLISTS_SECOND_PAGE);
@@ -73,11 +73,11 @@ final class PlaylistsByCategoryTest {
     @Test
     void givenAllWholePlaylistsByCategoryPagesHaveBeenObtained_whenGettingTheNextPlaylistsByCategoryPage_thenTheLastPlaylistsByCategoryPageIsReturned() {
         // GIVEN
-        target.firstPage(GOOD_MOOD_CATEGORY.getName());
-        target.nextPage();
+        playlistsByCategory.firstPage(GOOD_MOOD_CATEGORY.getName());
+        playlistsByCategory.nextPage();
 
         // WHEN
-        Page<Playlist> categoryPlaylistsPage = target.nextPage();
+        Page<Playlist> categoryPlaylistsPage = playlistsByCategory.nextPage();
 
         // THEN
         assertThat(categoryPlaylistsPage).as("Playlists by category third page").isEqualTo(CATEGORY_PLAYLISTS_THIRD_PAGE);
@@ -86,13 +86,13 @@ final class PlaylistsByCategoryTest {
     @Test
     void givenAllNextNewReleasePagesHaveBeenObtained_whenGettingTheNextPlaylistsByCategoryPage_thenAnExceptionIsThrown() {
         // GIVEN
-        target.firstPage(GOOD_MOOD_CATEGORY.getName());
-        target.nextPage();
-        target.nextPage();
+        playlistsByCategory.firstPage(GOOD_MOOD_CATEGORY.getName());
+        playlistsByCategory.nextPage();
+        playlistsByCategory.nextPage();
 
 
         // WHEN
-        Throwable thrown = catchThrowable(() -> target.nextPage());
+        Throwable thrown = catchThrowable(() -> playlistsByCategory.nextPage());
 
         // THEN
         assertThat(thrown).isInstanceOf(AdvisorException.class)
@@ -102,10 +102,10 @@ final class PlaylistsByCategoryTest {
     @Test
     void givenFirstPlaylistsByCategoryPageHasBeenObtained_whenGettingThePreviousPlaylistsByCategoryPage_thenAnExceptionIsThrown() {
         // GIVEN
-        target.firstPage(GOOD_MOOD_CATEGORY.getName());
+        playlistsByCategory.firstPage(GOOD_MOOD_CATEGORY.getName());
 
         // WHEN
-        Throwable thrown = catchThrowable(() -> target.previousPage());
+        Throwable thrown = catchThrowable(() -> playlistsByCategory.previousPage());
 
         // THEN
         assertThat(thrown).isInstanceOf(AdvisorException.class)
@@ -115,11 +115,11 @@ final class PlaylistsByCategoryTest {
     @Test
     void givenFirstTwoPlaylistsByCategoryPagesHaveBeenObtained_whenGettingThePreviousPlaylistsByCategoryPage_thenFirstPageIsObtained() {
         // GIVEN
-        target.firstPage(GOOD_MOOD_CATEGORY.getName());
-        target.nextPage();
+        playlistsByCategory.firstPage(GOOD_MOOD_CATEGORY.getName());
+        playlistsByCategory.nextPage();
 
         // WHEN
-        Page<Playlist> categoryPlaylistsPage = target.previousPage();
+        Page<Playlist> categoryPlaylistsPage = playlistsByCategory.previousPage();
 
         // THEN
         assertThat(categoryPlaylistsPage).as("Playlists by category first page").isEqualTo(CATEGORY_PLAYLISTS_FIRST_PAGE);
@@ -128,12 +128,12 @@ final class PlaylistsByCategoryTest {
     @Test
     void givenFirstTwoPlaylistsByCategoryPagesHaveBeenObtainedAndOnePreviousPlaylistsByCategoryPageHasBeenObtained_whenGettingThePreviousPlaylistsByCategoryPage_thenAnExceptionIsThrown() {
         // GIVEN
-        target.firstPage(GOOD_MOOD_CATEGORY.getName());
-        target.nextPage();
-        target.previousPage();
+        playlistsByCategory.firstPage(GOOD_MOOD_CATEGORY.getName());
+        playlistsByCategory.nextPage();
+        playlistsByCategory.previousPage();
 
         // WHEN
-        Throwable thrown = catchThrowable(() -> target.previousPage());
+        Throwable thrown = catchThrowable(() -> playlistsByCategory.previousPage());
 
         // THEN
         assertThat(thrown).isInstanceOf(AdvisorException.class)
@@ -143,12 +143,12 @@ final class PlaylistsByCategoryTest {
     @Test
     void givenAllNextPlaylistsByCategoryPagesHaveBeenObtained_whenGettingFirstPlaylistsByCategoryPage_thenFirstPlaylistsByCategoryPageIsObtained() {
         // GIVEN
-        target.firstPage(GOOD_MOOD_CATEGORY.getName());
-        target.nextPage();
-        target.nextPage();
+        playlistsByCategory.firstPage(GOOD_MOOD_CATEGORY.getName());
+        playlistsByCategory.nextPage();
+        playlistsByCategory.nextPage();
 
         // WHEN
-        Page<Playlist> categoryPlaylistsPage = target.firstPage(GOOD_MOOD_CATEGORY.getName());
+        Page<Playlist> categoryPlaylistsPage = playlistsByCategory.firstPage(GOOD_MOOD_CATEGORY.getName());
 
         // THEN
         assertThat(categoryPlaylistsPage).as("Playlists by category first page").isEqualTo(CATEGORY_PLAYLISTS_FIRST_PAGE);
@@ -157,7 +157,7 @@ final class PlaylistsByCategoryTest {
     @Test
     void givenCategoryDoesNotExist_whenGettingFirstPlaylistByCategoryPage_thenAnExceptionIsThrown() {
         // WHEN
-        Throwable thrown = catchThrowable(() -> target.firstPage("non existing category"));
+        Throwable thrown = catchThrowable(() -> playlistsByCategory.firstPage("non existing category"));
 
         // THEN
         assertThat(thrown).isInstanceOf(AdvisorException.class)

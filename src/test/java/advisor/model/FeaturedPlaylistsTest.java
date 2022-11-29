@@ -21,17 +21,17 @@ final class FeaturedPlaylistsTest {
     private static final Page<Playlist> FEATURED_PLAYLISTS_THIRD_PAGE = new Page<>(
             FEATURED_PLAYLISTS.subList(PAGE_SIZE * 2, (PAGE_SIZE * 3)), TOTAL_CATEGORIES, 3);
 
-    private FeaturedPlaylists target;
+    private FeaturedPlaylists featuredPlaylists;
 
     @BeforeEach
     void prepareTarget() {
-        target = new FeaturedPlaylists(new FakeAdvisor(PAGE_SIZE), PAGE_SIZE);
+        featuredPlaylists = new FeaturedPlaylists(new FakeAdvisor(PAGE_SIZE), PAGE_SIZE);
     }
 
     @Test
     void whenGettingTheFirstFeaturedPlaylistsPage_thenTheFirstFeaturedPlaylistsPageIsReturned() {
         // WHEN
-        Page<Playlist> featuredPlaylistsPage = target.firstPage();
+        Page<Playlist> featuredPlaylistsPage = featuredPlaylists.firstPage();
 
         // THEN
         assertThat(featuredPlaylistsPage).as("First featured playlists page").isEqualTo(FEATURED_PLAYLISTS_FIRST_PAGE);
@@ -40,7 +40,7 @@ final class FeaturedPlaylistsTest {
     @Test
     void givenFirstFeaturedPlaylistsPageHasNotBeenObtained_whenGettingTheNextFeaturedPlaylistsPage_thenAnExceptionIsThrown() {
         // WHEN
-        Throwable thrown = catchThrowable(() -> target.nextPage());
+        Throwable thrown = catchThrowable(() -> featuredPlaylists.nextPage());
 
         // THEN
         assertThat(thrown).isInstanceOf(AdvisorException.class)
@@ -50,7 +50,7 @@ final class FeaturedPlaylistsTest {
     @Test
     void givenFirstFeaturedPlaylistsPageHasNotBeenObtained_whenGettingThePreviousFeaturedPlaylistsPage_thenAnExceptionIsThrown() {
         // WHEN
-        Throwable thrown = catchThrowable(() -> target.previousPage());
+        Throwable thrown = catchThrowable(() -> featuredPlaylists.previousPage());
 
         // THEN
         assertThat(thrown).isInstanceOf(AdvisorException.class)
@@ -60,10 +60,10 @@ final class FeaturedPlaylistsTest {
     @Test
     void givenFirstFeaturedPlaylistsPageHasBeenObtained_whenGettingTheNextFeaturedPlaylistsPage_thenTheNextFeaturedPlaylistsPageIsReturned() {
         // GIVEN
-        target.firstPage();
+        featuredPlaylists.firstPage();
 
         // WHEN
-        Page<Playlist> featuredPlaylistsPage = target.nextPage();
+        Page<Playlist> featuredPlaylistsPage = featuredPlaylists.nextPage();
 
         // THEN
         assertThat(featuredPlaylistsPage).as("Second featured playlists page").isEqualTo(FEATURED_PLAYLISTS_SECOND_PAGE);
@@ -72,11 +72,11 @@ final class FeaturedPlaylistsTest {
     @Test
     void givenAllWholeFeaturedPlaylistsPagesHaveBeenObtained_whenGettingTheNextFeaturedPlaylistsPage_thenTheLastFeaturedPlaylistsPageIsReturned() {
         // GIVEN
-        target.firstPage();
-        target.nextPage();
+        featuredPlaylists.firstPage();
+        featuredPlaylists.nextPage();
 
         // WHEN
-        Page<Playlist> featuredPlaylistsPage = target.nextPage();
+        Page<Playlist> featuredPlaylistsPage = featuredPlaylists.nextPage();
 
         // THEN
         assertThat(featuredPlaylistsPage).as("Third featured playlists page").isEqualTo(FEATURED_PLAYLISTS_THIRD_PAGE);
@@ -85,13 +85,13 @@ final class FeaturedPlaylistsTest {
     @Test
     void givenAllNextFeaturedPlaylistsPagesHaveBeenObtained_whenGettingTheNextFeaturedPlaylistsPage_thenAnExceptionIsThrown() {
         // GIVEN
-        target.firstPage();
-        target.nextPage();
-        target.nextPage();
+        featuredPlaylists.firstPage();
+        featuredPlaylists.nextPage();
+        featuredPlaylists.nextPage();
 
 
         // WHEN
-        Throwable thrown = catchThrowable(() -> target.nextPage());
+        Throwable thrown = catchThrowable(() -> featuredPlaylists.nextPage());
 
         // THEN
         assertThat(thrown).isInstanceOf(AdvisorException.class)
@@ -101,10 +101,10 @@ final class FeaturedPlaylistsTest {
     @Test
     void givenFirstFeaturedPlaylistsPageHasBeenObtained_whenGettingThePreviousFeaturedPlaylistsPage_thenAnExceptionIsThrown() {
         // GIVEN
-        target.firstPage();
+        featuredPlaylists.firstPage();
 
         // WHEN
-        Throwable thrown = catchThrowable(() -> target.previousPage());
+        Throwable thrown = catchThrowable(() -> featuredPlaylists.previousPage());
 
         // THEN
         assertThat(thrown).isInstanceOf(AdvisorException.class)
@@ -114,11 +114,11 @@ final class FeaturedPlaylistsTest {
     @Test
     void givenFirstTwoFeaturedPlaylistsPagesHaveBeenObtained_whenGettingThePreviousFeaturedPlaylistsPage_thenFirstPageIsObtained() {
         // GIVEN
-        target.firstPage();
-        target.nextPage();
+        featuredPlaylists.firstPage();
+        featuredPlaylists.nextPage();
 
         // WHEN
-        Page<Playlist> featuredPlaylistsPage = target.previousPage();
+        Page<Playlist> featuredPlaylistsPage = featuredPlaylists.previousPage();
 
         // THEN
         assertThat(featuredPlaylistsPage).as("First featured playlists page").isEqualTo(FEATURED_PLAYLISTS_FIRST_PAGE);
@@ -127,12 +127,12 @@ final class FeaturedPlaylistsTest {
     @Test
     void givenFirstTwoFeaturedPlaylistsPagesHaveBeenObtainedAndOnePreviousFeaturedPlaylistsPageHasBeenObtained_whenGettingThePreviousFeaturedPlaylistsPage_thenAnExceptionIsThrown() {
         // GIVEN
-        target.firstPage();
-        target.nextPage();
-        target.previousPage();
+        featuredPlaylists.firstPage();
+        featuredPlaylists.nextPage();
+        featuredPlaylists.previousPage();
 
         // WHEN
-        Throwable thrown = catchThrowable(() -> target.previousPage());
+        Throwable thrown = catchThrowable(() -> featuredPlaylists.previousPage());
 
         // THEN
         assertThat(thrown).isInstanceOf(AdvisorException.class)
@@ -142,12 +142,12 @@ final class FeaturedPlaylistsTest {
     @Test
     void givenAllNextFeaturedPlaylistsPagesHaveBeenObtained_whenGettingFirstFeaturedPlaylistsPage_thenFirstFeaturedPlaylistsPageIsObtained() {
         // GIVEN
-        target.firstPage();
-        target.nextPage();
-        target.nextPage();
+        featuredPlaylists.firstPage();
+        featuredPlaylists.nextPage();
+        featuredPlaylists.nextPage();
 
         // WHEN
-        Page<Playlist> featuredPlaylistsPage = target.firstPage();
+        Page<Playlist> featuredPlaylistsPage = featuredPlaylists.firstPage();
 
         // THEN
         assertThat(featuredPlaylistsPage).as("First featured playlists page").isEqualTo(FEATURED_PLAYLISTS_FIRST_PAGE);

@@ -38,7 +38,7 @@ final class SpotifyAccessTokenFetcherTest {
     private final ByteArrayOutputStream output = new ByteArrayOutputStream();
     private final CommandLineView commandLineView =
             new CommandLineView(new Scanner(System.in), new PrintStream(output), 5);
-    private SpotifyAccessTokenFetcher target;
+    private SpotifyAccessTokenFetcher spotifyAccessTokenFetcher;
 
     @Managed
     private final WireMockServer wireMockServer = with(wireMockConfig().dynamicPort());
@@ -46,7 +46,7 @@ final class SpotifyAccessTokenFetcherTest {
     @BeforeEach
     void configureTarget() {
         String spotifyAccessHost = "http://localhost";
-        target = new SpotifyAccessTokenFetcher(
+        spotifyAccessTokenFetcher = new SpotifyAccessTokenFetcher(
                 spotifyAccessHost + ":" + wireMockServer.port(),
                 CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, commandLineView);
     }
@@ -61,7 +61,7 @@ final class SpotifyAccessTokenFetcherTest {
                         .withBody(new Gson().toJson(buildValidResponseBody()))));
 
         // WHEN
-        Optional<String> accessToken = target.fetchAccessToken("myAccessCode");
+        Optional<String> accessToken = spotifyAccessTokenFetcher.fetchAccessToken("myAccessCode");
 
         // THEN
         assertThat(accessToken).isNotEmpty().contains(ACCESS_TOKEN);
@@ -78,7 +78,7 @@ final class SpotifyAccessTokenFetcherTest {
                         .withBody(requestBody)));
 
         // WHEN
-        target.fetchAccessToken("myAccessCode");
+        spotifyAccessTokenFetcher.fetchAccessToken("myAccessCode");
 
         // THEN
         String expectedMessages = "making http request for access_token..." + System.lineSeparator()
@@ -97,7 +97,7 @@ final class SpotifyAccessTokenFetcherTest {
                         .withBody(buildInvalidResponseBody())));
 
         // WHEN
-        Optional<String> accessToken = target.fetchAccessToken("myAccessCode");
+        Optional<String> accessToken = spotifyAccessTokenFetcher.fetchAccessToken("myAccessCode");
 
         // THEN
         assertThat(accessToken).isEmpty();
@@ -113,7 +113,7 @@ final class SpotifyAccessTokenFetcherTest {
                         .withBody(buildInvalidResponseBody())));
 
         // WHEN
-        target.fetchAccessToken("myAccessCode");
+        spotifyAccessTokenFetcher.fetchAccessToken("myAccessCode");
 
         // THEN
         String expectedMessages = "making http request for access_token..." + System.lineSeparator()
@@ -134,7 +134,7 @@ final class SpotifyAccessTokenFetcherTest {
 
         // WHEN
         String accessCode = "myAccessCode";
-        target.fetchAccessToken(accessCode);
+        spotifyAccessTokenFetcher.fetchAccessToken(accessCode);
 
         // THEN
         String expectedBase64EncodedClientData =

@@ -30,7 +30,7 @@ final class SpotifyAdvisorTest {
     private static final String LOCALE = "es-ES";
     private final UserCommandAuthenticationFacade userCommandAuthenticationFacade =
             new UserCommandAuthenticationFacade(new AlwaysAuthenticatedUserCommandAuthentication());
-    private SpotifyAdvisor target;
+    private SpotifyAdvisor spotifyAdvisor;
 
     @Managed
     private final WireMockServer wireMockServer = with(wireMockConfig().dynamicPort());
@@ -38,7 +38,7 @@ final class SpotifyAdvisorTest {
     @BeforeEach
     void prepareTarget() {
         String spotifyResourceHost = "http://localhost";
-        target = new SpotifyAdvisor(
+        spotifyAdvisor = new SpotifyAdvisor(
                 spotifyResourceHost + ":" + wireMockServer.port(),
                 userCommandAuthenticationFacade,
                 DEFAULT_PAGE_SIZE,
@@ -64,7 +64,7 @@ final class SpotifyAdvisorTest {
 
         // WHEN
         final int pageNumber = 5;
-        Page<Category> categories = target.getCategories(pageNumber);
+        Page<Category> categories = spotifyAdvisor.getCategories(pageNumber);
 
         // THEN
         assertThat(categories.getElements())
@@ -88,7 +88,7 @@ final class SpotifyAdvisorTest {
                         .withBodyFile("categories.json")));
 
         // WHEN
-        target.getCategories(1);
+        spotifyAdvisor.getCategories(1);
 
         // THEN
         verify(getRequestedFor(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories"))
@@ -107,7 +107,7 @@ final class SpotifyAdvisorTest {
                         .withBodyFile("categories.json")));
 
         // WHEN
-        target.getCategories(1);
+        spotifyAdvisor.getCategories(1);
 
         // THEN
         verify(getRequestedFor(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories"))
@@ -126,7 +126,7 @@ final class SpotifyAdvisorTest {
 
         // WHEN
         final int pageNumber = 3;
-        target.getCategories(pageNumber);
+        spotifyAdvisor.getCategories(pageNumber);
 
         // THEN
         verify(getRequestedFor(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories"))
@@ -144,7 +144,7 @@ final class SpotifyAdvisorTest {
                         .withBodyFile("categories.json")));
 
         // WHEN
-        target.getCategories();
+        spotifyAdvisor.getCategories();
 
         // THEN
         verify(getRequestedFor(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories"))
@@ -170,7 +170,7 @@ final class SpotifyAdvisorTest {
                         .withBodyFile("categories.json")));
 
         // WHEN
-        Page<Category> categories = target.getCategories();
+        Page<Category> categories = spotifyAdvisor.getCategories();
 
         // THEN
         assertThat(categories.getElements())
@@ -191,7 +191,7 @@ final class SpotifyAdvisorTest {
                         .withBodyFile("categories.json")));
 
         // WHEN
-        target.getCategories();
+        spotifyAdvisor.getCategories();
 
         // THEN
         verify(getRequestedFor(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories"))
@@ -216,7 +216,7 @@ final class SpotifyAdvisorTest {
                                 "}")));
 
         // WHEN
-        Throwable thrown = Assertions.catchThrowable(() -> target.getCategories(1));
+        Throwable thrown = Assertions.catchThrowable(() -> spotifyAdvisor.getCategories(1));
 
         // THEN
         assertThat(thrown)
@@ -239,7 +239,7 @@ final class SpotifyAdvisorTest {
                                 "}")));
 
         // WHEN
-        Throwable thrown = Assertions.catchThrowable(() -> target.getCategories());
+        Throwable thrown = Assertions.catchThrowable(() -> spotifyAdvisor.getCategories());
 
         // THEN
         assertThat(thrown)
@@ -268,7 +268,7 @@ final class SpotifyAdvisorTest {
 
         // WHEN
         final int pageNumber = 5;
-        Page<Release> releases = target.getNewReleases(pageNumber);
+        Page<Release> releases = spotifyAdvisor.getNewReleases(pageNumber);
 
         // THEN
         assertThat(releases.getElements())
@@ -298,7 +298,7 @@ final class SpotifyAdvisorTest {
                                 "}")));
 
         // WHEN
-        Throwable thrown = Assertions.catchThrowable(() -> target.getNewReleases(1));
+        Throwable thrown = Assertions.catchThrowable(() -> spotifyAdvisor.getNewReleases(1));
 
         // THEN
         assertThat(thrown).isInstanceOf(AdvisorException.class)
@@ -315,7 +315,7 @@ final class SpotifyAdvisorTest {
                         .withBodyFile("new-releases.json")));
 
         // WHEN
-        target.getNewReleases(1);
+        spotifyAdvisor.getNewReleases(1);
 
         // THEN
         verify(getRequestedFor(urlPathEqualTo(RESOURCE_COMMON_PATH + "new-releases"))
@@ -334,7 +334,7 @@ final class SpotifyAdvisorTest {
                         .withBodyFile("new-releases.json")));
 
         // WHEN
-        target.getNewReleases(1);
+        spotifyAdvisor.getNewReleases(1);
 
         // THEN
         verify(getRequestedFor(urlPathEqualTo(RESOURCE_COMMON_PATH + "new-releases"))
@@ -353,7 +353,7 @@ final class SpotifyAdvisorTest {
 
         // WHEN
         final int pageNumber = 3;
-        target.getNewReleases(pageNumber);
+        spotifyAdvisor.getNewReleases(pageNumber);
 
         // THEN
         verify(getRequestedFor(urlPathEqualTo(RESOURCE_COMMON_PATH + "new-releases"))
@@ -383,7 +383,7 @@ final class SpotifyAdvisorTest {
 
         // WHEN
         final int pageNumber = 5;
-        Page<Playlist> featuredPlaylists = target.getFeaturedPlaylists(pageNumber);
+        Page<Playlist> featuredPlaylists = spotifyAdvisor.getFeaturedPlaylists(pageNumber);
 
         // THEN
         assertThat(featuredPlaylists.getElements())
@@ -412,7 +412,7 @@ final class SpotifyAdvisorTest {
                                 "}")));
 
         // WHEN
-        Throwable thrown = Assertions.catchThrowable(() -> target.getFeaturedPlaylists(1));
+        Throwable thrown = Assertions.catchThrowable(() -> spotifyAdvisor.getFeaturedPlaylists(1));
 
         // THEN
         assertThat(thrown).isInstanceOf(AdvisorException.class)
@@ -429,7 +429,7 @@ final class SpotifyAdvisorTest {
                         .withBodyFile("featured-playlists.json")));
 
         // WHEN
-        target.getFeaturedPlaylists(1);
+        spotifyAdvisor.getFeaturedPlaylists(1);
 
         // THEN
         verify(getRequestedFor(urlPathEqualTo(RESOURCE_COMMON_PATH + "featured-playlists"))
@@ -448,7 +448,7 @@ final class SpotifyAdvisorTest {
                         .withBodyFile("featured-playlists.json")));
 
         // WHEN
-        target.getFeaturedPlaylists(1);
+        spotifyAdvisor.getFeaturedPlaylists(1);
 
         // THEN
         verify(getRequestedFor(urlPathEqualTo(RESOURCE_COMMON_PATH + "featured-playlists"))
@@ -467,7 +467,7 @@ final class SpotifyAdvisorTest {
 
         // WHEN
         final int pageNumber = 3;
-        target.getFeaturedPlaylists(pageNumber);
+        spotifyAdvisor.getFeaturedPlaylists(pageNumber);
 
         // THEN
         verify(getRequestedFor(urlPathEqualTo(RESOURCE_COMMON_PATH + "featured-playlists"))
@@ -498,7 +498,7 @@ final class SpotifyAdvisorTest {
 
         // WHEN
         final int pageNumber = 5;
-        Page<Playlist> categoryPlaylists = target.getCategoryPlaylists(category, pageNumber);
+        Page<Playlist> categoryPlaylists = spotifyAdvisor.getCategoryPlaylists(category, pageNumber);
 
         // THEN
         assertThat(categoryPlaylists.getElements())
@@ -530,7 +530,7 @@ final class SpotifyAdvisorTest {
                                 "}")));
 
         // WHEN
-        Throwable thrown = Assertions.catchThrowable(() -> target.getCategoryPlaylists(category, 1));
+        Throwable thrown = Assertions.catchThrowable(() -> spotifyAdvisor.getCategoryPlaylists(category, 1));
 
         // THEN
         assertThat(thrown).isInstanceOf(AdvisorException.class)
@@ -548,7 +548,7 @@ final class SpotifyAdvisorTest {
                         .withBodyFile("category-playlists.json")));
 
         // WHEN
-        target.getCategoryPlaylists(category, 1);
+        spotifyAdvisor.getCategoryPlaylists(category, 1);
 
         // THEN
         verify(getRequestedFor(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories/" + category.getId() + "/playlists"))
@@ -569,7 +569,7 @@ final class SpotifyAdvisorTest {
                         .withBodyFile("category-playlists.json")));
 
         // WHEN
-        target.getCategoryPlaylists(category, 1);
+        spotifyAdvisor.getCategoryPlaylists(category, 1);
 
         // THEN
         verify(getRequestedFor(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories/" + category.getId() + "/playlists"))
@@ -589,7 +589,7 @@ final class SpotifyAdvisorTest {
 
         // WHEN
         final int pageNumber = 3;
-        target.getCategoryPlaylists(category, pageNumber);
+        spotifyAdvisor.getCategoryPlaylists(category, pageNumber);
 
         // THEN
         verify(getRequestedFor(urlPathEqualTo(RESOURCE_COMMON_PATH + "categories/" + category.getId() + "/playlists"))

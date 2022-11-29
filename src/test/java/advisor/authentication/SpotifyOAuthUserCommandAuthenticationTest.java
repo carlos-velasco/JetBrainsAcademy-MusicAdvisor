@@ -32,7 +32,7 @@ final class SpotifyOAuthUserCommandAuthenticationTest {
     private SpotifyAccessTokenFetcher spotifyAccessTokenFetcher;
 
     @InjectMocks
-    private SpotifyOAuthUserCommandAuthentication target;
+    private SpotifyOAuthUserCommandAuthentication spotifyOAuthUserCommandAuthentication;
 
     @Test
     void givenAccessTokenAndAuthTokenAreObtained_whenAuthenticating_thenAccessTokenIsPopulated() throws IOException, InterruptedException {
@@ -43,11 +43,11 @@ final class SpotifyOAuthUserCommandAuthenticationTest {
         when(spotifyAccessTokenFetcher.fetchAccessToken(accessCode)).thenReturn(Optional.of(accessToken));
 
         // WHEN
-        target.authenticate();
+        spotifyOAuthUserCommandAuthentication.authenticate();
 
         // THEN
-        assertThat(target.getAccessToken()).isEqualTo(accessToken);
-        assertThat(target.isAuthenticated()).isTrue();
+        assertThat(spotifyOAuthUserCommandAuthentication.getAccessToken()).isEqualTo(accessToken);
+        assertThat(spotifyOAuthUserCommandAuthentication.isAuthenticated()).isTrue();
     }
 
     @Test
@@ -59,7 +59,7 @@ final class SpotifyOAuthUserCommandAuthenticationTest {
         when(spotifyAccessTokenFetcher.fetchAccessToken(accessCode)).thenReturn(Optional.of(accessToken));
 
         // WHEN
-        target.authenticate();
+        spotifyOAuthUserCommandAuthentication.authenticate();
 
         // THEN
         String expectedMessages = "code received" + System.lineSeparator();
@@ -74,11 +74,11 @@ final class SpotifyOAuthUserCommandAuthenticationTest {
         when(spotifyAccessTokenFetcher.fetchAccessToken(accessCode)).thenReturn(Optional.empty());
 
         // WHEN
-        target.authenticate();
+        spotifyOAuthUserCommandAuthentication.authenticate();
 
         // THEN
-        assertThat(target.getAccessToken()).isNull();
-        assertThat(target.isAuthenticated()).isFalse();
+        assertThat(spotifyOAuthUserCommandAuthentication.getAccessToken()).isNull();
+        assertThat(spotifyOAuthUserCommandAuthentication.isAuthenticated()).isFalse();
     }
 
     @Test
@@ -89,7 +89,7 @@ final class SpotifyOAuthUserCommandAuthenticationTest {
         when(spotifyAccessTokenFetcher.fetchAccessToken(accessCode)).thenReturn(Optional.empty());
 
         // WHEN
-        target.authenticate();
+        spotifyOAuthUserCommandAuthentication.authenticate();
 
         // THEN
         String expectedMessages = "code received" + System.lineSeparator()
@@ -103,11 +103,11 @@ final class SpotifyOAuthUserCommandAuthenticationTest {
         when(spotifyAccessCodeFetcher.fetchAccessCode()).thenReturn(Optional.empty());
 
         // WHEN
-        target.authenticate();
+        spotifyOAuthUserCommandAuthentication.authenticate();
 
         // THEN
-        assertThat(target.getAccessToken()).isNull();
-        assertThat(target.isAuthenticated()).isFalse();
+        assertThat(spotifyOAuthUserCommandAuthentication.getAccessToken()).isNull();
+        assertThat(spotifyOAuthUserCommandAuthentication.isAuthenticated()).isFalse();
     }
 
     @Test
@@ -116,7 +116,7 @@ final class SpotifyOAuthUserCommandAuthenticationTest {
         when(spotifyAccessCodeFetcher.fetchAccessCode()).thenReturn(Optional.empty());
 
         // WHEN
-        target.authenticate();
+        spotifyOAuthUserCommandAuthentication.authenticate();
 
         // THEN
         String expectedMessages = "code not received" + System.lineSeparator();

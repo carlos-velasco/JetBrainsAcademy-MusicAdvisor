@@ -34,7 +34,7 @@ final class SpotifyAccessCodeFetcherTest {
     private final CommandLineView commandLineView = new CommandLineView(new Scanner(System.in), new PrintStream(output), 5);
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private String redirectUri;
-    private SpotifyAccessCodeFetcher target;
+    private SpotifyAccessCodeFetcher spotifyAccessCodeFetcher;
 
     @RegisterExtension
     final FreePortExtension freePort = new FreePortExtension();
@@ -44,7 +44,7 @@ final class SpotifyAccessCodeFetcherTest {
         uriBuilder.setScheme("http").setHost("localhost").setPort(freePort.getPort());
         redirectUri = uriBuilder.build().toString();
         int accessCodeServerTimeoutSeconds = 1;
-        target = new SpotifyAccessCodeFetcher(
+        spotifyAccessCodeFetcher = new SpotifyAccessCodeFetcher(
                 SPOTIFY_ACCESS_HOST, CLIENT_ID, redirectUri, commandLineView, accessCodeServerTimeoutSeconds);
     }
 
@@ -146,7 +146,7 @@ final class SpotifyAccessCodeFetcherTest {
     @Timeout(value = TEST_EXECUTION_SERVICE_AWAIT_SECONDS)
     void givenNoRequestToAccessCodeServerIsDone_whenFetchingTheAccessCode_thenServerTimesOutAfterSpecifiedTimeout() throws InterruptedException, ExecutionException {
         // WHEN
-        Future<Optional<String>> result = executorService.submit(target::fetchAccessCode);
+        Future<Optional<String>> result = executorService.submit(spotifyAccessCodeFetcher::fetchAccessCode);
         executorService.shutdown();
         executorService.awaitTermination(TEST_EXECUTION_SERVICE_AWAIT_SECONDS, TimeUnit.SECONDS);
 
@@ -163,13 +163,13 @@ final class SpotifyAccessCodeFetcherTest {
     }
 
     private Future<Optional<String>> fetchAccessCodeAndGetOptionalAccessCode(HttpRequest request) throws IOException, InterruptedException {
-        Future<Optional<String>> result = executorService.submit(target::fetchAccessCode);
+        Future<Optional<String>> result = executorService.submit(spotifyAccessCodeFetcher::fetchAccessCode);
         startAccessCodeServerAndGetRedirectUriResponse(request);
         return result;
     }
 
     private HttpResponse<String> fetchAccessCodeAndGetRedirectUriResponse(HttpRequest request) throws IOException, InterruptedException {
-        executorService.submit(target::fetchAccessCode);
+        executorService.submit(spotifyAccessCodeFetcher::fetchAccessCode);
         return startAccessCodeServerAndGetRedirectUriResponse(request);
     }
 
