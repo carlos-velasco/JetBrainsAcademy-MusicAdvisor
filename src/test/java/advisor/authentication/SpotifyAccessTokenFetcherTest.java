@@ -87,7 +87,6 @@ final class SpotifyAccessTokenFetcherTest {
         assertThat(newOutput).hasToString(expectedMessages);
     }
 
-
     @Test
     void givenInvalidResponse_whenRequestingAccessToken_thenNoAcessTokenIsReturned() {
         // GIVEN
