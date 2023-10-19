@@ -14,10 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
 
 import static com.github.jenspiegsa.wiremockextension.ManagedWireMockServer.with;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
@@ -79,12 +76,15 @@ final class SpotifyAccessTokenFetcherTest {
 
         // WHEN
         target.fetchAccessToken("myAccessCode");
-
+        String out = output.toString();
+        String newOutput = sortJsonString(out);
+        newOutput += out.substring(out.length() - 1);
+        String sortedRequestBody = sortJsonString(requestBody);
         // THEN
         String expectedMessages = "making http request for access_token..." + System.lineSeparator()
                 + "response:" + System.lineSeparator()
-                + requestBody + System.lineSeparator();
-        assertThat(output).hasToString(expectedMessages);
+                + sortedRequestBody + System.lineSeparator();
+        assertThat(newOutput).hasToString(expectedMessages);
     }
 
     @Test
@@ -160,5 +160,24 @@ final class SpotifyAccessTokenFetcherTest {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("error", "wrong data");
         return jsonObject.toString();
+    }
+
+    private String sortJsonString(String input) {
+        int start = input.indexOf('{');
+        int end = input.indexOf('}');
+        String responseBody = input.substring(start + 1, end);
+
+        String[] responseFields = responseBody.split(",");
+        Arrays.sort(responseFields);
+
+        StringBuilder sb = new StringBuilder("{");
+        for (String s: responseFields) {
+            sb.append(s);
+            sb.append(",");
+        }
+        sb.delete(sb.length() - 1, sb.length());
+        sb.append("}");
+        String sortedResponseBody = sb.toString();
+        return input.substring(0, start) + sortedResponseBody;
     }
 }
