@@ -5,6 +5,8 @@ import advisor.view.CommandLineView;
 import com.github.jenspiegsa.wiremockextension.Managed;
 import com.github.jenspiegsa.wiremockextension.WireMockExtension;
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.matching.ContentPattern;
+import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.apache.http.HttpStatus;
@@ -14,14 +16,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
 
 import static com.github.jenspiegsa.wiremockextension.ManagedWireMockServer.with;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+import static junit.framework.TestCase.assertEquals;
 import static org.apache.http.HttpHeaders.CONTENT_TYPE;
 import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -143,10 +143,21 @@ final class SpotifyAccessTokenFetcherTest {
                 List.of("code=" + accessCode,
                         "grant_type=authorization_code",
                         "redirect_uri=" + REDIRECT_URI));
+        RequestPatternBuilder builder = postRequestedFor(urlEqualTo(API_TOKEN_URL_PATH)).withRequestBody(equalTo(expectedRequestBody));
+        List<ContentPattern<?>> bodyPatterns = builder.build().getBodyPatterns();
+        if (bodyPatterns.size() != 1) {
+            throw new IllegalArgumentException("Incorrect number of request bodies.");
+        }
+        String requestBody = (String) bodyPatterns.get(0).getValue();
+        String sortedRequestBody = sortPostRequestBody(requestBody);
+        int idx = expectedRequestBody.indexOf("code=");
+        String unsortedInput = expectedRequestBody.substring(idx);
+        String sortedInput = sortPostRequestBody(unsortedInput);
+        String sortedExpectedRequestBody = expectedRequestBody.substring(0, idx) + sortedInput;
+        assertEquals(sortedExpectedRequestBody, sortedRequestBody);
         verify(postRequestedFor(urlEqualTo(API_TOKEN_URL_PATH))
                 .withHeader("Authorization", equalTo("Basic " + expectedBase64EncodedClientData))
-                .withHeader(CONTENT_TYPE, equalTo("application/x-www-form-urlencoded; charset=UTF-8"))
-                .withRequestBody(equalTo(expectedRequestBody)));
+                .withHeader(CONTENT_TYPE, equalTo("application/x-www-form-urlencoded; charset=UTF-8")));
     }
 
     private SpotifyAccessTokenResponse buildValidResponseBody() {
@@ -160,5 +171,17 @@ final class SpotifyAccessTokenFetcherTest {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("error", "wrong data");
         return jsonObject.toString();
+    }
+
+    private String sortPostRequestBody(String input) {
+        String[] unsortedFields = input.split("&");
+        Arrays.sort(unsortedFields);
+        StringBuilder sb = new StringBuilder();
+        for (String s: unsortedFields) {
+            sb.append(s);
+            sb.append("&");
+        }
+        sb.delete(sb.length() - 1, sb.length());
+        return sb.toString();
     }
 }
