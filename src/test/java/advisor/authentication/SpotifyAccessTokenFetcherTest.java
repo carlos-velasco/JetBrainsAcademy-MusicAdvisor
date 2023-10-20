@@ -79,7 +79,6 @@ final class SpotifyAccessTokenFetcherTest {
 
         // WHEN
         target.fetchAccessToken("myAccessCode");
-
         // THEN
         String expectedMessages = "making http request for access_token..." + System.lineSeparator()
                 + "response:" + System.lineSeparator()
