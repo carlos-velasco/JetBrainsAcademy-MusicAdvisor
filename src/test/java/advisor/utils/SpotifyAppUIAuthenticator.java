@@ -15,7 +15,7 @@ public class SpotifyAppUIAuthenticator {
     private static final By USERNAME_INPUT_LOCATOR = By.cssSelector("#login-username");
     private static final By PASSWORD_INPUT_LOCATOR = By.cssSelector("#login-password");
     private static final By LOGIN_BUTTON_LOCATOR = By.cssSelector("#login-button");
-    private static final By AUTHORIZE_BUTTON_LOCATOR = By.cssSelector("#auth-accept");
+    private static final By AUTHORIZE_BUTTON_LOCATOR = By.xpath("//button[@data-testid='auth-accept']");
 
     private final WebDriver driver;
     private final String redirectUri;
