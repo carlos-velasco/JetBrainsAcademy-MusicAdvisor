@@ -84,13 +84,13 @@ final class SpotifyAccessTokenFetcherTest {
         // WHEN
         target.fetchAccessToken("myAccessCode");
         // THEN
-        String expectedMessages = "making http request for access_token..." + System.lineSeparator()
-                + "response:" + System.lineSeparator()
-                + requestBody + System.lineSeparator();
-        String actualMessages = output.toString();
-        JsonElement actualJson = JsonParser.parseString(actualMessages.split("response:\n")[1].trim());
-        JsonElement expectedJson = JsonParser.parseString(expectedMessages.split("response:\n")[1].trim());
-        assertThat(actualJson).isEqualTo(expectedJson);
+        String actualMessage = output.toString();
+        String responsePlaceholder = "response:" + System.lineSeparator();
+        assertThat(actualMessage).contains("making http request for access_token..." + System.lineSeparator()
+                + responsePlaceholder);
+        JsonElement actualResponseBodyJson = JsonParser.parseString(actualMessage.split(responsePlaceholder)[1].trim());
+        JsonElement expectedResponseBodyJson = JsonParser.parseString(requestBody);
+        assertThat(actualResponseBodyJson).isEqualTo(expectedResponseBodyJson);
     }
 
     @Test
@@ -150,9 +150,10 @@ final class SpotifyAccessTokenFetcherTest {
                 .withHeader(CONTENT_TYPE, equalTo("application/x-www-form-urlencoded; charset=UTF-8")));
         List<LoggedRequest> requests = findAll(postRequestedFor(urlEqualTo(API_TOKEN_URL_PATH)));
         String actualRequestBody = requests.get(0).getBodyAsString();
-        Assertions.assertTrue(actualRequestBody.contains("code=" + accessCode) &&
-                actualRequestBody.contains("grant_type=authorization_code") &&
-                actualRequestBody.contains("redirect_uri=" + REDIRECT_URI));
+        assertThat(actualRequestBody)
+                .contains("code=" + accessCode)
+                .contains("grant_type=authorization_code")
+                .contains("redirect_uri=" + REDIRECT_URI);
     }
 
     private SpotifyAccessTokenResponse buildValidResponseBody() {
