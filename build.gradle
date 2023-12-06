@@ -32,7 +32,7 @@ dependencies {
     testImplementation 'org.assertj:assertj-core:3.17.0'
     testImplementation 'org.springframework:spring-test:5.2.8.RELEASE'
     testImplementation 'org.seleniumhq.selenium:selenium-java:3.141.59'
-    testImplementation 'io.github.bonigarcia:webdrivermanager:4.2.0'
+    testImplementation 'io.github.bonigarcia:webdrivermanager:5.6.2'
     testImplementation('com.github.stefanbirkner:system-rules:1.19.0') {
         exclude group: 'junit', module: 'junit-dep'
     }
@@ -41,7 +41,7 @@ dependencies {
 }
 
 compileJava.options.encoding = 'UTF-8'
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 
