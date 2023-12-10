@@ -27,6 +27,9 @@ public class ChromeDriverClassExtension extends ChromeDriver implements AfterAll
                 "--headless",
                 "--disable-gpu",
                 "--window-size=1920,1200",
+                // Spotify login page returns 400 BadRequest when using headless user agent
+                "--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)" +
+                        " Chrome/119.0.0.0 Safari/537.36",
                 "--ignore-certificate-errors");
         return chromeOptions;
     }

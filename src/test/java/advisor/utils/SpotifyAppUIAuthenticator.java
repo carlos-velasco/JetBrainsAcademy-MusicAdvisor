@@ -15,7 +15,7 @@ public class SpotifyAppUIAuthenticator {
     private static final By USERNAME_INPUT_LOCATOR = By.cssSelector("#login-username");
     private static final By PASSWORD_INPUT_LOCATOR = By.cssSelector("#login-password");
     private static final By LOGIN_BUTTON_LOCATOR = By.cssSelector("#login-button");
-    private static final By AUTHORIZE_BUTTON_LOCATOR = By.cssSelector("#auth-accept");
+    private static final By AUTHORIZE_BUTTON_LOCATOR = By.xpath("//button[@data-testid='auth-accept']");
 
     private final WebDriver driver;
     private final String redirectUri;
@@ -36,7 +36,6 @@ public class SpotifyAppUIAuthenticator {
             final WebElement submitButton = driver.findElement(LOGIN_BUTTON_LOCATOR);
             submitButton.click();
         }
-
         wait.until(ExpectedConditions.visibilityOfElementLocated(AUTHORIZE_BUTTON_LOCATOR));
         usernameAndPasswordFilledIn = true;
         final WebElement authorizeButton = driver.findElement(AUTHORIZE_BUTTON_LOCATOR);
