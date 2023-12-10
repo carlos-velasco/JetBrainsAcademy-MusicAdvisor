@@ -21,17 +21,17 @@ final class CategoriesTest {
     private static final Page<Category> CATEGORIES_THIRD_PAGE = new Page<>(
             CATEGORIES.subList(PAGE_SIZE * 2, (PAGE_SIZE * 3)), TOTAL_CATEGORIES, 3);
 
-    private Categories target;
+    private Categories categories;
 
     @BeforeEach
     void prepareTarget() {
-        target = new Categories(new FakeAdvisor(PAGE_SIZE), PAGE_SIZE);
+        categories = new Categories(new FakeAdvisor(PAGE_SIZE), PAGE_SIZE);
     }
 
     @Test
     void whenGettingTheFirstCategoriesPage_thenTheFirstCategoriesPageIsReturned() {
         // WHEN
-        Page<Category> categoryPage = target.firstPage();
+        Page<Category> categoryPage = categories.firstPage();
 
         // THEN
         assertThat(categoryPage).as("First categories page").isEqualTo(CATEGORIES_FIRST_PAGE);
@@ -40,7 +40,7 @@ final class CategoriesTest {
     @Test
     void givenFirstCategoriesPageHasNotBeenObtained_whenGettingTheNextCategoriesPage_thenAnExceptionIsThrown() {
         // WHEN
-        Throwable thrown = catchThrowable(() -> target.nextPage());
+        Throwable thrown = catchThrowable(() -> categories.nextPage());
 
         // THEN
         assertThat(thrown).isInstanceOf(AdvisorException.class)
@@ -50,7 +50,7 @@ final class CategoriesTest {
     @Test
     void givenFirstCategoriesPageHasNotBeenObtained_whenGettingThePreviousCategoriesPage_thenAnExceptionIsThrown() {
         // WHEN
-        Throwable thrown = catchThrowable(() -> target.previousPage());
+        Throwable thrown = catchThrowable(() -> categories.previousPage());
 
         // THEN
         assertThat(thrown).isInstanceOf(AdvisorException.class)
@@ -60,10 +60,10 @@ final class CategoriesTest {
     @Test
     void givenFirstCategoriesPageHasBeenObtained_whenGettingTheNextCategoriesPage_thenTheNextCategoryPageIsReturned() {
         // GIVEN
-        target.firstPage();
+        categories.firstPage();
 
         // WHEN
-        Page<Category> categoryPage = target.nextPage();
+        Page<Category> categoryPage = categories.nextPage();
 
         // THEN
         assertThat(categoryPage).as("Second categories page").isEqualTo(CATEGORIES_SECOND_PAGE);
@@ -72,11 +72,11 @@ final class CategoriesTest {
     @Test
     void givenAllWholeCategoriesPagesHaveBeenObtained_whenGettingTheNextCategoriesPage_thenTheLastCategoryPageIsReturned() {
         // GIVEN
-        target.firstPage();
-        target.nextPage();
+        categories.firstPage();
+        categories.nextPage();
 
         // WHEN
-        Page<Category> categoryPage = target.nextPage();
+        Page<Category> categoryPage = categories.nextPage();
 
         // THEN
         assertThat(categoryPage).as("Third categories page").isEqualTo(CATEGORIES_THIRD_PAGE);
@@ -85,13 +85,13 @@ final class CategoriesTest {
     @Test
     void givenAllNextCategoryPagesHaveBeenObtained_whenGettingTheNextCategoriesPage_thenAnExceptionIsThrown() {
         // GIVEN
-        target.firstPage();
-        target.nextPage();
-        target.nextPage();
+        categories.firstPage();
+        categories.nextPage();
+        categories.nextPage();
 
 
         // WHEN
-        Throwable thrown = catchThrowable(() -> target.nextPage());
+        Throwable thrown = catchThrowable(() -> categories.nextPage());
 
         // THEN
         assertThat(thrown).isInstanceOf(AdvisorException.class)
@@ -101,10 +101,10 @@ final class CategoriesTest {
     @Test
     void givenFirstCategoriesPageHasBeenObtained_whenGettingThePreviousCategoriesPage_thenAnExceptionIsThrown() {
         // GIVEN
-        target.firstPage();
+        categories.firstPage();
 
         // WHEN
-        Throwable thrown = catchThrowable(() -> target.previousPage());
+        Throwable thrown = catchThrowable(() -> categories.previousPage());
 
         // THEN
         assertThat(thrown).isInstanceOf(AdvisorException.class)
@@ -114,11 +114,11 @@ final class CategoriesTest {
     @Test
     void givenFirstTwoCategoriesPagesHaveBeenObtained_whenGettingThePreviousCategoriesPage_thenFirstPageIsObtained() {
         // GIVEN
-        target.firstPage();
-        target.nextPage();
+        categories.firstPage();
+        categories.nextPage();
 
         // WHEN
-        Page<Category> categoryPage = target.previousPage();
+        Page<Category> categoryPage = categories.previousPage();
 
         // THEN
         assertThat(categoryPage).as("First categories page").isEqualTo(CATEGORIES_FIRST_PAGE);
@@ -127,12 +127,12 @@ final class CategoriesTest {
     @Test
     void givenFirstTwoCategoriesPagesHaveBeenObtainedAndOnePreviousCategoryPageHasBeenObtained_whenGettingThePreviousCategoriesPage_thenAnExceptionIsThrown() {
         // GIVEN
-        target.firstPage();
-        target.nextPage();
-        target.previousPage();
+        categories.firstPage();
+        categories.nextPage();
+        categories.previousPage();
 
         // WHEN
-        Throwable thrown = catchThrowable(() -> target.previousPage());
+        Throwable thrown = catchThrowable(() -> categories.previousPage());
 
         // THEN
         assertThat(thrown).isInstanceOf(AdvisorException.class)
@@ -142,12 +142,12 @@ final class CategoriesTest {
     @Test
     void givenAllNextCategoriesPagesHaveBeenObtained_whenGettingFirstCategoriesPage_thenFirstCategoriesPageIsObtained() {
         // GIVEN
-        target.firstPage();
-        target.nextPage();
-        target.nextPage();
+        categories.firstPage();
+        categories.nextPage();
+        categories.nextPage();
 
         // WHEN
-        Page<Category> categoryPage = target.firstPage();
+        Page<Category> categoryPage = categories.firstPage();
 
         // THEN
         assertThat(categoryPage).as("First categories page").isEqualTo(CATEGORIES_FIRST_PAGE);

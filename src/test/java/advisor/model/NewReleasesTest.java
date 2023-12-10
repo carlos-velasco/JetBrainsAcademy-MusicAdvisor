@@ -21,17 +21,17 @@ final class NewReleasesTest {
     private static final Page<Release> NEW_RELEASES_THIRD_PAGE = new Page<>(
             RELEASES.subList(PAGE_SIZE * 2, (PAGE_SIZE * 3)), TOTAL_CATEGORIES, 3);
 
-    private NewReleases target;
+    private NewReleases newReleases;
 
     @BeforeEach
     void prepareTarget() {
-        target = new NewReleases(new FakeAdvisor(PAGE_SIZE), PAGE_SIZE);
+        newReleases = new NewReleases(new FakeAdvisor(PAGE_SIZE), PAGE_SIZE);
     }
 
     @Test
     void whenGettingTheFirstNewReleasesPage_thenTheFirstNewReleasesPageIsReturned() {
         // WHEN
-        Page<Release> newReleasesPage = target.firstPage();
+        Page<Release> newReleasesPage = newReleases.firstPage();
 
         // THEN
         assertThat(newReleasesPage).as("First new releases page").isEqualTo(NEW_RELEASES_FIRST_PAGE);
@@ -40,7 +40,7 @@ final class NewReleasesTest {
     @Test
     void givenFirstNewReleasesPageHasNotBeenObtained_whenGettingTheNextNewReleasesPage_thenAnExceptionIsThrown() {
         // WHEN
-        Throwable thrown = catchThrowable(() -> target.nextPage());
+        Throwable thrown = catchThrowable(() -> newReleases.nextPage());
 
         // THEN
         assertThat(thrown).isInstanceOf(AdvisorException.class)
@@ -50,7 +50,7 @@ final class NewReleasesTest {
     @Test
     void givenFirstNewReleasesPageHasNotBeenObtained_whenGettingThePreviousNewReleasesPage_thenAnExceptionIsThrown() {
         // WHEN
-        Throwable thrown = catchThrowable(() -> target.previousPage());
+        Throwable thrown = catchThrowable(() -> newReleases.previousPage());
 
         // THEN
         assertThat(thrown).isInstanceOf(AdvisorException.class)
@@ -60,10 +60,10 @@ final class NewReleasesTest {
     @Test
     void givenFirstNewReleasesPageHasBeenObtained_whenGettingTheNextNewReleasesPage_thenTheNextNewReleasesPageIsReturned() {
         // GIVEN
-        target.firstPage();
+        newReleases.firstPage();
 
         // WHEN
-        Page<Release> newReleasesPage = target.nextPage();
+        Page<Release> newReleasesPage = newReleases.nextPage();
 
         // THEN
         assertThat(newReleasesPage).as("Second new releases page").isEqualTo(NEW_RELEASES_SECOND_PAGE);
@@ -72,11 +72,11 @@ final class NewReleasesTest {
     @Test
     void givenAllWholeNewReleasesPagesHaveBeenObtained_whenGettingTheNextNewReleasesPage_thenTheLastNewReleasesPageIsReturned() {
         // GIVEN
-        target.firstPage();
-        target.nextPage();
+        newReleases.firstPage();
+        newReleases.nextPage();
 
         // WHEN
-        Page<Release> newReleasesPage = target.nextPage();
+        Page<Release> newReleasesPage = newReleases.nextPage();
 
         // THEN
         assertThat(newReleasesPage).as("Third new releases page").isEqualTo(NEW_RELEASES_THIRD_PAGE);
@@ -85,12 +85,12 @@ final class NewReleasesTest {
     @Test
     void givenAllNextNewReleasePagesHaveBeenObtained_whenGettingTheNextNewReleasesPage_thenAnExceptionIsThrown() {
         // GIVEN
-        target.firstPage();
-        target.nextPage();
-        target.nextPage();
+        newReleases.firstPage();
+        newReleases.nextPage();
+        newReleases.nextPage();
 
         // WHEN
-        Throwable thrown = catchThrowable(() -> target.nextPage());
+        Throwable thrown = catchThrowable(() -> newReleases.nextPage());
 
         // THEN
         assertThat(thrown).isInstanceOf(AdvisorException.class)
@@ -100,10 +100,10 @@ final class NewReleasesTest {
     @Test
     void givenFirstNewReleasesPageHasBeenObtained_whenGettingThePreviousNewReleasesPage_thenAnExceptionIsThrown() {
         // GIVEN
-        target.firstPage();
+        newReleases.firstPage();
 
         // WHEN
-        Throwable thrown = catchThrowable(() -> target.previousPage());
+        Throwable thrown = catchThrowable(() -> newReleases.previousPage());
 
         // THEN
         assertThat(thrown).isInstanceOf(AdvisorException.class)
@@ -113,11 +113,11 @@ final class NewReleasesTest {
     @Test
     void givenFirstTwoNewReleasesPagesHaveBeenObtained_whenGettingThePreviousNewReleasesPage_thenFirstPageIsObtained() {
         // GIVEN
-        target.firstPage();
-        target.nextPage();
+        newReleases.firstPage();
+        newReleases.nextPage();
 
         // WHEN
-        Page<Release> newReleasesPage = target.previousPage();
+        Page<Release> newReleasesPage = newReleases.previousPage();
 
         // THEN
         assertThat(newReleasesPage).as("First new releases page").isEqualTo(NEW_RELEASES_FIRST_PAGE);
@@ -126,12 +126,12 @@ final class NewReleasesTest {
     @Test
     void givenFirstTwoNewReleasesPagesHaveBeenObtainedAndOnePreviousNewReleasesPageHasBeenObtained_whenGettingThePreviousNewReleasesPage_thenAnExceptionIsThrown() {
         // GIVEN
-        target.firstPage();
-        target.nextPage();
-        target.previousPage();
+        newReleases.firstPage();
+        newReleases.nextPage();
+        newReleases.previousPage();
 
         // WHEN
-        Throwable thrown = catchThrowable(() -> target.previousPage());
+        Throwable thrown = catchThrowable(() -> newReleases.previousPage());
 
         // THEN
         assertThat(thrown).isInstanceOf(AdvisorException.class)
@@ -141,12 +141,12 @@ final class NewReleasesTest {
     @Test
     void givenAllNextNewReleasesPagesHaveBeenObtained_whenGettingFirstNewReleasesPage_thenFirstNewReleasesPageIsObtained() {
         // GIVEN
-        target.firstPage();
-        target.nextPage();
-        target.nextPage();
+        newReleases.firstPage();
+        newReleases.nextPage();
+        newReleases.nextPage();
 
         // WHEN
-        Page<Release> newReleasesPage = target.firstPage();
+        Page<Release> newReleasesPage = newReleases.firstPage();
 
         // THEN
         assertThat(newReleasesPage).as("First new releases page").isEqualTo(NEW_RELEASES_FIRST_PAGE);

@@ -23,7 +23,7 @@ final class CommandLineControllerAuthenticationTest {
     private static final int DEFAULT_PAGE_SIZE = 5;
     private final ByteArrayOutputStream output = new ByteArrayOutputStream();
     private final Advisor advisor = new FakeAdvisor(DEFAULT_PAGE_SIZE);
-    private CommandLineController target;
+    private CommandLineController commandLineController;
     private CommandLineView commandLineView;
 
     @ParameterizedTest
@@ -32,10 +32,10 @@ final class CommandLineControllerAuthenticationTest {
         // GIVEN
         InputStream inputStream = new ByteArrayInputStream(userCommandText.getBytes());
         commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
-        target = new CommandLineController(commandLineView, advisor, new AlwaysAuthenticatedUserCommandAuthentication(), DEFAULT_PAGE_SIZE);
+        commandLineController = new CommandLineController(commandLineView, advisor, new AlwaysAuthenticatedUserCommandAuthentication(), DEFAULT_PAGE_SIZE);
         
         // WHEN
-        target.processInput();
+        commandLineController.processInput();
 
         // THEN
         assertThat(output.toString().toLowerCase()).doesNotContain(PROVIDE_ACCESS_MESSAGE);
@@ -47,10 +47,10 @@ final class CommandLineControllerAuthenticationTest {
         // GIVEN
         InputStream inputStream = new ByteArrayInputStream(userCommandText.getBytes());
         commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
-        target = new CommandLineController(commandLineView, advisor, new NeverAuthenticatedUserCommandAuthentication(), DEFAULT_PAGE_SIZE);
+        commandLineController = new CommandLineController(commandLineView, advisor, new NeverAuthenticatedUserCommandAuthentication(), DEFAULT_PAGE_SIZE);
 
         // WHEN
-        target.processInput();
+        commandLineController.processInput();
 
         // THEN
         assertThat(output.toString()).containsIgnoringCase(PROVIDE_ACCESS_MESSAGE);
@@ -62,10 +62,10 @@ final class CommandLineControllerAuthenticationTest {
         // GIVEN
         InputStream inputStream = new ByteArrayInputStream(userCommandText.getBytes());
         commandLineView = new CommandLineView(new Scanner(inputStream), new PrintStream(output), DEFAULT_PAGE_SIZE);
-        target = new CommandLineController(commandLineView, advisor, new NeverAuthenticatedUserCommandAuthentication(), DEFAULT_PAGE_SIZE);
+        commandLineController = new CommandLineController(commandLineView, advisor, new NeverAuthenticatedUserCommandAuthentication(), DEFAULT_PAGE_SIZE);
 
         // WHEN
-        target.processInput();
+        commandLineController.processInput();
 
         // THEN
         assertThat(output.toString().toLowerCase()).doesNotContain(PROVIDE_ACCESS_MESSAGE);
