@@ -36,7 +36,6 @@ public class SpotifyAppUIAuthenticator {
             final WebElement submitButton = driver.findElement(LOGIN_BUTTON_LOCATOR);
             submitButton.click();
         }
-
         wait.until(ExpectedConditions.visibilityOfElementLocated(AUTHORIZE_BUTTON_LOCATOR));
         usernameAndPasswordFilledIn = true;
         final WebElement authorizeButton = driver.findElement(AUTHORIZE_BUTTON_LOCATOR);
