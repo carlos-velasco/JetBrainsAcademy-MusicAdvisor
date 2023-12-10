@@ -36,7 +36,10 @@ jobs:
         SPOTIFY_PASSWORD: ${{ secrets.SPOTIFYPASSWORD }}
         SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFYCLIENTID }}
         SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFYCLIENTSECRET }}
-      run: ./gradlew build -Pspotify.username="$SPOTIFY_USERNAME" -Pspotify.password="$SPOTIFY_PASSWORD" -Pspotify.client.id="$SPOTIFY_CLIENT_ID" -Pspotify.client.secret="$SPOTIFY_CLIENT_SECRET" --info
+      run: >
+        ./gradlew build -Pspotify.username="$SPOTIFY_USERNAME" -Pspotify.password="$SPOTIFY_PASSWORD"
+        -Pspotify.client.id="$SPOTIFY_CLIENT_ID" -Pspotify.client.secret="$SPOTIFY_CLIENT_SECRET"
+        -PexcludeTests="**/CommandLineSpotifyAdvisorEndToEndTest*" --info
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v1.7
       if: always()

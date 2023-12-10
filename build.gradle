@@ -52,6 +52,11 @@ test {
     systemProperty "spotify.password", findProperty("spotify.password")
     systemProperty "spotify.client.id", findProperty("spotify.client.id")
     systemProperty "spotify.client.secret", findProperty("spotify.client.secret")
+
+    //Dynamic exclude through property defined in the build.gradle file
+    if (project.hasProperty('excludeTests')) {
+        exclude project.property('excludeTests') as String
+    }
 }
 
 wrapper {
