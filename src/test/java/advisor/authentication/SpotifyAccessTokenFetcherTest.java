@@ -5,12 +5,16 @@ import advisor.view.CommandLineView;
 import com.github.jenspiegsa.wiremockextension.Managed;
 import com.github.jenspiegsa.wiremockextension.WireMockExtension;
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.Assertions;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -79,12 +83,14 @@ final class SpotifyAccessTokenFetcherTest {
 
         // WHEN
         spotifyAccessTokenFetcher.fetchAccessToken("myAccessCode");
-
         // THEN
-        String expectedMessages = "making http request for access_token..." + System.lineSeparator()
-                + "response:" + System.lineSeparator()
-                + requestBody + System.lineSeparator();
-        assertThat(output).hasToString(expectedMessages);
+        String actualMessage = output.toString();
+        String responsePlaceholder = "response:" + System.lineSeparator();
+        assertThat(actualMessage).contains("making http request for access_token..." + System.lineSeparator()
+                + responsePlaceholder);
+        JsonElement actualResponseBodyJson = JsonParser.parseString(actualMessage.split(responsePlaceholder)[1].trim());
+        JsonElement expectedResponseBodyJson = JsonParser.parseString(requestBody);
+        assertThat(actualResponseBodyJson).isEqualTo(expectedResponseBodyJson);
     }
 
     @Test
@@ -139,14 +145,15 @@ final class SpotifyAccessTokenFetcherTest {
         // THEN
         String expectedBase64EncodedClientData =
                 Base64.getEncoder().encodeToString(String.join(":", CLIENT_ID, CLIENT_SECRET).getBytes());
-        String expectedRequestBody = String.join("&",
-                List.of("code=" + accessCode,
-                        "grant_type=authorization_code",
-                        "redirect_uri=" + REDIRECT_URI));
         verify(postRequestedFor(urlEqualTo(API_TOKEN_URL_PATH))
                 .withHeader("Authorization", equalTo("Basic " + expectedBase64EncodedClientData))
-                .withHeader(CONTENT_TYPE, equalTo("application/x-www-form-urlencoded; charset=UTF-8"))
-                .withRequestBody(equalTo(expectedRequestBody)));
+                .withHeader(CONTENT_TYPE, equalTo("application/x-www-form-urlencoded; charset=UTF-8")));
+        List<LoggedRequest> requests = findAll(postRequestedFor(urlEqualTo(API_TOKEN_URL_PATH)));
+        String actualRequestBody = requests.get(0).getBodyAsString();
+        assertThat(actualRequestBody)
+                .contains("code=" + accessCode)
+                .contains("grant_type=authorization_code")
+                .contains("redirect_uri=" + REDIRECT_URI);
     }
 
     private SpotifyAccessTokenResponse buildValidResponseBody() {
