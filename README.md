@@ -24,5 +24,5 @@ Execute the following command
 With
 - ``$SPOTIFY_USERNAME``: your Spotify developer username
 - ``$SPOTIFY_PASSWORD``: your Spotify developer password
-- ``$SPOTIFY_CLIENT_ID``: your Spotify applications Client ID
-- ``$SPOTIFY_CLIENT_SECRET``: your Spotify applications Client secret
+- ``$SPOTIFY_CLIENT_ID``: your Spotify application's Client ID
+- ``$SPOTIFY_CLIENT_SECRET``: your Spotify application's Client secret
